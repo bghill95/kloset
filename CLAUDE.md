@@ -50,3 +50,6 @@ Currently resolved to Next 16 / React 19 / TS 6 (see package-lock.json).
 - Next dev blocks its own dev assets for origins not in `allowedDevOrigins`
   (next.config.ts). Symptom: pages load via a LAN/tailnet IP but never hydrate,
   so forms fall back to native GET submits (`GET /login?` in the dev log).
+- `npm run db:push` always re-emits `ALTER ... SET DEFAULT '{}'::text[]` for
+  text-array columns — a drizzle-kit diffing quirk, not schema drift. The
+  statements are no-ops; don't "fix" the schema in response.
