@@ -4,12 +4,13 @@ Personal virtual closet PWA: catalog clothes by photo, build outfits on AI
 photoreal renders, get AI stylist suggestions. Single user, passcode-gated.
 
 - Spec: docs/superpowers/specs/2026-06-10-virtual-closet-design.md
-- Current plan: docs/superpowers/plans/2026-06-10-m1-walking-skeleton.md
+- Current plan: docs/superpowers/plans/2026-06-11-m2-closet-capture.md
 
 ## Stack
 
 Next.js App Router (TS, Tailwind v4) on Vercel · Neon Postgres via Drizzle ·
-Vercel Blob (wired in M2) · Gemini API (all AI, from M2) · jose sessions + bcryptjs passcode.
+Vercel Blob · OpenAI API (all AI; superseded Gemini per the M2 spec) · jose sessions + bcryptjs passcode.
+Dev/tests always run with MOCK_AI=1 (canned fixtures, no OpenAI/Blob calls).
 Currently resolved to Next 16 / React 19 / TS 6 (see package-lock.json).
 
 ## Commands
