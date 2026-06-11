@@ -74,7 +74,8 @@ iPad Safari PWA ("Add to Home Screen", no secrets on device)
         ▼
 Vercel — Next.js App Router (TypeScript, Tailwind)
   • UI + API routes; middleware enforces passcode session on all routes
-  • Holds secrets: GEMINI_API_KEY, passcode hash, ICS URL
+  • Secrets: GEMINI_API_KEY as env var; passcode hash + ICS URL in the
+    settings table (set via the app UI, server-side only, never sent to client)
   • Rate limit + configurable daily cap on /api/render
         │
         ├── Neon Postgres (Drizzle ORM) — closet, outfits, wears, settings
@@ -119,7 +120,7 @@ Hairstyles: static config in code (id, name, renderDescription, previewImage) �
 - Guards: selection validation, rate limit, daily cap, retry button.
 
 ### 6.3 AI stylist (~$0.01/batch of 5–8)
-- Prompt assembles: full closet inventory (ids + tags — fits in one prompt at single-user scale), events for the selected day (parsed ICS), forecast, optional occasion, recent wear history (bias toward less-recently-worn).
+- Prompt assembles: full closet inventory (ids + tags — fits in one prompt at single-user scale), today's events (parsed ICS), today's forecast, optional occasion, recent wear history (bias toward less-recently-worn).
 - Output: structured JSON `[{itemIds, hairstyleId?, title, reason}]`.
 - **Hallucination guard:** server validates every itemId against the DB; invalid suggestions are dropped.
 - Cards reuse cutout images — no image generation while browsing.
