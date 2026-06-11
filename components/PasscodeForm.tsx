@@ -26,22 +26,30 @@ export default function PasscodeForm({
       return;
     }
     setBusy(true);
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ passcode }),
-    });
-    setBusy(false);
-    if (res.ok) {
-      router.push("/closet");
-      router.refresh();
-      return;
-    }
-    const body = (await res.json()) as { error?: string; retryAfterMs?: number };
-    if (body.error === "locked" && body.retryAfterMs) {
-      setError(`Locked. Try again in ${Math.ceil(body.retryAfterMs / 60000)} min.`);
-    } else {
-      setError(body.error ?? "Something went wrong.");
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ passcode }),
+      });
+      if (res.ok) {
+        router.push("/closet");
+        router.refresh();
+        return;
+      }
+      const body = (await res.json().catch(() => ({}))) as {
+        error?: string;
+        retryAfterMs?: number;
+      };
+      if (body.error === "locked" && body.retryAfterMs) {
+        setError(`Locked. Try again in ${Math.ceil(body.retryAfterMs / 60000)} min.`);
+      } else {
+        setError(body.error ?? "Something went wrong.");
+      }
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setBusy(false);
     }
   }
 

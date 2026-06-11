@@ -25,6 +25,6 @@ test("tab bar navigates between all five screens", async ({ page }) => {
   await unlock(page);
   for (const name of ["Studio", "Stylist", "Lookbook", "Settings", "Closet"]) {
     await page.getByRole("link", { name }).click();
-    await expect(page.getByRole("heading", { name }) ).toBeVisible();
+    await expect(page.getByRole("heading", { name })).toBeVisible();
   }
 });
