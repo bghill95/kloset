@@ -28,3 +28,14 @@ test("tab bar navigates between all five screens", async ({ page }) => {
     await expect(page.getByRole("heading", { name })).toBeVisible();
   }
 });
+
+test("PWA manifest and icons are served without auth", async ({ request }) => {
+  const manifest = await request.get("/manifest.webmanifest");
+  expect(manifest.status()).toBe(200);
+  const body = await manifest.json();
+  expect(body.display).toBe("standalone");
+
+  const icon = await request.get("/icon");
+  expect(icon.status()).toBe(200);
+  expect(icon.headers()["content-type"]).toContain("image/png");
+});

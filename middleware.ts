@@ -7,8 +7,8 @@ const PUBLIC_PATHS = [
   /^\/api\/auth\//,
   /^\/api\/health$/,
   /^\/manifest\.webmanifest$/,
-  /^\/icon/,
-  /^\/apple-icon/,
+  /^\/icon$/,
+  /^\/apple-icon$/,
 ];
 
 export async function middleware(req: NextRequest) {
