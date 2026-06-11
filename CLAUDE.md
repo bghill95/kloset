@@ -46,3 +46,6 @@ Currently resolved to Next 16 / React 19 / TS 6 (see package-lock.json).
 - e2e spec files run alphabetically with a single DB wipe up front: auth-flow
   creates the passcode that tabs.spec relies on. Name new spec files accordingly.
 - Don't commit `tsconfig.tsbuildinfo` (build cache — gitignored).
+- Next dev blocks its own dev assets for origins not in `allowedDevOrigins`
+  (next.config.ts). Symptom: pages load via a LAN/tailnet IP but never hydrate,
+  so forms fall back to native GET submits (`GET /login?` in the dev log).
