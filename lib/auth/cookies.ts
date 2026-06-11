@@ -10,7 +10,7 @@ export async function setSessionCookie(): Promise<void> {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 30,
+    maxAge: 60 * 60 * 24 * 30, // keep in sync with SESSION_DURATION ("30d") in session.ts
     path: "/",
   });
 }

@@ -4,7 +4,13 @@ import { hashPasscode } from "@/lib/auth/passcode";
 import { getSetting, setSetting } from "@/lib/db/settings";
 
 export async function POST(req: NextRequest) {
-  const { passcode } = (await req.json()) as { passcode?: string };
+  let body: { passcode?: unknown };
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+  }
+  const passcode = body?.passcode;
 
   if (typeof passcode !== "string" || passcode.length < 4) {
     return NextResponse.json(
