@@ -16,10 +16,10 @@ export default function TabBar() {
   return (
     <nav
       aria-label="Main"
-      className="fixed inset-x-0 bottom-0 flex border-t border-neutral-200 bg-white pb-[env(safe-area-inset-bottom)]"
+      className="fixed z-50 inset-x-0 bottom-0 flex border-t border-neutral-200 bg-white pb-[env(safe-area-inset-bottom)]"
     >
       {TABS.map((tab) => {
-        const active = pathname.startsWith(tab.href);
+        const active = pathname === tab.href || pathname.startsWith(tab.href + "/");
         return (
           <Link
             key={tab.href}
@@ -29,7 +29,7 @@ export default function TabBar() {
               active ? "font-semibold text-neutral-900" : "text-neutral-400"
             }`}
           >
-            <span className="text-xl">{tab.icon}</span>
+            <span className="text-xl" aria-hidden="true">{tab.icon}</span>
             {tab.label}
           </Link>
         );
