@@ -9,14 +9,14 @@ photoreal renders, get AI stylist suggestions. Single user, passcode-gated.
 ## Stack
 
 Next.js App Router (TS, Tailwind v4) on Vercel · Neon Postgres via Drizzle ·
-Vercel Blob · Gemini API (all AI) · jose sessions + bcryptjs passcode.
-Currently on Next 16 / React 19 / TS 6 (lockfile-pinned).
+Vercel Blob (wired in M2) · Gemini API (all AI, from M2) · jose sessions + bcryptjs passcode.
+Currently resolved to Next 16 / React 19 / TS 6 (see package-lock.json).
 
 ## Commands
 
 - `npm run dev` — dev server on :3000
-- `npm test` — Vitest unit tests (lib/**/*.{test,spec}.ts)
-- `npm run test:e2e` — Playwright (resets the settings table first!)
+- `npm test` — Vitest unit tests (patterns in vitest.config.ts: lib/**/*.test.ts and lib/**/*.spec.ts)
+- `npm run test:e2e` — Playwright (creates + wipes the settings table on each run!)
 - `npm run typecheck` — tsc --noEmit
 - `npm run db:push` — push Drizzle schema to Neon
 
