@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "Your virtual closet",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black",
     title: "Styling App",
   },
 };

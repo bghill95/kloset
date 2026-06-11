@@ -38,4 +38,8 @@ test("PWA manifest and icons are served without auth", async ({ request }) => {
   const icon = await request.get("/icon");
   expect(icon.status()).toBe(200);
   expect(icon.headers()["content-type"]).toContain("image/png");
+
+  const appleIcon = await request.get("/apple-icon");
+  expect(appleIcon.status()).toBe(200);
+  expect(appleIcon.headers()["content-type"]).toContain("image/png");
 });
