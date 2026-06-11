@@ -18,7 +18,9 @@ export async function createSession(): Promise<string> {
 
 export async function verifySession(token: string): Promise<boolean> {
   try {
-    await jwtVerify(token, secret());
+    // The payload ({ scope: "app" }) is intentionally not inspected: single-user
+    // app — any token with a valid signature and unexpired claims is authorized.
+    await jwtVerify(token, secret(), { algorithms: ["HS256"] });
     return true;
   } catch {
     return false;
