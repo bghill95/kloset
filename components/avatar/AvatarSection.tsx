@@ -72,7 +72,7 @@ export default function AvatarSection({ photos }: { photos: BasePhoto[] }) {
                 alt=""
                 loading="lazy"
                 decoding="async"
-                className="h-full w-full object-cover"
+                className="h-full w-full object-contain"
               />
               {photo.isPrimary && (
                 <span className="absolute left-1 top-1 rounded-full bg-neutral-900/80 px-2 py-0.5 text-xs font-semibold text-white">

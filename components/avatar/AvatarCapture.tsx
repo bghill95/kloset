@@ -45,6 +45,7 @@ export default function AvatarCapture() {
   }, [previewUrl]);
 
   function showPreview(blob: Blob) {
+    setCountdown(null);
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPhoto(blob);
     setPreviewUrl(URL.createObjectURL(blob));
@@ -200,7 +201,9 @@ export default function AvatarCapture() {
               ref={videoRef}
               playsInline
               muted
-              className="absolute inset-0 h-full w-full object-cover"
+              className={`absolute inset-0 h-full w-full object-cover ${
+                facing === "user" ? "[transform:scaleX(-1)]" : ""
+              }`}
             />
             <div className="absolute inset-0 flex items-center justify-center">
               <BodyOutline />
@@ -237,7 +240,9 @@ export default function AvatarCapture() {
         >
           Take photo now
         </button>
-        <label className="cursor-pointer text-sm text-neutral-300">
+        <label
+          className={countdown !== null ? "pointer-events-none cursor-pointer text-sm text-neutral-300 opacity-30" : "cursor-pointer text-sm text-neutral-300"}
+        >
           🖼️ Choose from library
           <input
             type="file"
@@ -248,11 +253,12 @@ export default function AvatarCapture() {
         </label>
         <button
           type="button"
+          disabled={countdown !== null}
           aria-label="Switch camera"
           onClick={() =>
             setFacing((f) => (f === "user" ? "environment" : "user"))
           }
-          className="text-sm text-neutral-300"
+          className="text-sm text-neutral-300 disabled:opacity-30"
         >
           🔄 Flip
         </button>
