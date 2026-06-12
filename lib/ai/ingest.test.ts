@@ -7,7 +7,8 @@ describe("runIngestPipeline with MOCK_AI=1", () => {
     process.env.MOCK_AI = "1";
   });
   afterEach(() => {
-    process.env.MOCK_AI = previous;
+    if (previous === undefined) delete process.env.MOCK_AI;
+    else process.env.MOCK_AI = previous;
   });
 
   it("returns fixture urls and a suggestion without touching OpenAI/Blob", async () => {

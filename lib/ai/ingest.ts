@@ -38,7 +38,7 @@ export async function runIngestPipeline(
       originalUrl: "/fixtures/original-top.svg",
       cutoutUrl: "/fixtures/cutout-top.svg",
       suggestion,
-      warning: null,
+      warning: mismatchWarning(suggestion, category),
     };
   }
 
@@ -47,8 +47,14 @@ export async function runIngestPipeline(
   // the route maps it to 502. AI failures below degrade to partial results.
   const originalUrl = await putImage(`items/original.${ext}`, photo, mime);
   const [cutoutUrl, suggestion] = await Promise.all([
-    cutout(photo, mime).catch(() => null),
-    tag(photo, mime, category).catch(() => null),
+    cutout(photo, mime).catch((err) => {
+      console.error("[ingest] cutout failed:", err);
+      return null;
+    }),
+    tag(photo, mime, category).catch((err) => {
+      console.error("[ingest] tagging failed:", err);
+      return null;
+    }),
   ]);
   return {
     originalUrl,
@@ -59,9 +65,11 @@ export async function runIngestPipeline(
 }
 
 async function cutout(photo: Buffer, mime: string): Promise<string | null> {
+  const ext = mime === "image/png" ? "png" : "jpg";
   const res = await getOpenAI().images.edit({
     model: IMAGE_MODEL,
-    image: await toFile(photo, "garment", { type: mime }),
+    quality: "medium",
+    image: await toFile(photo, `garment.${ext}`, { type: mime }),
     prompt:
       "Remove the background completely. Keep only the clothing item, " +
       "unaltered and centered, on a fully transparent background.",
