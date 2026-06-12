@@ -4,11 +4,16 @@ import { useEffect, useRef, useState } from "react";
 
 // Shared getUserMedia lifecycle: requests real resolution, cleans up tracks,
 // re-acquires when facingMode changes, degrades to an error flag.
-export function useCameraStream(facingMode: "user" | "environment") {
+// Pass active=false to suppress the stream (e.g. during preview/upload phases).
+export function useCameraStream(
+  facingMode: "user" | "environment",
+  active = true,
+) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [cameraError, setCameraError] = useState(false);
 
   useEffect(() => {
+    if (!active) return;
     let stream: MediaStream | undefined;
     let cancelled = false;
     setCameraError(false);
@@ -37,7 +42,7 @@ export function useCameraStream(facingMode: "user" | "environment") {
       cancelled = true;
       stream?.getTracks().forEach((t) => t.stop());
     };
-  }, [facingMode]);
+  }, [facingMode, active]);
 
   return { videoRef, cameraError };
 }

@@ -25,6 +25,22 @@ test.describe.serial("avatar base photos", () => {
     await expect(page.getByText("Primary", { exact: true })).toBeVisible();
   });
 
+  test("retake returns to a live viewfinder", async ({ page }) => {
+    await unlock(page);
+    await page.goto("/avatar-capture");
+    await page.getByRole("button", { name: "Take photo now" }).click();
+    await expect(page.getByRole("button", { name: "↻ Retake" })).toBeVisible();
+    await page.getByRole("button", { name: "↻ Retake" }).click();
+    await expect(page.getByTestId("outline-body")).toBeVisible();
+    // The re-acquired stream must re-enable the shutter (regression: black
+    // viewfinder with dead buttons after retake).
+    await expect(
+      page.getByRole("button", { name: "Take photo now" }),
+    ).toBeEnabled();
+    await page.getByRole("button", { name: "✕ Cancel" }).click();
+    await expect(page).toHaveURL(/\/settings$/);
+  });
+
   test("library photo becomes second; make primary flips the badge", async ({
     page,
   }) => {

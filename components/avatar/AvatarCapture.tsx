@@ -13,8 +13,8 @@ const TIMER_SECONDS = 10;
 export default function AvatarCapture() {
   const router = useRouter();
   const [facing, setFacing] = useState<"user" | "environment">("user");
-  const { videoRef, cameraError } = useCameraStream(facing);
   const [phase, setPhase] = useState<Phase>("camera");
+  const { videoRef, cameraError } = useCameraStream(facing, phase === "camera");
   const [countdown, setCountdown] = useState<number | null>(null);
   const [photo, setPhoto] = useState<Blob | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -22,11 +22,11 @@ export default function AvatarCapture() {
   const [snapping, setSnapping] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
 
-  // Reset videoReady whenever facingMode changes so the button stays locked
-  // until the new stream delivers its first frame.
+  // Reset videoReady whenever facingMode changes or we re-enter camera phase
+  // so the button stays locked until the new stream delivers its first frame.
   useEffect(() => {
     setVideoReady(false);
-  }, [facing]);
+  }, [facing, phase]);
 
   // Countdown ticks once per second; snap fires at 0.
   useEffect(() => {
