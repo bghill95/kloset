@@ -20,6 +20,13 @@ export default function AvatarCapture() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [error, setError] = useState<{ message: string; canRetry: boolean } | null>(null);
   const [snapping, setSnapping] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
+
+  // Reset videoReady whenever facingMode changes so the button stays locked
+  // until the new stream delivers its first frame.
+  useEffect(() => {
+    setVideoReady(false);
+  }, [facing]);
 
   // Countdown ticks once per second; snap fires at 0.
   useEffect(() => {
@@ -201,6 +208,7 @@ export default function AvatarCapture() {
               ref={videoRef}
               playsInline
               muted
+              onLoadedData={() => setVideoReady(true)}
               className={`absolute inset-0 h-full w-full object-cover ${
                 facing === "user" ? "[transform:scaleX(-1)]" : ""
               }`}
@@ -226,7 +234,7 @@ export default function AvatarCapture() {
       <div className="flex flex-wrap items-center justify-center gap-3 pb-2">
         <button
           type="button"
-          disabled={cameraError || countdown !== null}
+          disabled={cameraError || !videoReady || countdown !== null}
           onClick={() => setCountdown(TIMER_SECONDS)}
           className="touch-manipulation rounded-xl bg-white px-5 py-3 font-semibold text-neutral-900 disabled:opacity-30"
         >
@@ -234,7 +242,7 @@ export default function AvatarCapture() {
         </button>
         <button
           type="button"
-          disabled={cameraError || countdown !== null || snapping}
+          disabled={cameraError || !videoReady || countdown !== null || snapping}
           onClick={() => void snap()}
           className="touch-manipulation rounded-xl bg-neutral-200 px-5 py-3 font-semibold text-neutral-900 disabled:opacity-30"
         >
