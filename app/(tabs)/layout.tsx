@@ -1,3 +1,4 @@
+import StatusBar from "@/components/context/StatusBar";
 import TabBar from "@/components/TabBar";
 
 export default function TabsLayout({
@@ -5,6 +6,7 @@ export default function TabsLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <div className="min-h-dvh pb-[calc(5rem+env(safe-area-inset-bottom))]">
+      <StatusBar />
       <main className="mx-auto max-w-5xl p-4">{children}</main>
       <TabBar />
     </div>

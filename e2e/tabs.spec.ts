@@ -9,8 +9,11 @@ test("health endpoint reports db connectivity without auth", async ({ request })
 
 test("tab bar navigates between all five screens", async ({ page }) => {
   await unlock(page);
+  // Scope to the main nav to avoid ambiguity with the StatusBar link which
+  // also links to /settings (CLAUDE.md learned rule: fix locator precision).
+  const nav = page.getByRole("navigation", { name: "Main" });
   for (const name of ["Studio", "Stylist", "Lookbook", "Settings", "Closet"]) {
-    await page.getByRole("link", { name }).click();
+    await nav.getByRole("link", { name }).click();
     await expect(page.getByRole("heading", { name })).toBeVisible();
   }
 });
