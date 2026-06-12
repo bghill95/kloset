@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import { useCameraStream } from "@/components/capture/useCameraStream";
 import type { Category } from "@/lib/closet/categories";
 import CategoryChips from "./CategoryChips";
 import { downscalePhoto } from "./downscale";
@@ -17,39 +18,8 @@ export default function CaptureScreen({
   onPhoto: (photo: Blob) => void;
   onCancel: () => void;
 }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [cameraError, setCameraError] = useState(false);
+  const { videoRef, cameraError } = useCameraStream("environment");
   const [snapping, setSnapping] = useState(false);
-
-  useEffect(() => {
-    let stream: MediaStream | undefined;
-    let cancelled = false;
-    (async () => {
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: "environment",
-            width: { ideal: 2048 },
-            height: { ideal: 1536 },
-          },
-        });
-        if (cancelled) {
-          stream.getTracks().forEach((t) => t.stop());
-          return;
-        }
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          await videoRef.current.play();
-        }
-      } catch {
-        if (!cancelled) setCameraError(true);
-      }
-    })();
-    return () => {
-      cancelled = true;
-      stream?.getTracks().forEach((t) => t.stop());
-    };
-  }, []);
 
   async function snap() {
     const video = videoRef.current;
