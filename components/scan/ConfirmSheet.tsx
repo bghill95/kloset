@@ -19,6 +19,9 @@ export default function ConfirmSheet({
   onRetake: () => void;
 }) {
   const suggestion = result.suggestion;
+  // State captures props at mount and never resyncs. Consumers must remount
+  // for a new result (e.g. key={result.originalUrl}) — ScanFlow does this by
+  // swapping phases, which unmounts the sheet.
   const [category, setCategory] = useState(initialCategory);
   const [name, setName] = useState(
     suggestion?.name ?? deriveName(initialCategory, suggestion?.colors ?? []),
@@ -36,24 +39,34 @@ export default function ConfirmSheet({
   async function save(mode: "done" | "another") {
     setBusy(mode);
     setError(null);
-    const res = await fetch("/api/items", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        category,
-        colors,
-        styleTags,
-        imageUrl: result.cutoutUrl ?? result.originalUrl,
-        originalImageUrl: result.originalUrl,
-      }),
-    });
-    setBusy(null);
-    if (!res.ok) {
+    try {
+      const res = await fetch("/api/items", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          category,
+          colors,
+          styleTags,
+          imageUrl: result.cutoutUrl ?? result.originalUrl,
+          originalImageUrl: result.originalUrl,
+        }),
+      });
+      if (!res.ok) {
+        // Error bodies are JSON from our routes but can be platform-generated
+        // non-JSON (e.g. proxy 413) — never assume parseability.
+        const data = (await res.json().catch(() => null)) as {
+          error?: string;
+        } | null;
+        setError(data?.error ?? "Couldn't save — try again.");
+        setBusy(null);
+        return;
+      }
+      onSaved(mode);
+    } catch {
       setError("Couldn't save — try again.");
-      return;
+      setBusy(null);
     }
-    onSaved(mode);
   }
 
   return (
