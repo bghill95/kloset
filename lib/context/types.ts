@@ -1,6 +1,8 @@
 export type ContextEvent = {
   title: string;
-  start: string; // ISO instant; for all-day events, midnight UTC of the date
+  start: string; // ISO instant. All-day events: midnight UTC of the literal
+  // date — clients must render them via start.slice(0, 10), never local Date
+  // conversion.
   end: string;
   allDay: boolean;
 };

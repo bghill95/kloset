@@ -60,6 +60,8 @@ describe("parseGeocode", () => {
   it("returns null when there are no results", () => {
     expect(parseGeocode({})).toBeNull();
     expect(parseGeocode(null)).toBeNull();
+    // Fix 4b: guard non-object first element
+    expect(parseGeocode({ results: [null] })).toBeNull();
   });
 });
 

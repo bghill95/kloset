@@ -49,7 +49,9 @@ describe("windowEvents", () => {
     expect(standup.allDay).toBe(false);
     const beach = events[2];
     expect(beach.allDay).toBe(true);
-    expect(beach.start.startsWith("2026-06-12")).toBe(true);
+    // Fix 1: all-day events must be UTC midnight of the literal date
+    expect(beach.start).toBe("2026-06-12T00:00:00.000Z");
+    expect(beach.end).toBe("2026-06-13T00:00:00.000Z");
   });
 
   it("returns [] for garbage input", () => {
@@ -63,5 +65,42 @@ describe("windowEvents", () => {
       TO,
     );
     expect(events.length).toBeLessThanOrEqual(20);
+  });
+
+  // Fix 2: half-open recurrence window
+  it("treats the window as half-open for recurrences", () => {
+    const ics = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+UID:daily@test
+DTSTART:20260611T000000Z
+DTEND:20260611T003000Z
+RRULE:FREQ=DAILY
+SUMMARY:Daily
+END:VEVENT
+END:VCALENDAR
+`;
+    const events = windowEvents(ics, FROM, TO);
+    expect(events.map((e) => e.start)).toEqual([
+      "2026-06-11T00:00:00.000Z",
+      "2026-06-12T00:00:00.000Z",
+    ]);
+  });
+
+  // Fix 3: EXDATE cancelled occurrences
+  it("skips EXDATE-cancelled occurrences", () => {
+    const ics = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+UID:cancelled@test
+DTSTART:20260604T090000Z
+DTEND:20260604T093000Z
+RRULE:FREQ=WEEKLY
+EXDATE:20260611T090000Z
+SUMMARY:Standup
+END:VEVENT
+END:VCALENDAR
+`;
+    expect(windowEvents(ics, FROM, TO)).toEqual([]);
   });
 });

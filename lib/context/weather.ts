@@ -63,11 +63,13 @@ export function parseGeocode(raw: unknown): GeoLocation | null {
   if (typeof raw !== "object" || raw === null) return null;
   const results = (raw as { results?: unknown }).results;
   if (!Array.isArray(results) || results.length === 0) return null;
-  const top = results[0] as Record<string, unknown>;
-  if (typeof top.latitude !== "number" || typeof top.longitude !== "number") {
+  const top = results[0];
+  if (typeof top !== "object" || top === null) return null;
+  const topObj = top as Record<string, unknown>;
+  if (typeof topObj.latitude !== "number" || typeof topObj.longitude !== "number") {
     return null;
   }
-  const name = typeof top.name === "string" ? top.name : "Unknown";
-  const admin = typeof top.admin1 === "string" ? `, ${top.admin1}` : "";
-  return { lat: top.latitude, lon: top.longitude, label: `${name}${admin}` };
+  const name = typeof topObj.name === "string" ? topObj.name : "Unknown";
+  const admin = typeof topObj.admin1 === "string" ? `, ${topObj.admin1}` : "";
+  return { lat: topObj.latitude as number, lon: topObj.longitude as number, label: `${name}${admin}` };
 }
