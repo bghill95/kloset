@@ -1,6 +1,5 @@
 import { expect, test } from "@playwright/test";
-
-const PASSCODE = "test-1234";
+import { PASSCODE } from "./helpers";
 
 test.describe.serial("first-run auth flow", () => {
   test("unauthenticated visit is sent to setup via login", async ({ page }) => {

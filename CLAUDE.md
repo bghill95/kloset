@@ -40,8 +40,8 @@ Currently resolved to Next 16 / React 19 / TS 6 (see package-lock.json).
   `next build` when the var is missing. Use a lazy getter (see lib/db/client.ts).
 - Always wrap `await req.json()` in try/catch and return 400 — malformed bodies
   otherwise 500 (see app/api/auth/*/route.ts).
-- Next 16 deprecates the `middleware.ts` convention in favor of `proxy.ts` —
-  migrate during M2; until then ignore the dev-server warning.
+- Next 16 uses the `proxy.ts` convention (renamed from `middleware.ts` in M2);
+  the exported function is `proxy`, semantics unchanged.
 - Next 16 injects a route announcer with role="alert" — Playwright must use
   precise locators (e.g., `p[role='alert']`), not `getByRole("alert")`.
 - e2e spec files run alphabetically with a single DB wipe up front: auth-flow

@@ -38,6 +38,7 @@ export async function runIngestPipeline(
       originalUrl: "/fixtures/original-top.svg",
       cutoutUrl: "/fixtures/cutout-top.svg",
       suggestion,
+      // Echoed for API completeness; ConfirmSheet recomputes the warning live.
       warning: mismatchWarning(suggestion, category),
     };
   }
@@ -60,6 +61,7 @@ export async function runIngestPipeline(
     originalUrl,
     cutoutUrl,
     suggestion,
+    // Echoed for API completeness; ConfirmSheet recomputes the warning live.
     warning: mismatchWarning(suggestion, category),
   };
 }

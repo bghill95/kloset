@@ -11,7 +11,7 @@ const PUBLIC_PATHS = [
   /^\/apple-icon$/,
 ];
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   if (PUBLIC_PATHS.some((p) => p.test(pathname))) return NextResponse.next();
 
