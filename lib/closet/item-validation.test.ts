@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { validateItemPatch, validateNewItem } from "./item-validation";
+import { UUID_RE, validateItemPatch, validateNewItem } from "./item-validation";
 
 const valid = {
   name: "Light blue oxford shirt",
@@ -32,6 +32,8 @@ describe("validateNewItem", () => {
     ["bad imageUrl", { ...valid, imageUrl: "javascript:alert(1)" }],
     ["bad originalImageUrl", { ...valid, originalImageUrl: "" }],
     ["non-object", "nope"],
+    ["non-array colors", { ...valid, colors: "red" }],
+    ["protocol-relative imageUrl", { ...valid, imageUrl: "//evil.com/x.png" }],
   ])("rejects %s", (_label, payload) => {
     expect(validateNewItem(payload).ok).toBe(false);
   });
@@ -60,5 +62,23 @@ describe("validateItemPatch", () => {
       ok: true,
       value: { colors: ["red"], styleTags: ["warm"] },
     });
+  });
+
+  it("rejects non-array colors instead of wiping them", () => {
+    expect(validateItemPatch({ colors: "red" }).ok).toBe(false);
+    expect(validateItemPatch({ styleTags: null }).ok).toBe(false);
+  });
+});
+
+describe("UUID_RE", () => {
+  it("matches standard UUIDs, either case", () => {
+    expect(UUID_RE.test("123e4567-e89b-12d3-a456-426614174000")).toBe(true);
+    expect(UUID_RE.test("123E4567-E89B-12D3-A456-426614174000")).toBe(true);
+  });
+
+  it("rejects malformed ids", () => {
+    expect(UUID_RE.test("123e4567e89b12d3a456426614174000")).toBe(false);
+    expect(UUID_RE.test("123e4567-e89b-12d3-a456-42661417400g")).toBe(false);
+    expect(UUID_RE.test("123e4567-e89b-12d3-a456-426614174000\n")).toBe(false);
   });
 });
