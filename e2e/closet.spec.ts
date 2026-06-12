@@ -7,4 +7,56 @@ test.describe.serial("closet", () => {
     await expect(page.getByText("Your closet is empty")).toBeVisible();
     await expect(page.getByRole("link", { name: /Scan item/ })).toBeVisible();
   });
+
+  test("viewfinder renders with the category outline", async ({ page }) => {
+    await unlock(page);
+    await page.goto("/scan");
+    await expect(page.getByTestId("outline-top")).toBeVisible();
+    await expect(page.locator("video")).toBeVisible();
+    await page.getByRole("radio", { name: "Shoes" }).click();
+    await expect(page.getByTestId("outline-shoes")).toBeVisible();
+  });
+
+  test("scan via library: ingest, confirm, save, appears in grid", async ({
+    page,
+  }) => {
+    await unlock(page);
+    await page.goto("/scan");
+    await page
+      .locator('input[type="file"]')
+      .setInputFiles("e2e/fixtures/garment.svg");
+    // Mock pipeline fills the sheet with the fixture suggestion.
+    await expect(page.getByLabel("Name")).toHaveValue(
+      "Light blue oxford shirt",
+      { timeout: 15_000 },
+    );
+    await page.getByLabel("Name").fill("My test shirt");
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await expect(page).toHaveURL(/\/closet$/);
+    await expect(page.getByText("My test shirt")).toBeVisible();
+  });
+
+  test("save & scan another returns to the camera", async ({ page }) => {
+    await unlock(page);
+    await page.goto("/scan");
+    await page
+      .locator('input[type="file"]')
+      .setInputFiles("e2e/fixtures/garment.svg");
+    await expect(page.getByLabel("Name")).toHaveValue(
+      "Light blue oxford shirt",
+      { timeout: 15_000 },
+    );
+    await page
+      .getByRole("button", { name: "Save & scan another" })
+      .click();
+    await expect(page.getByTestId("outline-top")).toBeVisible();
+  });
+
+  test("category filter narrows the grid", async ({ page }) => {
+    await unlock(page);
+    await page.goto("/closet?category=shoes");
+    await expect(page.getByText("My test shirt")).not.toBeVisible();
+    await page.goto("/closet?category=top");
+    await expect(page.getByText("My test shirt")).toBeVisible();
+  });
 });
