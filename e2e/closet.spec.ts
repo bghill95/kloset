@@ -80,4 +80,8 @@ test.describe.serial("closet", () => {
     await expect(page).toHaveURL(/\/closet$/);
     await expect(page.getByText("Renamed shirt")).not.toBeVisible();
   });
+
+  // NOTE: this suite intentionally leaves one item ("Light blue oxford shirt",
+  // from the save-&-scan-another test) in the DB. Specs sorting after
+  // closet.spec.ts inherit it; the per-run wipe in global-setup resets it.
 });

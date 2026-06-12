@@ -15,8 +15,17 @@ export default function ItemDetailForm({ item }: { item: ClosetItem }) {
   const [status, setStatus] = useState<"idle" | "busy" | "saved" | "error">(
     "idle",
   );
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  function touch<T>(setter: (v: T) => void) {
+    return (v: T) => {
+      if (status === "saved") setStatus("idle");
+      setter(v);
+    };
+  }
 
   async function save() {
+    setErrorMessage(null);
     setStatus("busy");
     try {
       const res = await fetch(`/api/items/${item.id}`, {
@@ -25,8 +34,21 @@ export default function ItemDetailForm({ item }: { item: ClosetItem }) {
         body: JSON.stringify({ name, category, colors, styleTags }),
       });
       if (!res.ok) {
+        const data = (await res.json().catch(() => null)) as {
+          error?: string;
+        } | null;
+        setErrorMessage(data?.error ?? null);
         setStatus("error");
         return;
+      }
+      const data = (await res.json().catch(() => null)) as {
+        item?: { name: string; category: typeof category; colors: string[]; styleTags: string[] };
+      } | null;
+      if (data?.item) {
+        setName(data.item.name);
+        setCategory(data.item.category);
+        setColors(data.item.colors);
+        setStyleTags(data.item.styleTags);
       }
       setStatus("saved");
       router.refresh();
@@ -37,6 +59,7 @@ export default function ItemDetailForm({ item }: { item: ClosetItem }) {
 
   async function remove() {
     if (!window.confirm(`Delete "${item.name}" from your closet?`)) return;
+    setErrorMessage(null);
     setStatus("busy");
     try {
       const res = await fetch(`/api/items/${item.id}`, { method: "DELETE" });
@@ -70,13 +93,13 @@ export default function ItemDetailForm({ item }: { item: ClosetItem }) {
 
       <input
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={(e) => touch(setName)(e.target.value)}
         aria-label="Name"
         className="rounded-xl border border-neutral-300 p-3 text-lg"
       />
-      <CategoryChips value={category} onChange={setCategory} />
-      <TagChips label="Colors" values={colors} onChange={setColors} />
-      <TagChips label="Style tags" values={styleTags} onChange={setStyleTags} />
+      <CategoryChips value={category} onChange={touch(setCategory)} />
+      <TagChips label="Colors" values={colors} onChange={touch(setColors)} />
+      <TagChips label="Style tags" values={styleTags} onChange={touch(setStyleTags)} />
 
       {status === "saved" && (
         <p role="status" className="text-sm text-green-700">
@@ -85,7 +108,7 @@ export default function ItemDetailForm({ item }: { item: ClosetItem }) {
       )}
       {status === "error" && (
         <p role="alert" className="text-sm text-red-600">
-          Something went wrong — try again.
+          {errorMessage ?? "Something went wrong — try again."}
         </p>
       )}
 
@@ -101,7 +124,7 @@ export default function ItemDetailForm({ item }: { item: ClosetItem }) {
         type="button"
         disabled={status === "busy"}
         onClick={remove}
-        className="text-sm text-red-600 underline"
+        className="text-sm text-red-600 underline disabled:opacity-50"
       >
         Delete item
       </button>
