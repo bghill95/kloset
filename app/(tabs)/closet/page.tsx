@@ -2,7 +2,7 @@ import { desc } from "drizzle-orm";
 import Link from "next/link";
 import {
   CATEGORIES,
-  CATEGORY_LABELS,
+  CATEGORY_PLURAL_LABELS,
   isCategory,
 } from "@/lib/closet/categories";
 import { distinctColors, filterItems } from "@/lib/closet/filter";
@@ -28,11 +28,14 @@ function href(category?: string, color?: string) {
 export default async function ClosetPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; color?: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const params = await searchParams;
-  const category = isCategory(params.category) ? params.category : undefined;
-  const color = params.color || undefined;
+  const first = (v: string | string[] | undefined) =>
+    Array.isArray(v) ? v[0] : v;
+  const rawCategory = first(params.category);
+  const category = isCategory(rawCategory) ? rawCategory : undefined;
+  const color = first(params.color) || undefined;
 
   // Single-user scale: fetch all, filter in memory (unit-tested pure logic).
   const all = await getDb().select().from(items).orderBy(desc(items.createdAt));
@@ -43,24 +46,24 @@ export default async function ClosetPage({
     <>
       <h1 className="text-2xl font-semibold">Closet</h1>
 
-      <div className="mt-3 flex flex-wrap gap-2">
-        <Link href={href(undefined, color)} className={chipClass(!category)}>
+      <div className="mt-3 flex flex-wrap gap-2" aria-label="Filter by category">
+        <Link href={href(undefined, color)} className={chipClass(!category)} aria-current={!category ? "true" : undefined}>
           All
         </Link>
         {CATEGORIES.map((c) => (
-          <Link key={c} href={href(c, color)} className={chipClass(category === c)}>
-            {CATEGORY_LABELS[c]}s
+          <Link key={c} href={href(c, color)} className={chipClass(category === c)} aria-current={category === c ? "true" : undefined}>
+            {CATEGORY_PLURAL_LABELS[c]}
           </Link>
         ))}
       </div>
 
       {colors.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-2">
-          <Link href={href(category)} className={chipClass(!color)}>
+        <div className="mt-2 flex flex-wrap gap-2" aria-label="Filter by color">
+          <Link href={href(category)} className={chipClass(!color)} aria-current={!color ? "true" : undefined}>
             Any color
           </Link>
           {colors.map((c) => (
-            <Link key={c} href={href(category, c)} className={chipClass(color === c)}>
+            <Link key={c} href={href(category, c)} className={chipClass(color === c)} aria-current={color === c ? "true" : undefined}>
               {c}
             </Link>
           ))}
@@ -89,7 +92,9 @@ export default async function ClosetPage({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={item.imageUrl}
-              alt={item.name}
+              alt=""
+              loading="lazy"
+              decoding="async"
               className="min-h-0 flex-1 object-contain"
             />
             <span className="max-w-full truncate text-xs text-neutral-600">

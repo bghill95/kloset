@@ -9,6 +9,14 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   hat: "Hat",
 };
 
+export const CATEGORY_PLURAL_LABELS: Record<Category, string> = {
+  top: "Tops",
+  bottom: "Bottoms",
+  jacket: "Jackets",
+  shoes: "Shoes",
+  hat: "Hats",
+};
+
 export function isCategory(value: unknown): value is Category {
   return (
     typeof value === "string" &&

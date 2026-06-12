@@ -1,19 +1,5 @@
-import { expect, test, type Page } from "@playwright/test";
-
-const PASSCODE = "test-1234";
-
-async function unlock(page: Page) {
-  await page.goto("/login");
-  if (page.url().endsWith("/setup")) {
-    await page.getByLabel("Passcode", { exact: true }).fill(PASSCODE);
-    await page.getByLabel("Confirm passcode").fill(PASSCODE);
-    await page.getByRole("button", { name: "Create passcode" }).click();
-  } else {
-    await page.getByLabel("Passcode", { exact: true }).fill(PASSCODE);
-    await page.getByRole("button", { name: "Unlock" }).click();
-  }
-  await expect(page).toHaveURL(/\/closet$/);
-}
+import { expect, test } from "@playwright/test";
+import { unlock } from "./helpers";
 
 test.describe.serial("closet", () => {
   test("empty closet shows the scan tile and empty state", async ({ page }) => {
