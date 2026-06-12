@@ -25,6 +25,10 @@ describe("filterItems", () => {
       items[0],
     ]);
   });
+
+  it("treats empty-string filters as no filter", () => {
+    expect(filterItems(items, { category: "", color: "" })).toHaveLength(3);
+  });
 });
 
 describe("distinctColors", () => {
