@@ -1,0 +1,130 @@
+"use client";
+
+import { useState } from "react";
+import type { IngestResult } from "@/lib/ai/ingest";
+import type { Category } from "@/lib/closet/categories";
+import { deriveName, mismatchWarning } from "@/lib/closet/suggestion";
+import CategoryChips from "./CategoryChips";
+import TagChips from "./TagChips";
+
+export default function ConfirmSheet({
+  result,
+  initialCategory,
+  onSaved,
+  onRetake,
+}: {
+  result: IngestResult;
+  initialCategory: Category;
+  onSaved: (mode: "done" | "another") => void;
+  onRetake: () => void;
+}) {
+  const suggestion = result.suggestion;
+  const [category, setCategory] = useState(initialCategory);
+  const [name, setName] = useState(
+    suggestion?.name ?? deriveName(initialCategory, suggestion?.colors ?? []),
+  );
+  const [colors, setColors] = useState<string[]>(suggestion?.colors ?? []);
+  const [styleTags, setStyleTags] = useState<string[]>(
+    suggestion?.styleTags ?? [],
+  );
+  const [busy, setBusy] = useState<"done" | "another" | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // Recomputed live so switching the category chip clears the warning (spec §3.2).
+  const warning = mismatchWarning(suggestion, category);
+
+  async function save(mode: "done" | "another") {
+    setBusy(mode);
+    setError(null);
+    const res = await fetch("/api/items", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        category,
+        colors,
+        styleTags,
+        imageUrl: result.cutoutUrl ?? result.originalUrl,
+        originalImageUrl: result.originalUrl,
+      }),
+    });
+    setBusy(null);
+    if (!res.ok) {
+      setError("Couldn't save — try again.");
+      return;
+    }
+    onSaved(mode);
+  }
+
+  return (
+    <div className="mx-auto flex max-w-md flex-col gap-4 p-4">
+      <div
+        className="flex h-56 items-center justify-center rounded-xl"
+        style={{
+          background:
+            "repeating-conic-gradient(#e8e8e8 0% 25%, #fff 0% 50%) 0 0 / 16px 16px",
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={result.cutoutUrl ?? result.originalUrl}
+          alt="Scanned garment"
+          className="max-h-full max-w-full object-contain"
+        />
+      </div>
+
+      {!suggestion && (
+        <p className="text-sm text-neutral-500">
+          AI tagging wasn't available — fill in the details yourself.
+        </p>
+      )}
+      {warning && (
+        <p role="status" className="rounded-lg bg-amber-100 px-3 py-2 text-sm text-amber-900">
+          ⚠️ {warning}
+        </p>
+      )}
+
+      <input
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        aria-label="Name"
+        className="rounded-xl border border-neutral-300 p-3 text-lg"
+      />
+      <CategoryChips value={category} onChange={setCategory} />
+      <TagChips label="Colors" values={colors} onChange={setColors} />
+      <TagChips label="Style tags" values={styleTags} onChange={setStyleTags} />
+
+      {error && (
+        <p role="alert" className="text-sm text-red-600">
+          {error}
+        </p>
+      )}
+
+      <div className="flex gap-2">
+        <button
+          type="button"
+          disabled={busy !== null}
+          onClick={() => save("done")}
+          className="flex-1 rounded-xl bg-neutral-900 p-3 font-semibold text-white disabled:opacity-50"
+        >
+          {busy === "done" ? "…" : "Save"}
+        </button>
+        <button
+          type="button"
+          disabled={busy !== null}
+          onClick={() => save("another")}
+          className="flex-1 rounded-xl bg-neutral-700 p-3 font-semibold text-white disabled:opacity-50"
+        >
+          {busy === "another" ? "…" : "Save & scan another"}
+        </button>
+      </div>
+      <button
+        type="button"
+        onClick={onRetake}
+        className="text-sm text-neutral-500 underline"
+      >
+        ↻ Retake
+      </button>
+    </div>
+  );
+}

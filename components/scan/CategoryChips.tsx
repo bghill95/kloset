@@ -1,0 +1,43 @@
+"use client";
+
+import {
+  CATEGORIES,
+  CATEGORY_LABELS,
+  type Category,
+} from "@/lib/closet/categories";
+
+export default function CategoryChips({
+  value,
+  onChange,
+  dark = false,
+}: {
+  value: Category;
+  onChange: (category: Category) => void;
+  dark?: boolean;
+}) {
+  return (
+    <div className="flex flex-wrap justify-center gap-2" role="radiogroup" aria-label="Category">
+      {CATEGORIES.map((category) => {
+        const active = category === value;
+        const activeClass = dark
+          ? "bg-white text-neutral-900"
+          : "bg-neutral-900 text-white";
+        const idleClass = dark
+          ? "bg-neutral-700 text-neutral-300"
+          : "bg-neutral-200 text-neutral-600";
+        return (
+          <button
+            key={category}
+            type="button"
+            role="radio"
+            aria-checked={active}
+            onClick={() => onChange(category)}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium ${active ? activeClass : idleClass}`}
+          >
+            {CATEGORY_LABELS[category]}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
