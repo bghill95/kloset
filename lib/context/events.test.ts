@@ -87,6 +87,38 @@ END:VCALENDAR
     ]);
   });
 
+  it("converts TZID events to correct UTC instants", () => {
+    const ics = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+UID:tzid-single@test
+DTSTART;TZID=America/New_York:20260611T090000
+DTEND;TZID=America/New_York:20260611T100000
+SUMMARY:NY Meeting
+END:VEVENT
+END:VCALENDAR
+`;
+    const events = windowEvents(ics, FROM, TO);
+    expect(events).toHaveLength(1);
+    expect(events[0].start).toBe("2026-06-11T13:00:00.000Z"); // 9am EDT
+  });
+
+  it("expands recurring TZID events at correct UTC instants", () => {
+    const ics = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+UID:tzid-recurring@test
+DTSTART;TZID=America/New_York:20260604T090000
+DTEND;TZID=America/New_York:20260604T100000
+RRULE:FREQ=WEEKLY
+SUMMARY:NY Standup
+END:VEVENT
+END:VCALENDAR
+`;
+    const events = windowEvents(ics, FROM, TO);
+    expect(events.map((e) => e.start)).toEqual(["2026-06-11T13:00:00.000Z"]);
+  });
+
   // Fix 3: EXDATE cancelled occurrences
   it("skips EXDATE-cancelled occurrences", () => {
     const ics = `BEGIN:VCALENDAR

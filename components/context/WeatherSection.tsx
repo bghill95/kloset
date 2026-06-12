@@ -78,6 +78,7 @@ export default function WeatherSection({
             onChange={(e) => setQuery(e.target.value)}
             placeholder="City, e.g. Carlsbad"
             aria-label="City"
+            disabled={busy}
             className="flex-1 rounded-xl border border-neutral-300 p-2 text-sm"
           />
           <button

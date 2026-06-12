@@ -4,14 +4,25 @@ import { deleteSetting, setSetting } from "@/lib/db/settings";
 
 // iCloud hands out webcal:// links; they're https underneath.
 function normalizeIcsUrl(raw: string): string | null {
-  const url = raw.trim().replace(/^webcal:\/\//i, "https://");
-  if (!/^https:\/\//i.test(url)) return null;
+  const normalized = raw.trim().replace(/^webcal:\/\//i, "https://");
+  if (!/^https:\/\//i.test(normalized)) return null;
+  let parsed: URL;
   try {
-    new URL(url);
+    parsed = new URL(normalized);
   } catch {
     return null;
   }
-  return url;
+  const host = parsed.hostname.toLowerCase();
+  if (
+    host === "localhost" ||
+    host.endsWith(".local") ||
+    /^127\.|^10\.|^192\.168\.|^169\.254\.|^172\.(1[6-9]|2\d|3[01])\./.test(host) ||
+    host === "::1" ||
+    host === "[::1]"
+  ) {
+    return null;
+  }
+  return normalized;
 }
 
 export async function POST(req: NextRequest) {
@@ -50,15 +61,21 @@ export async function POST(req: NextRequest) {
       );
     }
     const text = await res.text();
-    const from = new Date();
-    const to = new Date(from.getTime() + 7 * 24 * 60 * 60 * 1000);
-    const events = windowEvents(text, from, to);
+    if (text.length > 5 * 1024 * 1024) {
+      return NextResponse.json(
+        { error: "Calendar feed too large." },
+        { status: 400 },
+      );
+    }
     if (!text.includes("BEGIN:VCALENDAR")) {
       return NextResponse.json(
         { error: "That URL doesn't serve an ICS calendar." },
         { status: 400 },
       );
     }
+    const from = new Date();
+    const to = new Date(from.getTime() + 7 * 24 * 60 * 60 * 1000);
+    const events = windowEvents(text, from, to);
     await setSetting("icsUrl", icsUrl);
     return NextResponse.json({ ok: true, eventCount: events.length });
   } catch (err) {

@@ -35,6 +35,7 @@ export async function GET(req: NextRequest) {
     try {
       const res = await fetch(icsUrl, {
         next: { revalidate: REVALIDATE_SECONDS },
+        signal: AbortSignal.timeout(10_000),
       });
       if (res.ok) {
         events = windowEvents(await res.text(), window.from, window.to);
@@ -50,6 +51,7 @@ export async function GET(req: NextRequest) {
       const location = JSON.parse(locationRaw) as { lat: number; lon: number };
       const res = await fetch(buildForecastUrl(location.lat, location.lon), {
         next: { revalidate: REVALIDATE_SECONDS },
+        signal: AbortSignal.timeout(10_000),
       });
       if (res.ok) weather = summarizeForecast(await res.json());
     } catch (err) {

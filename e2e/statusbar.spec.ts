@@ -40,8 +40,8 @@ test.describe.serial("context status bar", () => {
     await page.getByRole("button", { name: "Set location" }).click();
     await expect(page.getByText("Weather location: Mock City")).toBeVisible();
     await page
+      .locator("section[aria-label='Weather']")
       .getByRole("button", { name: "Remove" })
-      .last()
       .click();
     await expect(page.getByLabel("City")).toBeVisible();
   });
@@ -49,7 +49,10 @@ test.describe.serial("context status bar", () => {
   test("calendar removes cleanly", async ({ page }) => {
     await unlock(page);
     await page.goto("/settings");
-    await page.getByRole("button", { name: "Remove" }).click();
+    await page
+      .locator("section[aria-label='Calendar']")
+      .getByRole("button", { name: "Remove" })
+      .click();
     await expect(page.getByLabel("Calendar link")).toBeVisible();
   });
 });

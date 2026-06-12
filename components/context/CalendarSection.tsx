@@ -84,6 +84,7 @@ export default function CalendarSection({
             onChange={(e) => setUrl(e.target.value)}
             placeholder="webcal://… or https://…"
             aria-label="Calendar link"
+            disabled={busy}
             className="flex-1 rounded-xl border border-neutral-300 p-2 text-sm"
           />
           <button
