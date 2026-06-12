@@ -5,6 +5,9 @@ import { isCategory } from "@/lib/closet/categories";
 // Cutout + tagging can take a while on a slow day.
 export const maxDuration = 60;
 
+// Note: Vercel rejects bodies over ~4.5 MB at the platform edge before this
+// runs, so in production this cap only documents intent; the client-side
+// resize (≤1500px JPEG) keeps real uploads far below both limits.
 const MAX_BYTES = 10 * 1024 * 1024;
 
 export async function POST(req: NextRequest) {
@@ -38,9 +41,10 @@ export async function POST(req: NextRequest) {
       category,
     );
     return NextResponse.json(result);
-  } catch {
+  } catch (err) {
     // Only infrastructure (the original Blob upload) throws — AI failures
     // come back as partial results from the pipeline.
+    console.error("[ingest] pipeline failed:", err);
     return NextResponse.json(
       { error: "Upload failed — try again." },
       { status: 502 },
