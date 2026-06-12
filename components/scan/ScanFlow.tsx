@@ -15,22 +15,30 @@ export default function ScanFlow() {
   const [category, setCategory] = useState<Category>("top");
   const [photo, setPhoto] = useState<Blob | null>(null);
   const [result, setResult] = useState<IngestResult | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [error, setError] = useState<{ message: string; canRetry: boolean } | null>(null);
 
   async function ingest(blob: Blob) {
+    setError(null);
     setPhase("processing");
     const form = new FormData();
     form.append("photo", blob, "photo.jpg");
     form.append("category", category);
     try {
-      const res = await fetch("/api/ingest", { method: "POST", body: form });
+      const res = await fetch("/api/ingest", {
+        method: "POST",
+        body: form,
+        signal: AbortSignal.timeout(65_000),
+      });
       if (!res.ok) {
         // Error bodies are usually our JSON but can be platform-generated
         // (e.g. the deploy edge rejects big bodies before our route runs).
-        setErrorMessage(
+        setError(
           res.status === 413
-            ? "Photo too large — try again; it should be smaller after the retake."
-            : "Couldn't process the photo.",
+            ? {
+                message: "Photo too large — retake it or pick a smaller one.",
+                canRetry: false,
+              }
+            : { message: "Couldn't process the photo.", canRetry: true },
         );
         setPhase("error");
         return;
@@ -38,12 +46,13 @@ export default function ScanFlow() {
       setResult((await res.json()) as IngestResult);
       setPhase("confirm");
     } catch {
-      setErrorMessage("Couldn't process the photo.");
+      setError({ message: "Couldn't process the photo.", canRetry: true });
       setPhase("error");
     }
   }
 
   function handlePhoto(blob: Blob) {
+    if (phase !== "capture") return;
     setPhoto(blob);
     void ingest(blob);
   }
@@ -71,22 +80,31 @@ export default function ScanFlow() {
   }
 
   if (phase === "error") {
+    const canRetry = error?.canRetry !== false;
     return (
       <div className="flex min-h-dvh flex-col items-center justify-center gap-4 p-6">
-        <p className="text-neutral-700">{errorMessage ?? "Couldn't process the photo."}</p>
-        <button
-          type="button"
-          onClick={() => photo && ingest(photo)}
-          className="rounded-xl bg-neutral-900 px-6 py-3 font-semibold text-white"
-        >
-          Try again
-        </button>
+        <p role="status" className="text-neutral-700">
+          {error?.message ?? "Couldn't process the photo."}
+        </p>
+        {canRetry && (
+          <button
+            type="button"
+            onClick={() => photo && ingest(photo)}
+            className="rounded-xl bg-neutral-900 px-6 py-3 font-semibold text-white"
+          >
+            Try again
+          </button>
+        )}
         <button
           type="button"
           onClick={() => setPhase("capture")}
-          className="text-sm text-neutral-500 underline"
+          className={
+            canRetry
+              ? "text-sm text-neutral-500 underline"
+              : "rounded-xl bg-neutral-900 px-6 py-3 font-semibold text-white"
+          }
         >
-          Back to camera
+          {canRetry ? "Back to camera" : "Retake photo"}
         </button>
       </div>
     );

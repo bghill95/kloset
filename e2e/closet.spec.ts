@@ -1,3 +1,4 @@
+import path from "node:path";
 import { expect, test } from "@playwright/test";
 import { unlock } from "./helpers";
 
@@ -24,7 +25,7 @@ test.describe.serial("closet", () => {
     await page.goto("/scan");
     await page
       .locator('input[type="file"]')
-      .setInputFiles("e2e/fixtures/garment.svg");
+      .setInputFiles(path.join(__dirname, "fixtures", "garment.svg"));
     // Mock pipeline fills the sheet with the fixture suggestion.
     await expect(page.getByLabel("Name")).toHaveValue(
       "Light blue oxford shirt",
@@ -41,7 +42,7 @@ test.describe.serial("closet", () => {
     await page.goto("/scan");
     await page
       .locator('input[type="file"]')
-      .setInputFiles("e2e/fixtures/garment.svg");
+      .setInputFiles(path.join(__dirname, "fixtures", "garment.svg"));
     await expect(page.getByLabel("Name")).toHaveValue(
       "Light blue oxford shirt",
       { timeout: 15_000 },
