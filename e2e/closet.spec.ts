@@ -60,4 +60,24 @@ test.describe.serial("closet", () => {
     await page.goto("/closet?category=top");
     await expect(page.getByText("My test shirt")).toBeVisible();
   });
+
+  test("item detail edits persist", async ({ page }) => {
+    await unlock(page);
+    await page.getByRole("link", { name: /My test shirt/ }).click();
+    await expect(page.getByLabel("Name")).toHaveValue("My test shirt");
+    await page.getByLabel("Name").fill("Renamed shirt");
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await expect(page.locator("p[role='status']")).toContainText("Saved");
+    await page.goto("/closet");
+    await expect(page.getByText("Renamed shirt")).toBeVisible();
+  });
+
+  test("deleting an item removes it from the grid", async ({ page }) => {
+    await unlock(page);
+    await page.getByRole("link", { name: /Renamed shirt/ }).click();
+    page.on("dialog", (dialog) => dialog.accept());
+    await page.getByRole("button", { name: "Delete item" }).click();
+    await expect(page).toHaveURL(/\/closet$/);
+    await expect(page.getByText("Renamed shirt")).not.toBeVisible();
+  });
 });
