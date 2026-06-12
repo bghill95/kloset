@@ -19,6 +19,7 @@ export default function CaptureScreen({
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [cameraError, setCameraError] = useState(false);
+  const [snapping, setSnapping] = useState(false);
 
   useEffect(() => {
     let stream: MediaStream | undefined;
@@ -26,7 +27,11 @@ export default function CaptureScreen({
     (async () => {
       try {
         stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "environment" },
+          video: {
+            facingMode: "environment",
+            width: { ideal: 2048 },
+            height: { ideal: 1536 },
+          },
         });
         if (cancelled) {
           stream.getTracks().forEach((t) => t.stop());
@@ -37,7 +42,7 @@ export default function CaptureScreen({
           await videoRef.current.play();
         }
       } catch {
-        setCameraError(true);
+        if (!cancelled) setCameraError(true);
       }
     })();
     return () => {
@@ -48,15 +53,26 @@ export default function CaptureScreen({
 
   async function snap() {
     const video = videoRef.current;
-    if (!video || video.videoWidth === 0) return;
-    const canvas = document.createElement("canvas");
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext("2d")!.drawImage(video, 0, 0);
-    const blob = await new Promise<Blob | null>((resolve) =>
-      canvas.toBlob(resolve, "image/jpeg", 0.9),
-    );
-    if (blob) onPhoto(await downscalePhoto(blob));
+    if (snapping || !video || video.videoWidth === 0) return;
+    setSnapping(true);
+    try {
+      const scale = Math.min(
+        1,
+        1500 / Math.max(video.videoWidth, video.videoHeight),
+      );
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(video.videoWidth * scale);
+      canvas.height = Math.round(video.videoHeight * scale);
+      canvas
+        .getContext("2d")!
+        .drawImage(video, 0, 0, canvas.width, canvas.height);
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, "image/jpeg", 0.85),
+      );
+      if (blob) onPhoto(blob);
+    } finally {
+      setSnapping(false);
+    }
   }
 
   async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -108,8 +124,8 @@ export default function CaptureScreen({
           type="button"
           aria-label="Take photo"
           onClick={snap}
-          disabled={cameraError}
-          className="h-16 w-16 rounded-full border-4 border-neutral-400 bg-white disabled:opacity-30"
+          disabled={cameraError || snapping}
+          className="h-16 w-16 touch-manipulation rounded-full border-4 border-neutral-400 bg-white disabled:opacity-30"
         />
         <button
           type="button"
