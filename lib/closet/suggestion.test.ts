@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  cleanStrings,
   deriveName,
   mismatchWarning,
   validateSuggestion,
@@ -58,7 +59,7 @@ describe("mismatchWarning", () => {
   it("describes the mismatch otherwise", () => {
     expect(
       mismatchWarning({ ...base, detectedCategory: "jacket" }, "top"),
-    ).toBe("This looks more like a jacket than a top.");
+    ).toBe('This looks more like "jacket" than "top".');
   });
 });
 
@@ -69,5 +70,23 @@ describe("deriveName", () => {
 
   it("falls back to a generic name", () => {
     expect(deriveName("shoes", [])).toBe("New shoes");
+  });
+});
+
+describe("cleanStrings", () => {
+  it("returns [] for non-arrays", () => {
+    expect(cleanStrings(undefined, 5)).toEqual([]);
+    expect(cleanStrings("red", 5)).toEqual([]);
+  });
+
+  it("dedupes after normalizing, then caps", () => {
+    expect(cleanStrings(["Blue", " blue ", "RED", "red", "tan"], 2)).toEqual([
+      "blue",
+      "red",
+    ]);
+  });
+
+  it("drops entries longer than 40 chars", () => {
+    expect(cleanStrings(["x".repeat(41), "ok"], 5)).toEqual(["ok"]);
   });
 });
