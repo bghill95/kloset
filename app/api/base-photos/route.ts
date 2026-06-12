@@ -47,7 +47,9 @@ export async function POST(req: NextRequest) {
     }
     const [created] = await getDb()
       .insert(basePhotos)
-      .values({ imageUrl, isPrimary: existing.length === 0 })
+      // No primary among existing photos (first upload, or healing a crash
+      // between PATCH's demote/promote) → this one becomes primary.
+      .values({ imageUrl, isPrimary: !existing.some((p) => p.isPrimary) })
       .returning();
     return NextResponse.json({ photo: created }, { status: 201 });
   } catch (err) {

@@ -43,6 +43,7 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
     .set({ isPrimary: true })
     .where(eq(basePhotos.id, id))
     .returning();
+  if (!photo) return NextResponse.json({ error: "Not found." }, { status: 404 });
   return NextResponse.json({ photo });
 }
 
