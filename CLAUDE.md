@@ -10,14 +10,15 @@ photoreal renders, get AI stylist suggestions. Single user, passcode-gated.
 
 Next.js App Router (TS, Tailwind v4) on Vercel · Neon Postgres via Drizzle ·
 Vercel Blob · OpenAI API (all AI; superseded Gemini per the M2 spec) · jose sessions + bcryptjs passcode.
-Dev/tests always run with MOCK_AI=1 (canned fixtures, no OpenAI/Blob calls).
+Dev/tests always run with MOCK_AI=1 (mocks ALL external services — OpenAI, Blob;
+canned fixtures, no network calls).
 Currently resolved to Next 16 / React 19 / TS 6 (see package-lock.json).
 
 ## Commands
 
 - `npm run dev` — dev server on :3000
 - `npm test` — Vitest unit tests (patterns in vitest.config.ts: lib/**/*.test.ts and lib/**/*.spec.ts)
-- `npm run test:e2e` — Playwright (creates + wipes the settings and items tables on each run!)
+- `npm run test:e2e` — Playwright (creates + wipes the settings, items and base_photos tables on each run!)
 - `npm run typecheck` — tsc --noEmit
 - `npm run db:push` — push Drizzle schema to Neon
 
@@ -29,7 +30,7 @@ Currently resolved to Next 16 / React 19 / TS 6 (see package-lock.json).
 - All AI calls go through server routes; never expose keys client-side.
   From M2 on, develop and test against MOCK_AI=1.
 - `.env.local` is never committed. New env vars also go in `.env.example`.
-- e2e wipes the settings and items tables — never point DATABASE_URL at data
+- e2e wipes the settings, items and base_photos tables — never point DATABASE_URL at data
   you care about when running tests.
 
 ## Learned rules

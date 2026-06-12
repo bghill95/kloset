@@ -16,6 +16,14 @@ export default async function globalSetup() {
     original_image_url text NOT NULL,
     created_at timestamp NOT NULL DEFAULT now()
   )`;
+  // Keep in sync with lib/db/schema.ts
+  await sql`CREATE TABLE IF NOT EXISTS base_photos (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    image_url text NOT NULL,
+    is_primary boolean NOT NULL DEFAULT false,
+    created_at timestamp NOT NULL DEFAULT now()
+  )`;
   await sql`DELETE FROM settings`;
   await sql`DELETE FROM items`;
+  await sql`DELETE FROM base_photos`;
 }

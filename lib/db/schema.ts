@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const settings = pgTable("settings", {
   key: text("key").primaryKey(),
@@ -17,5 +17,12 @@ export const items = pgTable("items", {
   styleTags: text("style_tags").array().notNull().default(sql`'{}'::text[]`),
   imageUrl: text("image_url").notNull(),
   originalImageUrl: text("original_image_url").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const basePhotos = pgTable("base_photos", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  imageUrl: text("image_url").notNull(),
+  isPrimary: boolean("is_primary").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
