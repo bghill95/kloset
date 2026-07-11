@@ -88,7 +88,7 @@ export default async function ClosetPage({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={item.imageUrl}
-              alt={item.name}
+              alt=""
               loading="lazy"
               decoding="async"
               className="w-full object-contain p-3"

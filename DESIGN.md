@@ -51,7 +51,8 @@ components:
   button-icon-circular: { backgroundColor: "{colors.surface-card}", textColor: "{colors.ink}", rounded: "{rounded.full}", size: 40px }
   filter-chip:      { backgroundColor: "{colors.surface-card}", textColor: "{colors.ink}", typography: "{typography.button-md}", rounded: "{rounded.full}", padding: 8px 16px }
   filter-chip-active: { backgroundColor: "{colors.ink}", textColor: "{colors.on-dark}", typography: "{typography.button-md}", rounded: "{rounded.full}" }
-  pin-card:         { backgroundColor: "{colors.surface-card}", textColor: "{colors.ink}", rounded: "{rounded.card}", padding: 0px }
+  pin-card:         { backgroundColor: "{colors.surface-card}", textColor: "{colors.ink}", rounded: "{rounded.card}", padding: 12px }
+  pin-card-photo:   { backgroundColor: "{colors.surface-card}", textColor: "{colors.ink}", rounded: "{rounded.card}", padding: 0px }
   text-input:       { backgroundColor: "{colors.canvas}", textColor: "{colors.ink}", typography: "{typography.body-md}", rounded: "{rounded.card}", padding: 11px 15px, height: 44px }
   menu-overlay:     { backgroundColor: "{colors.canvas}", textColor: "{colors.ink}", typography: "{typography.script-menu}", rounded: "{rounded.none}" }
   page-header:      { backgroundColor: "{colors.canvas}", textColor: "{colors.ink}", typography: "{typography.script-title}", rounded: "{rounded.none}" }
@@ -76,9 +77,11 @@ wordmark, page titles, and the full-screen menu's link list). Great Vibes
 never appears in body copy, buttons, form labels, or captions — the instant
 it shows up outside those three contexts, the hierarchy breaks. Garment
 imagery is the load-bearing visual element in the Closet's masonry grid: each
-cutout sits in a `{rounded.card}` (16px) tile with zero internal padding and
-tight `{spacing.sm}` (8px) gutters, exactly as pin photography does in a
-pin-grid system — except the "pin" here is a photo of one item of clothing.
+cutout sits in a `{rounded.card}` (16px) tile with the standard
+`{spacing.md}` (12px) `{component.pin-card}` inset — keeping irregular
+cutout silhouettes off the rounded corners — and tight `{spacing.sm}` (8px)
+gutters between tiles, exactly as pin photography does in a pin-grid system
+— except the "pin" here is a photo of one item of clothing.
 
 **Key Characteristics:**
 - Single-accent CTA: Kloset Pink (`{colors.primary}`) carries at most one
@@ -90,7 +93,9 @@ pin-grid system — except the "pin" here is a photo of one item of clothing.
   inputs, `{rounded.big}` (32px) reserved for the menu overlay and large
   surfaces, `{rounded.full}` for buttons, chips, and circular controls
 - Masonry garment grid as the load-bearing visual element — each cutout
-  photograph fills its card edge-to-edge, no internal padding
+  sits inset `{spacing.md}` (12px) inside its `{component.pin-card}`, off
+  the rounded corners; true photographs stay full-bleed in
+  `{component.pin-card-photo}`
 - Flat elevation throughout: no card shadows anywhere; the only depth cue is
   the full-screen menu's scrim over the page it covers
 - Blush-tinted neutral chrome (`{colors.surface-card}` — `#f9f1f5`) that
@@ -250,7 +255,12 @@ except the deliberately flat structural surfaces above.
 
 ### Photography Geometry
 - **Garment cutouts:** natural aspect ratio preserved inside `{rounded.card}`
-  (16px) corners, no internal padding — the cutout fills the card.
+  (16px) corners, inset by the standard `{spacing.md}` (12px)
+  `{component.pin-card}` padding — the blush surface reads as backdrop
+  behind the cutout, not a frame around a photo.
+- **True photographs** (avatar base photos, outfit renders): full-bleed,
+  zero internal padding, in `{component.pin-card-photo}` — the photograph
+  IS the card.
 - **Avatar / profile renders:** circular at `{rounded.full}` where used in
   Studio.
 
@@ -296,12 +306,22 @@ except the deliberately flat structural surfaces above.
 
 ### Cards & Containers
 
-**`pin-card`** — the standard garment tile
+**`pin-card`** — the standard garment cutout tile
+- Container: background `{colors.surface-card}`, rounded `{rounded.card}`
+  (16px), padding `{spacing.md}` (12px).
+- Layout: garment cutout at its natural aspect ratio, inset `{spacing.md}`
+  (12px) on every side so the cutout's irregular silhouette never collides
+  with the rounded corners — the blush card surface reads as the backdrop
+  the garment sits on, not a photo frame. No shadow, ever. This is the
+  Closet grid's card.
+
+**`pin-card-photo`** — the full-bleed photographic tile
 - Container: background `{colors.surface-card}`, rounded `{rounded.card}`
   (16px), padding `0px`.
-- Layout: full-bleed garment cutout at its natural aspect ratio with **no
+- Layout: full-bleed photograph at its natural aspect ratio with **no
   internal padding** — the photograph IS the card, exactly as in the
-  reference masonry system. No shadow, ever.
+  reference masonry system. No shadow, ever. Reserved for true photographs
+  — avatar base photos, future outfit renders — never for garment cutouts.
 
 ### Overlays
 
@@ -325,8 +345,10 @@ except the deliberately flat structural surfaces above.
 - Use Great Vibes only for the Kloset wordmark, `{component.page-header}`
   page titles, and `{component.menu-overlay}` menu links. Every other text
   role — body, buttons, labels, captions — is Inter.
-- Stage every garment cutout inside a `{component.pin-card}` with zero
-  internal padding — the photograph/cutout IS the card.
+- Stage every garment cutout inside a `{component.pin-card}` with its
+  standard `{spacing.md}` (12px) inset; stage true photographs (avatar base
+  photos, outfit renders) inside `{component.pin-card-photo}` full-bleed —
+  the photograph IS the card.
 - Keep cards and surfaces flat: no shadows, ever. The full-screen menu scrim
   is the only elevation gesture in the system.
 - Use only the three radii in the system: `{rounded.card}` (16px),
@@ -342,9 +364,11 @@ except the deliberately flat structural surfaces above.
 - Don't add drop shadows to cards. There is no shadow token in this system —
   not even a soft one — cards are flat, and only the menu scrim reads as
   "above" the page.
-- Don't pad `{component.pin-card}` internally. The garment image is
-  full-bleed; any label sits as an overlay, not as internal padding pushing
-  the image inward.
+- Don't exceed `{component.pin-card}`'s standard `{spacing.md}` (12px)
+  inset — that padding is reserved for garment cutouts, to keep silhouettes
+  off the rounded corners. Don't pad `{component.pin-card-photo}` at all;
+  any label sits as an overlay, not as internal padding pushing the photo
+  inward.
 - Don't introduce a radius value between 16px and 32px, or any sharp corner
   on an interactive element. The vocabulary is exactly 16 / 32 / pill.
 - Don't replace `{colors.primary}` with another pink or a gradient. The brand
