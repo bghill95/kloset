@@ -11,7 +11,7 @@ export const items = pgTable("items", {
   name: text("name").notNull(),
   // Keep in sync with CATEGORIES in lib/closet/categories.ts
   category: text("category", {
-    enum: ["top", "bottom", "jacket", "shoes", "hat"],
+    enum: ["top", "bottom", "dress", "jacket", "shoes", "hat", "accessory"],
   }).notNull(),
   colors: text("colors").array().notNull().default(sql`'{}'::text[]`),
   styleTags: text("style_tags").array().notNull().default(sql`'{}'::text[]`),
