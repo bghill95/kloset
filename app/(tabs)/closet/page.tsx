@@ -1,6 +1,5 @@
 import { desc } from "drizzle-orm";
 import Link from "next/link";
-import PageHeader from "@/components/shell/PageHeader";
 import {
   CATEGORIES,
   CATEGORY_PLURAL_LABELS,
@@ -9,12 +8,13 @@ import {
 import { distinctColors, filterItems } from "@/lib/closet/filter";
 import { getDb } from "@/lib/db/client";
 import { items } from "@/lib/db/schema";
+import PageHeader from "@/components/shell/PageHeader";
 
 export const dynamic = "force-dynamic";
 
 function chipClass(active: boolean) {
-  return `rounded-full px-3 py-1 text-sm ${
-    active ? "bg-neutral-900 text-white" : "bg-neutral-200 text-neutral-600"
+  return `rounded-full px-4 py-2 text-sm font-bold ${
+    active ? "bg-ink text-white" : "bg-card text-ink"
   }`;
 }
 
@@ -47,7 +47,7 @@ export default async function ClosetPage({
     <>
       <PageHeader title="Closet" />
 
-      <div className="mt-3 flex flex-wrap gap-2" aria-label="Filter by category">
+      <div className="flex gap-2 overflow-x-auto pb-1" aria-label="Filter by category">
         <Link href={href(undefined, color)} className={chipClass(!category)} aria-current={!category ? "true" : undefined}>
           All
         </Link>
@@ -59,7 +59,7 @@ export default async function ClosetPage({
       </div>
 
       {colors.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-2" aria-label="Filter by color">
+        <div className="mt-2 flex gap-2 overflow-x-auto pb-1" aria-label="Filter by color">
           <Link href={href(category)} className={chipClass(!color)} aria-current={!color ? "true" : undefined}>
             Any color
           </Link>
@@ -72,38 +72,45 @@ export default async function ClosetPage({
       )}
 
       {all.length === 0 && (
-        <p className="mt-6 text-neutral-500">
-          Your closet is empty — scan your first item.
-        </p>
+        <div className="mt-16 flex flex-col items-center gap-3 text-center">
+          <p className="font-script text-3xl text-ink">Your closet awaits</p>
+          <p className="text-mute">Scan your first item to start your Kloset.</p>
+        </div>
       )}
 
-      <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5">
-        <Link
-          href="/scan"
-          className="flex h-36 flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-neutral-300 text-sm font-semibold text-neutral-500"
-        >
-          📷 Scan item
-        </Link>
+      <div className="mt-4 columns-2 gap-2 sm:columns-3 md:columns-4 [&>a]:mb-2">
         {visible.map((item) => (
           <Link
             key={item.id}
             href={`/closet/${item.id}`}
-            className="flex h-36 flex-col items-center justify-center gap-1 rounded-xl bg-white p-2 shadow-sm"
+            className="relative block break-inside-avoid overflow-hidden rounded-card bg-card"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={item.imageUrl}
-              alt=""
+              alt={item.name}
               loading="lazy"
               decoding="async"
-              className="min-h-0 flex-1 object-contain"
+              className="w-full object-contain p-3"
             />
-            <span className="max-w-full truncate text-xs text-neutral-600">
+            <span className="absolute bottom-2 left-2 max-w-[85%] truncate rounded-full bg-canvas px-3 py-1 text-xs font-bold text-ink">
               {item.name}
             </span>
           </Link>
         ))}
       </div>
+
+      <Link
+        href="/scan"
+        aria-label="Scan item"
+        className="fixed right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-pink text-white"
+        style={{ bottom: "calc(1.25rem + env(safe-area-inset-bottom))" }}
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 8h3l2-3h6l2 3h3v11H4V8z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+          <circle cx="12" cy="13" r="3.5" stroke="currentColor" strokeWidth="2" />
+        </svg>
+      </Link>
     </>
   );
 }
