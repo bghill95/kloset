@@ -88,3 +88,39 @@ test.describe.serial("avatar base photos", () => {
     ).toBeVisible();
   });
 });
+
+test.describe.serial("calendar and weather settings flows", () => {
+  test("calendar save & test connects in mock mode", async ({ page }) => {
+    await unlock(page);
+    await page.goto("/settings");
+    await page
+      .getByLabel("Calendar link")
+      .fill("webcal://p01-caldav.icloud.com/published/2/test");
+    await page.getByRole("button", { name: "Save & test" }).click();
+    await expect(page.locator("p[role='status']")).toContainText("Connected");
+    await expect(page.getByText("✅ Calendar connected")).toBeVisible();
+  });
+
+  test("weather location sets and clears", async ({ page }) => {
+    await unlock(page);
+    await page.goto("/settings");
+    await page.getByLabel("City").fill("Carlsbad");
+    await page.getByRole("button", { name: "Set location" }).click();
+    await expect(page.getByText("Weather location: Mock City")).toBeVisible();
+    await page
+      .locator("section[aria-label='Weather']")
+      .getByRole("button", { name: "Remove" })
+      .click();
+    await expect(page.getByLabel("City")).toBeVisible();
+  });
+
+  test("calendar removes cleanly", async ({ page }) => {
+    await unlock(page);
+    await page.goto("/settings");
+    await page
+      .locator("section[aria-label='Calendar']")
+      .getByRole("button", { name: "Remove" })
+      .click();
+    await expect(page.getByLabel("Calendar link")).toBeVisible();
+  });
+});
