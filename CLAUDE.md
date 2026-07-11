@@ -1,10 +1,11 @@
-# Styling App
+# Kloset
 
-Personal virtual closet PWA: catalog clothes by photo, build outfits on AI
-photoreal renders, get AI stylist suggestions. Single user, passcode-gated.
+Personal virtual closet PWA (Kloset): catalog clothes by photo, Today screen
+with weather/calendar-aware outfit, build outfits on AI photoreal renders,
+AI stylist suggestions. Single user, passcode-gated.
 
 - Spec: docs/superpowers/specs/2026-06-10-virtual-closet-design.md
-- Current plan: docs/superpowers/plans/2026-06-11-m2-closet-capture.md
+- Current plan: docs/superpowers/plans/2026-07-11-kloset-p1-identity-shell-closet-today.md
 
 ## Stack
 
@@ -32,6 +33,7 @@ Currently resolved to Next 16 / React 19 / TS 6 (see package-lock.json).
 - `.env.local` is never committed. New env vars also go in `.env.example`.
 - e2e wipes the settings, items and base_photos tables — never point DATABASE_URL at data
   you care about when running tests.
+- UI work follows DESIGN.md (root) — tokens only, no ad-hoc colors/radii.
 
 ## Learned rules
 

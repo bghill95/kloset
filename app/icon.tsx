@@ -1,9 +1,14 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { ImageResponse } from "next/og";
 
 export const size = { width: 512, height: 512 };
 export const contentType = "image/png";
 
-export default function Icon() {
+export default async function Icon() {
+  const font = await readFile(
+    path.join(process.cwd(), "assets/fonts/GreatVibes-Regular.ttf"),
+  );
   return new ImageResponse(
     (
       <div
@@ -13,13 +18,16 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#2b2b2e",
-          fontSize: 320,
+          background: "#e60070",
+          color: "#ffffff",
+          fontFamily: "Great Vibes",
+          fontSize: 360,
+          paddingBottom: 40,
         }}
       >
-        👕
+        K
       </div>
     ),
-    size,
+    { ...size, fonts: [{ name: "Great Vibes", data: font, style: "normal" }] },
   );
 }

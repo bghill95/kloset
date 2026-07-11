@@ -2,13 +2,13 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Styling App",
-    short_name: "Styling",
+    name: "Kloset",
+    short_name: "Kloset",
     description: "Your virtual closet",
-    start_url: "/closet",
+    start_url: "/today",
     display: "standalone",
-    background_color: "#faf9f7",
-    theme_color: "#2b2b2e",
+    background_color: "#ffffff",
+    theme_color: "#ffffff",
     icons: [
       { src: "/apple-icon", sizes: "180x180", type: "image/png" },
       { src: "/icon", sizes: "512x512", type: "image/png" },
