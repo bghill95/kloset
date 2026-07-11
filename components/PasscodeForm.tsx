@@ -61,7 +61,7 @@ export default function PasscodeForm({
         onChange={(e) => setPasscode(e.target.value)}
         placeholder="Passcode"
         aria-label="Passcode"
-        className="rounded-xl border border-neutral-300 p-4 text-lg"
+        className="rounded-card border border-hairline bg-canvas p-4 text-lg text-ink placeholder:text-ash focus:outline-2 focus:outline-offset-2 focus:outline-ink"
         autoFocus
       />
       {confirm && (
@@ -71,14 +71,14 @@ export default function PasscodeForm({
           onChange={(e) => setConfirmValue(e.target.value)}
           placeholder="Confirm passcode"
           aria-label="Confirm passcode"
-          className="rounded-xl border border-neutral-300 p-4 text-lg"
+          className="rounded-card border border-hairline bg-canvas p-4 text-lg text-ink placeholder:text-ash focus:outline-2 focus:outline-offset-2 focus:outline-ink"
         />
       )}
       {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
       <button
         type="submit"
         disabled={busy}
-        className="rounded-xl bg-neutral-900 p-4 text-lg font-semibold text-white disabled:opacity-50"
+        className="rounded-full bg-pink p-4 text-lg font-semibold text-white active:bg-pink-deep disabled:opacity-50"
       >
         {busy ? "…" : buttonLabel}
       </button>

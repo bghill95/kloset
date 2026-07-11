@@ -8,7 +8,8 @@ export default async function LoginPage() {
   if (!(await getSetting("passcodeHash"))) redirect("/setup");
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-6 p-6">
-      <h1 className="text-2xl font-semibold">Styling App</h1>
+      <h1 className="font-script text-6xl text-pink">Kloset</h1>
+      <p className="text-mute">Your virtual closet</p>
       <PasscodeForm endpoint="/api/auth/login" buttonLabel="Unlock" />
     </div>
   );
