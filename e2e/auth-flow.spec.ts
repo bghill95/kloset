@@ -12,8 +12,8 @@ test.describe.serial("first-run auth flow", () => {
     await page.getByLabel("Passcode", { exact: true }).fill(PASSCODE);
     await page.getByLabel("Confirm passcode").fill(PASSCODE);
     await page.getByRole("button", { name: "Create passcode" }).click();
-    await expect(page).toHaveURL(/\/closet$/);
-    await expect(page.getByRole("heading", { name: "Closet" })).toBeVisible();
+    await expect(page).toHaveURL(/\/today$/);
+    await expect(page.getByRole("heading", { name: "Today" })).toBeVisible();
   });
 
   test("wrong passcode is rejected, correct one unlocks", async ({ page }) => {
@@ -24,16 +24,16 @@ test.describe.serial("first-run auth flow", () => {
 
     await page.getByLabel("Passcode", { exact: true }).fill(PASSCODE);
     await page.getByRole("button", { name: "Unlock" }).click();
-    await expect(page).toHaveURL(/\/closet$/);
+    await expect(page).toHaveURL(/\/today$/);
   });
 
   test("session persists across reload", async ({ page }) => {
     await page.goto("/login");
     await page.getByLabel("Passcode", { exact: true }).fill(PASSCODE);
     await page.getByRole("button", { name: "Unlock" }).click();
-    await expect(page).toHaveURL(/\/closet$/);
+    await expect(page).toHaveURL(/\/today$/);
     await page.reload();
-    await expect(page.getByRole("heading", { name: "Closet" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Today" })).toBeVisible();
   });
 });
 

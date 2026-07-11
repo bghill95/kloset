@@ -12,5 +12,5 @@ export async function unlock(page: Page) {
     await page.getByLabel("Passcode", { exact: true }).fill(PASSCODE);
     await page.getByRole("button", { name: "Unlock" }).click();
   }
-  await expect(page).toHaveURL(/\/closet$/);
+  await expect(page).toHaveURL(/\/today$/);
 }

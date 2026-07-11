@@ -2,6 +2,7 @@ import { asc } from "drizzle-orm";
 import AvatarSection from "@/components/avatar/AvatarSection";
 import CalendarSection from "@/components/context/CalendarSection";
 import WeatherSection from "@/components/context/WeatherSection";
+import PageHeader from "@/components/shell/PageHeader";
 import { getDb } from "@/lib/db/client";
 import { basePhotos } from "@/lib/db/schema";
 import { getSetting } from "@/lib/db/settings";
@@ -27,7 +28,7 @@ export default async function SettingsPage() {
 
   return (
     <>
-      <h1 className="text-2xl font-semibold">Settings</h1>
+      <PageHeader title="Settings" />
       <div className="mt-6 flex flex-col gap-8">
         <AvatarSection photos={photos} />
         <CalendarSection currentUrl={icsUrl} />

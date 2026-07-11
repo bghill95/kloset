@@ -1,5 +1,6 @@
 import { desc } from "drizzle-orm";
 import Link from "next/link";
+import PageHeader from "@/components/shell/PageHeader";
 import {
   CATEGORIES,
   CATEGORY_PLURAL_LABELS,
@@ -44,7 +45,7 @@ export default async function ClosetPage({
 
   return (
     <>
-      <h1 className="text-2xl font-semibold">Closet</h1>
+      <PageHeader title="Closet" />
 
       <div className="mt-3 flex flex-wrap gap-2" aria-label="Filter by category">
         <Link href={href(undefined, color)} className={chipClass(!category)} aria-current={!category ? "true" : undefined}>

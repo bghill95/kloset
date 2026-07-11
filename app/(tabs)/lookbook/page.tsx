@@ -1,8 +1,10 @@
+import PageHeader from "@/components/shell/PageHeader";
+
 export default function LookbookPage() {
   return (
     <>
-      <h1 className="text-2xl font-semibold">Lookbook</h1>
-      <p className="mt-2 text-neutral-500">Saved outfits arrive in M5.</p>
+      <PageHeader title="Lookbook" />
+      <p className="mt-4 text-mute">Saved outfits and wear history arrive in Phase 3.</p>
     </>
   );
 }

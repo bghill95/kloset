@@ -33,7 +33,7 @@ export default function PasscodeForm({
         body: JSON.stringify({ passcode }),
       });
       if (res.ok) {
-        router.push("/closet");
+        router.push("/today");
         router.refresh();
         return;
       }
