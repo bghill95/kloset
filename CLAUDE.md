@@ -5,7 +5,7 @@ with weather/calendar-aware outfit, build outfits on AI photoreal renders,
 AI stylist suggestions. Single user, passcode-gated.
 
 - Spec: docs/superpowers/specs/2026-06-10-virtual-closet-design.md
-- Current plan: docs/superpowers/plans/2026-07-11-kloset-p1-identity-shell-closet-today.md
+- Current plan: docs/superpowers/plans/2026-07-11-kloset-p2-studio.md
 
 ## Stack
 
@@ -19,7 +19,7 @@ Currently resolved to Next 16 / React 19 / TS 6 (see package-lock.json).
 
 - `npm run dev` — dev server on :8000
 - `npm test` — Vitest unit tests (patterns in vitest.config.ts: lib/**/*.test.ts and lib/**/*.spec.ts)
-- `npm run test:e2e` — Playwright (creates + wipes the settings, items and base_photos tables on each run!)
+- `npm run test:e2e` — Playwright (creates + wipes the settings, items, base_photos and outfits tables on each run!)
 - `npm run typecheck` — tsc --noEmit
 - `npm run db:push` — push Drizzle schema to Neon
 
@@ -31,7 +31,7 @@ Currently resolved to Next 16 / React 19 / TS 6 (see package-lock.json).
 - All AI calls go through server routes; never expose keys client-side.
   From M2 on, develop and test against MOCK_AI=1.
 - `.env.local` is never committed. New env vars also go in `.env.example`.
-- e2e wipes the settings, items and base_photos tables — never point DATABASE_URL at data
+- e2e wipes the settings, items, base_photos and outfits tables — never point DATABASE_URL at data
   you care about when running tests.
 - UI work follows DESIGN.md (root) — tokens only, no ad-hoc colors/radii.
 

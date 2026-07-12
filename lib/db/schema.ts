@@ -26,3 +26,12 @@ export const basePhotos = pgTable("base_photos", {
   isPrimary: boolean("is_primary").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+export const outfits = pgTable("outfits", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  // Plain id array, no FK — deleted items drop out of collages at read time.
+  itemIds: uuid("item_ids").array().notNull(),
+  renderUrl: text("render_url"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});

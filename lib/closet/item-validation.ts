@@ -23,7 +23,7 @@ export type Result<T> = { ok: true; value: T } | { ok: false; error: string };
 // (MAX_NAME = 80 in suggestion.ts). Intentionally different — don't merge.
 const MAX_NAME = 120;
 
-function cleanName(value: unknown): string | null {
+export function cleanName(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
   return trimmed.length > 0 && trimmed.length <= MAX_NAME ? trimmed : null;
@@ -33,7 +33,7 @@ const MAX_URL = 2048;
 
 // Blob URLs are https; MOCK_AI fixtures are root-relative paths.
 // "//host/..." is protocol-relative (an external URL in disguise) — reject.
-function isImageUrl(value: unknown): value is string {
+export function isImageUrl(value: unknown): value is string {
   return (
     typeof value === "string" &&
     value.length <= MAX_URL &&
