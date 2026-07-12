@@ -23,7 +23,7 @@ export default function CategoryChips({
           ? "bg-canvas text-ink"
           : "bg-ink text-white";
         const idleClass = dark
-          ? "bg-neutral-700 text-neutral-300"
+          ? "bg-white/15 text-white"
           : "bg-card text-ink";
         return (
           <button
