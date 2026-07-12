@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ItemDetailForm from "@/components/closet/ItemDetailForm";
+import PageHeader from "@/components/shell/PageHeader";
 import { UUID_RE } from "@/lib/closet/item-validation";
 import { getDb } from "@/lib/db/client";
 import { items } from "@/lib/db/schema";
@@ -20,10 +21,10 @@ export default async function ItemPage({
 
   return (
     <>
-      <Link href="/closet" className="text-sm text-neutral-500">
+      <Link href="/closet" className="text-sm text-mute">
         ← Closet
       </Link>
-      <h1 className="mt-1 mb-4 text-2xl font-semibold">{item.name}</h1>
+      <PageHeader title={item.name} />
       <ItemDetailForm item={item} />
     </>
   );

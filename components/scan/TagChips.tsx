@@ -21,14 +21,14 @@ export default function TagChips({
 
   return (
     <div>
-      <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+      <p className="text-xs font-semibold uppercase tracking-wide text-mute">
         {label}
       </p>
       <div className="mt-1 flex flex-wrap items-center gap-2">
         {values.map((value) => (
           <span
             key={value}
-            className="flex items-center gap-1 rounded-full bg-neutral-200 px-3 py-1 text-sm"
+            className="flex items-center gap-1 rounded-full bg-card px-3 py-1 text-sm text-ink"
           >
             {value}
             <button
@@ -52,7 +52,7 @@ export default function TagChips({
           onBlur={add}
           placeholder={`+ add ${label.toLowerCase()}`}
           aria-label={`Add ${label.toLowerCase()}`}
-          className="w-36 rounded-full border border-dashed border-neutral-400 px-3 py-1 text-sm"
+          className="w-36 rounded-full border border-dashed border-hairline px-3 py-1 text-sm"
         />
       </div>
     </div>

@@ -71,8 +71,8 @@ export default function ScanFlow() {
   if (phase === "processing") {
     return (
       <div className="flex min-h-dvh flex-col items-center justify-center gap-3 p-6">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-neutral-300 border-t-neutral-900" />
-        <p className="text-neutral-600">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-hairline border-t-ink" />
+        <p className="text-mute">
           Analyzing your {CATEGORY_LABELS[category].toLowerCase()}…
         </p>
       </div>
@@ -83,14 +83,14 @@ export default function ScanFlow() {
     const canRetry = error?.canRetry !== false;
     return (
       <div className="flex min-h-dvh flex-col items-center justify-center gap-4 p-6">
-        <p role="status" className="text-neutral-700">
+        <p role="status" className="text-body">
           {error?.message ?? "Couldn't process the photo."}
         </p>
         {canRetry && (
           <button
             type="button"
             onClick={() => photo && ingest(photo)}
-            className="rounded-xl bg-neutral-900 px-6 py-3 font-semibold text-white"
+            className="rounded-full bg-pink px-6 py-3 font-semibold text-white active:bg-pink-deep"
           >
             Try again
           </button>
@@ -100,8 +100,8 @@ export default function ScanFlow() {
           onClick={() => setPhase("capture")}
           className={
             canRetry
-              ? "text-sm text-neutral-500 underline"
-              : "rounded-xl bg-neutral-900 px-6 py-3 font-semibold text-white"
+              ? "text-sm text-mute underline"
+              : "rounded-full bg-pink px-6 py-3 font-semibold text-white active:bg-pink-deep"
           }
         >
           {canRetry ? "Back to camera" : "Retake photo"}

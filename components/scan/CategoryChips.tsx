@@ -20,11 +20,11 @@ export default function CategoryChips({
       {CATEGORIES.map((category) => {
         const active = category === value;
         const activeClass = dark
-          ? "bg-white text-neutral-900"
-          : "bg-neutral-900 text-white";
+          ? "bg-canvas text-ink"
+          : "bg-ink text-white";
         const idleClass = dark
           ? "bg-neutral-700 text-neutral-300"
-          : "bg-neutral-200 text-neutral-600";
+          : "bg-card text-ink";
         return (
           <button
             key={category}

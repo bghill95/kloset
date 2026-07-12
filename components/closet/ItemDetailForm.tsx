@@ -75,9 +75,9 @@ export default function ItemDetailForm({ item }: { item: ClosetItem }) {
   }
 
   return (
-    <div className="mx-auto flex max-w-md flex-col gap-4">
+    <div className="mx-auto mt-4 flex max-w-md flex-col gap-4">
       <div
-        className="flex h-64 items-center justify-center rounded-xl"
+        className="flex h-64 items-center justify-center rounded-card p-3"
         style={{
           background:
             "repeating-conic-gradient(#e8e8e8 0% 25%, #fff 0% 50%) 0 0 / 16px 16px",
@@ -95,7 +95,7 @@ export default function ItemDetailForm({ item }: { item: ClosetItem }) {
         value={name}
         onChange={(e) => touch(setName)(e.target.value)}
         aria-label="Name"
-        className="rounded-xl border border-neutral-300 p-3 text-lg"
+        className="rounded-card border border-hairline p-3 text-lg"
       />
       <CategoryChips value={category} onChange={touch(setCategory)} />
       <TagChips label="Colors" values={colors} onChange={touch(setColors)} />
@@ -116,7 +116,7 @@ export default function ItemDetailForm({ item }: { item: ClosetItem }) {
         type="button"
         disabled={status === "busy"}
         onClick={save}
-        className="rounded-xl bg-neutral-900 p-3 font-semibold text-white disabled:opacity-50"
+        className="rounded-full bg-pink p-3 font-semibold text-white active:bg-pink-deep disabled:opacity-50"
       >
         {status === "busy" ? "…" : "Save"}
       </button>

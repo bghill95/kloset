@@ -55,7 +55,7 @@ export default function CaptureScreen({
     <div className="flex min-h-dvh flex-col gap-4 bg-neutral-950 p-4">
       <CategoryChips value={category} onChange={onCategoryChange} dark />
 
-      <div className="relative flex flex-1 items-center justify-center overflow-hidden rounded-2xl bg-neutral-800">
+      <div className="relative flex flex-1 items-center justify-center overflow-hidden rounded-card bg-neutral-800">
         {cameraError ? (
           <p className="max-w-xs text-center text-sm text-neutral-300">
             Camera unavailable — use "Choose from library" below to add a photo
@@ -95,7 +95,7 @@ export default function CaptureScreen({
           aria-label="Take photo"
           onClick={snap}
           disabled={cameraError || snapping}
-          className="h-16 w-16 touch-manipulation rounded-full border-4 border-neutral-400 bg-white disabled:opacity-30"
+          className="h-16 w-16 touch-manipulation rounded-full border-4 border-neutral-400 bg-canvas disabled:opacity-30"
         />
         <button
           type="button"
