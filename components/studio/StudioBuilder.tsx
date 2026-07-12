@@ -22,10 +22,20 @@ function chipClass(active: boolean) {
   }`;
 }
 
-export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
-  const [selected, setSelected] = useState<Partial<Record<Category, ClosetItem>>>({});
+export default function StudioBuilder({
+  items,
+  initialSelected = {},
+}: {
+  items: ClosetItem[];
+  initialSelected?: Partial<Record<Category, ClosetItem>>;
+}) {
+  const [selected, setSelected] =
+    useState<Partial<Record<Category, ClosetItem>>>(initialSelected);
   const [active, setActive] = useState<Category>(
-    () => CATEGORIES.find((c) => items.some((i) => i.category === c)) ?? "top",
+    () =>
+      CATEGORIES.find((c) => initialSelected[c]) ??
+      CATEGORIES.find((c) => items.some((i) => i.category === c)) ??
+      "top",
   );
   const [view, setView] = useState<"collage" | "render">("collage");
   const [render, setRender] = useState<RenderState>({ status: "idle", url: null });
