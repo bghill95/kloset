@@ -40,7 +40,11 @@ export default function TodayCard({ items }: { items: ClosetItem[] }) {
 
   const weather = context?.weather ?? null;
   const events = context?.events.slice(0, 3) ?? [];
-  const dateKey = new Date().toISOString().slice(0, 10);
+  // Local date parts, not toISOString(): the UTC date would roll the outfit
+  // seed mid-afternoon for western timezones while the context window stays
+  // anchored to local midnight. (Amended during execution.)
+  const now = new Date();
+  const dateKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   const outfit = pickOutfit(items, weather, dateKey);
 
   return (
