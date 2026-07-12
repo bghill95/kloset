@@ -41,14 +41,20 @@ export function summarizeForecast(raw: unknown): WeatherSummary | null {
   };
 }
 
-export function buildForecastUrl(lat: number, lon: number): string {
+export function buildForecastUrl(lat: number, lon: number, date?: string): string {
   const params = new URLSearchParams({
     latitude: String(lat),
     longitude: String(lon),
     daily: "weathercode,temperature_2m_max,temperature_2m_min",
     timezone: "auto",
-    forecast_days: "1",
   });
+  // A specific day (stylist occasions, ≤16 days out) vs. today (forecast_days).
+  if (date) {
+    params.set("start_date", date);
+    params.set("end_date", date);
+  } else {
+    params.set("forecast_days", "1");
+  }
   return `https://api.open-meteo.com/v1/forecast?${params}`;
 }
 

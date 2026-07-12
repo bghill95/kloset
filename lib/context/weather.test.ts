@@ -71,3 +71,18 @@ describe("urls", () => {
     expect(buildGeocodeUrl("Carlsbad")).toContain("name=Carlsbad");
   });
 });
+
+describe("buildForecastUrl with a date", () => {
+  it("requests exactly that day", () => {
+    const url = new URL(buildForecastUrl(40, -70, "2026-07-18"));
+    expect(url.searchParams.get("start_date")).toBe("2026-07-18");
+    expect(url.searchParams.get("end_date")).toBe("2026-07-18");
+    expect(url.searchParams.get("forecast_days")).toBeNull();
+  });
+
+  it("keeps forecast_days=1 when no date is given", () => {
+    const url = new URL(buildForecastUrl(40, -70));
+    expect(url.searchParams.get("forecast_days")).toBe("1");
+    expect(url.searchParams.get("start_date")).toBeNull();
+  });
+});
