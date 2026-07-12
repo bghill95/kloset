@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import OutfitCollage from "./OutfitCollage";
 import {
@@ -28,6 +29,11 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
   );
   const [view, setView] = useState<"collage" | "render">("collage");
   const [render, setRender] = useState<RenderState>({ status: "idle", url: null });
+  const router = useRouter();
+  const [naming, setNaming] = useState(false);
+  const [name, setName] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const chosen = CATEGORIES.flatMap((c) => (selected[c] ? [selected[c]!] : []));
   const activeItems = items.filter((i) => i.category === active);
@@ -42,6 +48,34 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
     // A different outfit invalidates the old render.
     setRender({ status: "idle", url: null });
     setView("collage");
+    setNaming(false);
+  }
+
+  async function save() {
+    setSaving(true);
+    setSaveError(null);
+    try {
+      const res = await fetch("/api/outfits", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          itemIds: chosen.map((i) => i.id),
+          renderUrl: render.url,
+        }),
+      });
+      if (!res.ok) {
+        const data = (await res.json().catch(() => null)) as { error?: string } | null;
+        setSaveError(data?.error ?? "Save failed — try again.");
+        return;
+      }
+      router.push("/lookbook");
+      router.refresh();
+    } catch {
+      setSaveError("Save failed — try again.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (items.length === 0) {
@@ -121,6 +155,52 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
           );
         })}
       </div>
+
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={() => {
+            setNaming(true);
+            setName(chosen.map((i) => i.name).join(" + ").slice(0, 120));
+          }}
+          disabled={chosen.length === 0 || saving}
+          className="h-11 rounded-full bg-secondary px-5 text-sm font-bold text-ink active:bg-secondary-deep disabled:opacity-40"
+        >
+          Save outfit
+        </button>
+      </div>
+
+      {naming && (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            void save();
+          }}
+          className="flex items-center gap-2"
+        >
+          <label className="sr-only" htmlFor="outfit-name">
+            Outfit name
+          </label>
+          <input
+            id="outfit-name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="h-11 min-w-0 flex-1 rounded-card border border-hairline bg-canvas px-4 text-ink"
+          />
+          <button
+            type="submit"
+            disabled={saving || name.trim().length === 0}
+            className="h-11 shrink-0 rounded-full bg-secondary px-5 text-sm font-bold text-ink active:bg-secondary-deep disabled:opacity-40"
+          >
+            {saving ? "Saving…" : "Save"}
+          </button>
+        </form>
+      )}
+      {saveError && (
+        <p role="alert" className="text-sm text-error">
+          {saveError}
+        </p>
+      )}
     </div>
   );
 }

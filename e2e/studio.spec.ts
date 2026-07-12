@@ -38,4 +38,18 @@ test.describe.serial("studio", () => {
     await page.getByRole("button", { name: "Studio jeans" }).click();
     await expect(page.getByTestId("outfit-collage").locator("img")).toHaveCount(1);
   });
+
+  test("save outfit lands in the lookbook", async ({ page }) => {
+    await unlock(page);
+    await page.goto("/studio");
+    await page.getByRole("button", { name: "Studio tee" }).click();
+    await page.getByRole("button", { name: "Bottoms" }).click();
+    await page.getByRole("button", { name: "Studio jeans" }).click();
+    await page.getByRole("button", { name: "Save outfit" }).click();
+    await expect(page.getByLabel("Outfit name")).toHaveValue("Studio tee + Studio jeans");
+    await page.getByLabel("Outfit name").fill("Friday fit");
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await expect(page).toHaveURL(/\/lookbook$/);
+    await expect(page.getByText("Friday fit")).toBeVisible();
+  });
 });
