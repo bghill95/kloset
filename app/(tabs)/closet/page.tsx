@@ -13,7 +13,7 @@ import PageHeader from "@/components/shell/PageHeader";
 export const dynamic = "force-dynamic";
 
 function chipClass(active: boolean) {
-  return `rounded-full px-4 py-2 text-sm font-bold ${
+  return `whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold ${
     active ? "bg-ink text-white" : "bg-card text-ink"
   }`;
 }

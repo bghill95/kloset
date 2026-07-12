@@ -17,6 +17,7 @@ export default function Menu() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const closeRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => setOpen(false), [pathname]);
 
@@ -25,12 +26,16 @@ export default function Menu() {
     if (open) closeRef.current?.focus();
     return () => {
       document.body.style.overflow = "";
+      // Return focus to the trigger when the dialog closes in place
+      // (no-op after route changes — the old trigger is unmounted).
+      if (open) triggerRef.current?.focus();
     };
   }, [open]);
 
   return (
     <>
       <button
+        ref={triggerRef}
         type="button"
         aria-label="Open menu"
         onClick={() => setOpen(true)}

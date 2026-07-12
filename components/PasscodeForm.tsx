@@ -61,7 +61,7 @@ export default function PasscodeForm({
         onChange={(e) => setPasscode(e.target.value)}
         placeholder="Passcode"
         aria-label="Passcode"
-        className="rounded-card border border-hairline bg-canvas p-4 text-lg text-ink placeholder:text-ash focus:outline-2 focus:outline-offset-2 focus:outline-ink"
+        className="rounded-card border border-hairline bg-canvas p-4 text-lg text-ink placeholder:text-mute focus:outline-2 focus:outline-offset-2 focus:outline-ink"
         autoFocus
       />
       {confirm && (
@@ -71,7 +71,7 @@ export default function PasscodeForm({
           onChange={(e) => setConfirmValue(e.target.value)}
           placeholder="Confirm passcode"
           aria-label="Confirm passcode"
-          className="rounded-card border border-hairline bg-canvas p-4 text-lg text-ink placeholder:text-ash focus:outline-2 focus:outline-offset-2 focus:outline-ink"
+          className="rounded-card border border-hairline bg-canvas p-4 text-lg text-ink placeholder:text-mute focus:outline-2 focus:outline-offset-2 focus:outline-ink"
         />
       )}
       {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
