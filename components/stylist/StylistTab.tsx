@@ -67,10 +67,12 @@ export default function StylistTab() {
     try {
       const outfits = await fetchOutfits({ count: FEED_COUNT });
       setFeed(outfits);
-      try {
-        sessionStorage.setItem(FEED_CACHE_KEY, JSON.stringify(outfits));
-      } catch {
-        // Cache is an optimization — a failed write is not a styling failure.
+      if (outfits.length > 0) {
+        try {
+          sessionStorage.setItem(FEED_CACHE_KEY, JSON.stringify(outfits));
+        } catch {
+          // Cache is an optimization — a failed write is not a styling failure.
+        }
       }
     } catch (err) {
       // Keep the previous batch on a failed shuffle — stale looks beat a blank feed.
@@ -103,7 +105,11 @@ export default function StylistTab() {
     setResultsError(null);
     try {
       setResults(
-        await fetchOutfits({ count: OCCASION_COUNT, occasion: occasion.trim(), date }),
+        await fetchOutfits({
+          count: OCCASION_COUNT,
+          occasion: occasion.trim(),
+          date: date || undefined,
+        }),
       );
     } catch (err) {
       setResults(null);
