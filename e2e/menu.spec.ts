@@ -27,6 +27,16 @@ test("menu closes on Escape without navigating", async ({ page }) => {
   await expect(page).toHaveURL(/\/today$/);
 });
 
+test("Tab is trapped inside the open menu", async ({ page }) => {
+  await unlock(page);
+  await page.getByRole("button", { name: "Open menu" }).click();
+  // Focus starts on the close button; Shift+Tab must wrap to the last link.
+  await page.keyboard.press("Shift+Tab");
+  await expect(page.getByRole("link", { name: "Settings" })).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Close menu" })).toBeFocused();
+});
+
 test("PWA manifest and icons are served without auth", async ({ request }) => {
   const manifest = await request.get("/manifest.webmanifest");
   expect(manifest.status()).toBe(200);

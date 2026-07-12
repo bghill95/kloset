@@ -43,9 +43,16 @@ export default function TodayCard({ items }: { items: ClosetItem[] }) {
   // Local date parts, not toISOString(): the UTC date would roll the outfit
   // seed mid-afternoon for western timezones while the context window stays
   // anchored to local midnight. (Amended during execution.)
-  const now = new Date();
-  const dateKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-  const outfit = pickOutfit(items, weather, dateKey);
+  // Client-only: the server's local date can differ from the viewer's, so the
+  // outfit section renders nothing until hydration sets the real local key.
+  const [dateKey, setDateKey] = useState<string | null>(null);
+  useEffect(() => {
+    const now = new Date();
+    setDateKey(
+      `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`,
+    );
+  }, []);
+  const outfit = dateKey ? pickOutfit(items, weather, dateKey) : null;
 
   return (
     <div className="flex flex-col gap-6">
@@ -76,7 +83,7 @@ export default function TodayCard({ items }: { items: ClosetItem[] }) {
         </ul>
       )}
 
-      {outfit ? (
+      {!dateKey ? null : outfit ? (
         <section aria-label="Today's outfit">
           <h2 className="font-script text-3xl text-ink">Today&apos;s outfit</h2>
           <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">

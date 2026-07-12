@@ -32,6 +32,20 @@ export default function Menu() {
     };
   }, [open]);
 
+  function trapTab(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (e.key !== "Tab") return;
+    const focusables = e.currentTarget.querySelectorAll<HTMLElement>("a[href], button");
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
   return (
     <>
       <button
@@ -51,7 +65,10 @@ export default function Menu() {
           aria-modal="true"
           aria-label="Menu"
           className="fixed inset-0 z-50 flex flex-col bg-canvas"
-          onKeyDown={(e) => e.key === "Escape" && setOpen(false)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setOpen(false);
+            trapTab(e);
+          }}
         >
           <div className="flex items-center justify-between px-5 pt-5">
             <span className="font-script text-3xl text-pink" aria-hidden="true">

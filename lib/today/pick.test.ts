@@ -72,4 +72,26 @@ describe("pickOutfit", () => {
     );
     expect(tops.size).toBeGreaterThan(1);
   });
+
+  it("prefers top + bottom over a dress when all are present", () => {
+    const closet = [item("top"), item("bottom"), item("dress")];
+    expect(pickOutfit(closet, WARM, "2026-07-11")?.picks.map((p) => p.category)).toEqual([
+      "top", "bottom",
+    ]);
+  });
+
+  it("adds the jacket exactly at the 15° boundary", () => {
+    const AT15: WeatherSummary = { tempMin: 8, tempMax: 15, code: 2, label: "Cloudy", emoji: "⛅" };
+    const closet = [item("top"), item("bottom"), item("jacket")];
+    expect(pickOutfit(closet, AT15, "2026-07-11")?.picks.map((p) => p.category)).toEqual([
+      "top", "bottom", "jacket",
+    ]);
+  });
+
+  it("layers jacket and hat over a dress base in the cold", () => {
+    const closet = [item("dress"), item("shoes"), item("jacket"), item("hat")];
+    expect(pickOutfit(closet, COLD, "2026-07-11")?.picks.map((p) => p.category)).toEqual([
+      "dress", "shoes", "jacket", "hat",
+    ]);
+  });
 });
