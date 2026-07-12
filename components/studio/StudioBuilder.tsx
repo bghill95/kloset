@@ -109,7 +109,7 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
               onClick={() => toggle(item)}
               aria-pressed={isSelected}
               className={`w-28 shrink-0 rounded-card bg-card p-3 ${
-                isSelected ? "outline-2 outline-pink" : ""
+                isSelected ? "outline-2 outline-ink" : ""
               }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}

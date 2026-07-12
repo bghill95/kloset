@@ -965,7 +965,7 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
               onClick={() => toggle(item)}
               aria-pressed={isSelected}
               className={`w-28 shrink-0 rounded-card bg-card p-3 ${
-                isSelected ? "outline-2 outline-pink" : ""
+                isSelected ? "outline-2 outline-ink" : ""
               }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1061,6 +1061,8 @@ test.describe.serial("studio", () => {
 ```bash
 git add -A && git commit -m "feat(p2): Studio slot builder with live flat-lay collage" && git push
 ```
+
+> Amended during execution: selected-tile outline changed pink → ink (DESIGN.md: pink is never decorative; ink is the selected-state idiom).
 
 ---
 
