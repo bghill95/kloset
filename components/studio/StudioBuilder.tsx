@@ -52,6 +52,7 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
     renderSeq.current++;
     setView("collage");
     setNaming(false);
+    setSaveError(null);
   }
 
   async function save() {
@@ -183,6 +184,7 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
 
       <div
         className="flex gap-2 overflow-x-auto pb-1"
+        role="group"
         aria-label="Pick a category"
       >
         {CATEGORIES.map((c) => (
@@ -200,6 +202,7 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
 
       <div
         className="flex gap-2 overflow-x-auto pb-1"
+        role="group"
         aria-label={`Pick ${CATEGORY_PLURAL_LABELS[active].toLowerCase()}`}
       >
         {activeItems.length === 0 && (
@@ -245,10 +248,10 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
         <button
           type="button"
           onClick={() => {
+            if (!naming) setName(chosen.map((i) => i.name).join(" + ").slice(0, 120));
             setNaming(true);
-            setName(chosen.map((i) => i.name).join(" + ").slice(0, 120));
           }}
-          disabled={chosen.length === 0 || saving}
+          disabled={chosen.length === 0 || saving || render.status === "loading"}
           className="h-11 rounded-full bg-secondary px-5 text-sm font-bold text-ink active:bg-secondary-deep disabled:opacity-40"
         >
           Save outfit

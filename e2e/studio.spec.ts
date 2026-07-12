@@ -4,6 +4,7 @@ import { unlock } from "./helpers";
 // Runs after settings.spec (base photos: zero) and closet.spec (one leftover
 // top). Seeds its own items; Task 8's tests seed the base photo late so the
 // no-base-photo path stays testable.
+// NOTE: retries must stay 0 for this serial suite — a retry re-runs the seed test and duplicates items.
 test.describe.serial("studio", () => {
   test("seed: three items land in the closet via the API", async ({ page }) => {
     await unlock(page);
