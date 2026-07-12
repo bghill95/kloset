@@ -29,10 +29,19 @@ export default async function globalSetup() {
     name text NOT NULL,
     item_ids uuid[] NOT NULL,
     render_url text,
+    source text NOT NULL DEFAULT 'studio',
     created_at timestamp NOT NULL DEFAULT now()
+  )`;
+  // Keep in sync with lib/db/schema.ts
+  await sql`CREATE TABLE IF NOT EXISTS wears (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    outfit_id uuid NOT NULL,
+    worn_on date NOT NULL,
+    UNIQUE (outfit_id, worn_on)
   )`;
   await sql`DELETE FROM settings`;
   await sql`DELETE FROM items`;
   await sql`DELETE FROM base_photos`;
   await sql`DELETE FROM outfits`;
+  await sql`DELETE FROM wears`;
 }
