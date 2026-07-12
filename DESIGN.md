@@ -345,11 +345,21 @@ reads true. The vocabulary, mirroring light chrome one-for-one:
 
 - Surface: `{colors.ink}` (`bg-ink`); wells (viewfinder, photo preview) are
   white at 10% over ink (`bg-white/10`), `{rounded.card}`.
-- Primary action: exactly ONE canvas pill per dark screen (`bg-canvas
-  text-ink`, pill radius, `{typography.button-md}`) — the dark twin of the
-  one-pink-CTA rule. Kloset Pink itself never appears on dark chrome.
+- Primary action: exactly ONE canvas pill per dark screen for the *action*
+  role (`bg-canvas text-ink`, pill radius, `{typography.button-md}`) — the
+  dark twin of the one-pink-CTA rule. Kloset Pink itself never appears on
+  dark chrome. A selected-state chip (e.g. the active category chip on the
+  scan screen) may independently render as a canvas pill too — that's the
+  dark twin of `{component.filter-chip-active}`'s ink-inversion, a distinct
+  selected-state role, not a second action pill. A dark screen can
+  legitimately show one action pill and one selected chip at once.
 - Secondary actions: white at 15% (`bg-white/15 text-white`), pill radius.
-- Helper and utility text: white at 70% (`text-white/70`).
+- Helper and utility text: white at 70% (`text-white/70`); a lighter
+  hint/status tier — viewfinder captions, upload-error status text — runs at
+  white at 80% (`text-white/80`) for slightly higher legibility over the
+  camera feed.
+- The countdown timer overlay is the one full-screen scrim on dark chrome:
+  black at 50% (`bg-black/50`) over the viewfinder, holding the numeral.
 - No other colors on dark chrome; the shutter ring keeps `border-hairline`.
 
 ## Do's and Don'ts
@@ -443,5 +453,6 @@ padding, extended to a 44px tappable area via parent padding.
 6. When touching Tailwind classes, use the utilities this file backs
    (`bg-canvas`, `bg-blush`/`bg-card`, `bg-pink`, `bg-pink-deep`, `text-ink`,
    `text-body`, `text-mute`, `text-ash`, `border-hairline`, `text-error`,
-   `text-success-deep`, `font-script`, `font-sans`, `rounded-card`, `rounded-big`) — never hand-roll a hex color
-   or arbitrary radius in a component.
+   `text-success-deep`, `font-script`, `font-sans`, `rounded-card`,
+   `rounded-big`) — never hand-roll a hex color or arbitrary radius in a
+   component.

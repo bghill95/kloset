@@ -270,6 +270,7 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
             id="outfit-name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            maxLength={120}
             className="h-11 min-w-0 flex-1 rounded-card border border-hairline bg-canvas px-4 text-ink"
           />
           <button
