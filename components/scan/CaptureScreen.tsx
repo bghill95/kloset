@@ -95,7 +95,7 @@ export default function CaptureScreen({
           aria-label="Take photo"
           onClick={snap}
           disabled={cameraError || snapping}
-          className="h-16 w-16 touch-manipulation rounded-full border-4 border-neutral-400 bg-canvas disabled:opacity-30"
+          className="h-16 w-16 touch-manipulation rounded-full border-4 border-hairline bg-canvas disabled:opacity-30"
         />
         <button
           type="button"
