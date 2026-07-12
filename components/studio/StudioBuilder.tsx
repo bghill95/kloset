@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import OutfitCollage from "./OutfitCollage";
 import {
   CATEGORIES,
@@ -34,6 +34,8 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
   const [name, setName] = useState("");
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  // Invalidates in-flight renders when the selection changes.
+  const renderSeq = useRef(0);
 
   const chosen = CATEGORIES.flatMap((c) => (selected[c] ? [selected[c]!] : []));
   const activeItems = items.filter((i) => i.category === active);
@@ -47,6 +49,7 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
     });
     // A different outfit invalidates the old render.
     setRender({ status: "idle", url: null });
+    renderSeq.current++;
     setView("collage");
     setNaming(false);
   }
@@ -79,6 +82,8 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
   }
 
   async function tryOn() {
+    if (render.status === "loading") return;
+    const seq = ++renderSeq.current;
     setRender({ status: "loading", url: null });
     try {
       const res = await fetch("/api/render", {
@@ -91,6 +96,7 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
         renderUrl?: string;
         error?: string;
       } | null;
+      if (seq !== renderSeq.current) return;
       if (!res.ok || !data?.renderUrl) {
         setRender({
           status: "error",
@@ -103,6 +109,7 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
       setRender({ status: "idle", url: data.renderUrl });
       setView("render");
     } catch {
+      if (seq !== renderSeq.current) return;
       setRender({
         status: "error",
         url: null,
@@ -155,10 +162,20 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
       )}
       {render.url && (
         <div className="flex gap-2" role="group" aria-label="Preview mode">
-          <button type="button" onClick={() => setView("collage")} className={chipClass(view === "collage")}>
+          <button
+            type="button"
+            onClick={() => setView("collage")}
+            aria-pressed={view === "collage"}
+            className={chipClass(view === "collage")}
+          >
             Flat lay
           </button>
-          <button type="button" onClick={() => setView("render")} className={chipClass(view === "render")}>
+          <button
+            type="button"
+            onClick={() => setView("render")}
+            aria-pressed={view === "render"}
+            className={chipClass(view === "render")}
+          >
             Try-on
           </button>
         </div>
