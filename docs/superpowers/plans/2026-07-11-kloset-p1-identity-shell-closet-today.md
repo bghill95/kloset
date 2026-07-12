@@ -793,7 +793,7 @@ export function pickOutfit(
 ): OutfitPick | null;
 ```
 
-Rules: base = top + bottom; if either slot is empty and a dress exists, base = dress. No base possible → `null`. Add shoes if any. Add jacket if `weather && weather.tempMax <= 15`. Add hat if `weather && weather.tempMax <= 5`. Within a slot, selection is deterministic: `djb2(dateKey + category) % candidates.length`.
+Rules: base = top + bottom; if either slot is empty and a dress exists, base = dress. No base possible → `null`. Add shoes if any. Add jacket if `weather && weather.tempMax <= 15`. Add hat if `weather && weather.tempMax <= 5`. Within a slot, selection is deterministic: `fnv1a(dateKey + category) % candidates.length`. (Amended during execution: the original djb2 hash degenerates mod 3 — its multiplier 33 is divisible by 3, so `djb2 % 3` is constant and rotation never happens with 3 candidates. FNV-1a has no such degeneracy; verified across mods 2/3/4/5/7.)
 
 - [ ] **Step 1: Write the failing tests** `lib/today/pick.test.ts`:
 
@@ -886,9 +886,14 @@ import type { WeatherSummary } from "@/lib/context/types";
 
 export type OutfitPick = { picks: { category: Category; item: ClosetItem }[] };
 
-function djb2(s: string): number {
-  let h = 5381;
-  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
+// FNV-1a, not djb2: djb2's multiplier (33) is divisible by 3, so djb2 % 3 is
+// constant — rotation would never happen with 3 candidates in a slot.
+function fnv1a(s: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
   return h;
 }
 
@@ -899,7 +904,7 @@ function choose(
 ): ClosetItem | null {
   const candidates = all.filter((i) => i.category === category);
   if (candidates.length === 0) return null;
-  return candidates[djb2(dateKey + category) % candidates.length];
+  return candidates[fnv1a(dateKey + category) % candidates.length];
 }
 
 export function pickOutfit(
