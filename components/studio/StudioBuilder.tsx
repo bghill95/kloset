@@ -278,7 +278,7 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
           />
           <button
             type="submit"
-            disabled={saving || name.trim().length === 0}
+            disabled={saving || name.trim().length === 0 || render.status === "loading"}
             className="h-11 shrink-0 rounded-full bg-secondary px-5 text-sm font-bold text-ink active:bg-secondary-deep disabled:opacity-40"
           >
             {saving ? "Saving…" : "Save"}
