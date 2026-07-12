@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     .where(and(eq(wears.outfitId, outfitId), eq(wears.wornOn, wornOn)))
     .returning({ id: wears.id });
   if (removed.length > 0) return NextResponse.json({ worn: false });
-  await db.insert(wears).values({ outfitId, wornOn });
+  await db.insert(wears).values({ outfitId, wornOn }).onConflictDoNothing();
   return NextResponse.json({ worn: true });
 }
 
