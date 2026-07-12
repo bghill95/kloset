@@ -78,6 +78,40 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
     }
   }
 
+  async function tryOn() {
+    setRender({ status: "loading", url: null });
+    try {
+      const res = await fetch("/api/render", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ itemIds: chosen.map((i) => i.id) }),
+        signal: AbortSignal.timeout(180_000),
+      });
+      const data = (await res.json().catch(() => null)) as {
+        renderUrl?: string;
+        error?: string;
+      } | null;
+      if (!res.ok || !data?.renderUrl) {
+        setRender({
+          status: "error",
+          url: null,
+          message: data?.error ?? "Render failed — try again.",
+          needsBasePhoto: res.status === 409,
+        });
+        return;
+      }
+      setRender({ status: "idle", url: data.renderUrl });
+      setView("render");
+    } catch {
+      setRender({
+        status: "error",
+        url: null,
+        message: "Render failed — try again.",
+        needsBasePhoto: false,
+      });
+    }
+  }
+
   if (items.length === 0) {
     return (
       <div className="mt-16 flex flex-col items-center gap-3 text-center">
@@ -102,6 +136,32 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
         </div>
       ) : (
         <OutfitCollage items={chosen} />
+      )}
+
+      {render.status === "loading" && (
+        <p role="status" className="text-sm text-mute">
+          Rendering your try-on… this can take a minute.
+        </p>
+      )}
+      {render.status === "error" && (
+        <p role="alert" className="text-sm text-error">
+          {render.message}{" "}
+          {render.needsBasePhoto && (
+            <Link href="/avatar-capture" className="underline">
+              Capture base photo
+            </Link>
+          )}
+        </p>
+      )}
+      {render.url && (
+        <div className="flex gap-2" role="group" aria-label="Preview mode">
+          <button type="button" onClick={() => setView("collage")} className={chipClass(view === "collage")}>
+            Flat lay
+          </button>
+          <button type="button" onClick={() => setView("render")} className={chipClass(view === "render")}>
+            Try-on
+          </button>
+        </div>
       )}
 
       <div
@@ -157,6 +217,14 @@ export default function StudioBuilder({ items }: { items: ClosetItem[] }) {
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={() => void tryOn()}
+          disabled={chosen.length === 0 || render.status === "loading"}
+          className="h-11 rounded-full bg-pink px-5 text-sm font-bold text-white active:bg-pink-deep disabled:opacity-40"
+        >
+          {render.status === "loading" ? "Rendering…" : "Try it on"}
+        </button>
         <button
           type="button"
           onClick={() => {

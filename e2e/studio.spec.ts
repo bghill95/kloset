@@ -52,4 +52,35 @@ test.describe.serial("studio", () => {
     await expect(page).toHaveURL(/\/lookbook$/);
     await expect(page.getByText("Friday fit")).toBeVisible();
   });
+
+  test("try it on without a base photo points to avatar capture", async ({ page }) => {
+    await unlock(page);
+    await page.goto("/studio");
+    await page.getByRole("button", { name: "Studio tee" }).click();
+    await page.getByRole("button", { name: "Try it on" }).click();
+    // Next 16's route announcer also has role=alert — use the precise locator.
+    await expect(page.locator("p[role='alert']")).toContainText("base photo");
+    await expect(page.getByRole("link", { name: "Capture base photo" })).toBeVisible();
+  });
+
+  test("try it on renders the mock try-on photo", async ({ page }) => {
+    await unlock(page);
+    const seeded = await page.request.post("/api/base-photos", {
+      multipart: {
+        photo: { name: "base.jpg", mimeType: "image/jpeg", buffer: Buffer.from("fake-jpeg-bytes") },
+      },
+    });
+    expect(seeded.status()).toBe(201);
+    await page.goto("/studio");
+    await page.getByRole("button", { name: "Studio tee" }).click();
+    await page.getByRole("button", { name: "Try it on" }).click();
+    const photo = page.getByRole("img", { name: "Try-on render" });
+    await expect(photo).toBeVisible({ timeout: 15_000 });
+    await expect(photo).toHaveAttribute("src", /render\.svg/);
+    // Flip back to the flat lay and back again.
+    await page.getByRole("button", { name: "Flat lay" }).click();
+    await expect(page.getByTestId("outfit-collage")).toBeVisible();
+    await page.getByRole("button", { name: "Try-on", exact: true }).click();
+    await expect(photo).toBeVisible();
+  });
 });
