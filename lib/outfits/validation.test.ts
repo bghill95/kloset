@@ -29,7 +29,7 @@ describe("validateNewOutfit", () => {
     const r = validateNewOutfit({ name: " Friday fit ", itemIds: [A] });
     expect(r).toEqual({
       ok: true,
-      value: { name: "Friday fit", itemIds: [A], renderUrl: null },
+      value: { name: "Friday fit", itemIds: [A], renderUrl: null, source: "studio" },
     });
   });
   it("accepts a blob or fixture renderUrl", () => {
@@ -64,5 +64,26 @@ describe("checkOutfitItems", () => {
         { id: B, category: "top" },
       ]),
     ).toBe("Outfits take at most one item per category.");
+  });
+});
+
+describe("validateNewOutfit source", () => {
+  const base = { name: "Look", itemIds: [A], renderUrl: null };
+
+  it("defaults source to studio", () => {
+    const r = validateNewOutfit(base);
+    expect(r.ok && r.value.source).toBe("studio");
+  });
+
+  it("accepts stylist and today", () => {
+    for (const source of ["stylist", "today"]) {
+      const r = validateNewOutfit({ ...base, source });
+      expect(r.ok && r.value.source).toBe(source);
+    }
+  });
+
+  it("rejects unknown sources", () => {
+    const r = validateNewOutfit({ ...base, source: "closet" });
+    expect(r.ok).toBe(false);
   });
 });

@@ -6,10 +6,14 @@ import {
   UUID_RE,
 } from "@/lib/closet/item-validation";
 
+export const OUTFIT_SOURCES = ["studio", "stylist", "today"] as const;
+export type OutfitSource = (typeof OUTFIT_SOURCES)[number];
+
 export type NewOutfit = {
   name: string;
   itemIds: string[];
   renderUrl: string | null;
+  source: OutfitSource;
 };
 
 export function validateItemIds(raw: unknown): Result<string[]> {
@@ -38,12 +42,17 @@ export function validateNewOutfit(raw: unknown): Result<NewOutfit> {
   if (o.renderUrl != null && !isImageUrl(o.renderUrl)) {
     return { ok: false, error: "Invalid renderUrl." };
   }
+  const source = (o.source ?? "studio") as string;
+  if (!(OUTFIT_SOURCES as readonly string[]).includes(source)) {
+    return { ok: false, error: "Invalid source." };
+  }
   return {
     ok: true,
     value: {
       name,
       itemIds: ids.value,
       renderUrl: (o.renderUrl as string | undefined) ?? null,
+      source: source as OutfitSource,
     },
   };
 }
