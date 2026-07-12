@@ -6,6 +6,9 @@ import type { ClosetItem } from "@/lib/closet/types";
 import { CATEGORY_LABELS } from "@/lib/closet/categories";
 import type { ContextResponse } from "@/lib/context/types";
 import { pickOutfit } from "@/lib/today/pick";
+import OutfitActions from "@/components/outfits/OutfitActions";
+import { localDateKey } from "@/lib/today/date";
+import { type DayWear, findWornMatch } from "@/lib/today/worn";
 
 function formatTime(iso: string): string {
   return new Date(iso).toLocaleTimeString([], {
@@ -47,11 +50,30 @@ export default function TodayCard({ items }: { items: ClosetItem[] }) {
   // outfit section renders nothing until hydration sets the real local key.
   const [dateKey, setDateKey] = useState<string | null>(null);
   useEffect(() => {
-    const now = new Date();
-    setDateKey(
-      `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`,
-    );
+    setDateKey(localDateKey());
   }, []);
+
+  // Today's logged wears, so the action row can reflect "already worn".
+  const [dayWears, setDayWears] = useState<DayWear[] | null>(null);
+  useEffect(() => {
+    if (!dateKey) return;
+    const controller = new AbortController();
+    (async () => {
+      try {
+        const res = await fetch(`/api/wears?on=${dateKey}`, { signal: controller.signal });
+        if (res.ok) {
+          const data = (await res.json()) as { wears: DayWear[] };
+          setDayWears(data.wears);
+        } else {
+          setDayWears([]);
+        }
+      } catch {
+        setDayWears([]); // Actions still work; state just starts unworn.
+      }
+    })();
+    return () => controller.abort();
+  }, [dateKey]);
+
   const outfit = dateKey ? pickOutfit(items, weather, dateKey) : null;
 
   return (
@@ -101,6 +123,28 @@ export default function TodayCard({ items }: { items: ClosetItem[] }) {
               </Link>
             ))}
           </div>
+          {dayWears !== null &&
+            (() => {
+              const pickIds = outfit.picks.map((p) => p.item.id);
+              const matchId = findWornMatch(dayWears, pickIds);
+              return (
+                <div className="mt-3">
+                  <OutfitActions
+                    // Remount if the pick changes (weather arrives async).
+                    key={`${pickIds.join(",")}-${matchId ?? "none"}`}
+                    name={new Date().toLocaleDateString([], {
+                      weekday: "long",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                    itemIds={pickIds}
+                    source="today"
+                    savedOutfitId={matchId}
+                    initialWorn={matchId !== null}
+                  />
+                </div>
+              );
+            })()}
         </section>
       ) : (
         <div className="mt-8 flex flex-col items-center gap-3 text-center">

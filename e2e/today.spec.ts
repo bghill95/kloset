@@ -12,3 +12,16 @@ test("today shows heading, date, and fixture weather", async ({ page }) => {
     page.getByLabel("Today's outfit").or(page.getByRole("link", { name: "Scan your first item" })),
   ).toBeVisible();
 });
+
+test("wearing today toggles and survives reload", async ({ page }) => {
+  await unlock(page);
+  // Runs after studio.spec's seed, so a pick always renders.
+  await expect(page.getByLabel("Today's outfit")).toBeVisible();
+  await page.getByRole("button", { name: "Wearing this today" }).click();
+  await expect(page.getByRole("button", { name: "Wearing today ✓" })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole("button", { name: "Wearing today ✓" })).toBeVisible();
+  // Toggle back off so later specs start with a clean day.
+  await page.getByRole("button", { name: "Wearing today ✓" }).click();
+  await expect(page.getByRole("button", { name: "Wearing this today" })).toBeVisible();
+});
