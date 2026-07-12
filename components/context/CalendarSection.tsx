@@ -60,14 +60,14 @@ export default function CalendarSection({
   return (
     <section aria-label="Calendar">
       <h2 className="text-lg font-semibold">Calendar</h2>
-      <p className="mt-1 text-sm text-neutral-500">
+      <p className="mt-1 text-sm text-mute">
         Paste your iCloud shared-calendar link (iCloud Calendar → share →
         public link). Events show in the status bar and feed outfit
         suggestions later.
       </p>
       {currentUrl ? (
         <div className="mt-2 flex items-center gap-3">
-          <p className="text-sm text-neutral-700">✅ Calendar connected</p>
+          <p className="text-sm text-body">✅ Calendar connected</p>
           <button
             type="button"
             disabled={busy}
@@ -85,13 +85,13 @@ export default function CalendarSection({
             placeholder="webcal://… or https://…"
             aria-label="Calendar link"
             disabled={busy}
-            className="flex-1 rounded-xl border border-neutral-300 p-2 text-sm"
+            className="flex-1 rounded-card border border-hairline p-2 text-sm"
           />
           <button
             type="button"
             disabled={busy || url.trim().length === 0}
             onClick={save}
-            className="rounded-xl bg-neutral-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+            className="rounded-full bg-pink px-4 py-2 text-sm font-semibold text-white active:bg-pink-deep disabled:opacity-50"
           >
             {busy ? "…" : "Save & test"}
           </button>

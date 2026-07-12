@@ -138,8 +138,9 @@ gutters between tiles, exactly as pin photography does in a pin-grid system
   `{colors.canvas}`.
 - **Mute** (`{colors.mute}` — `#6e6270`): metadata, secondary captions, helper
   text.
-- **Ash** (`{colors.ash}` — `#a396a0`): placeholder text, disabled labels,
-  least-emphasis utility text.
+- **Ash** (`{colors.ash}` — `#a396a0`): disabled labels, least-emphasis
+  utility text. Not used for placeholder text — `{colors.mute}` carries
+  placeholders (contrast fix).
 - **On Dark** (`{colors.on-dark}` — `#ffffff`): text on `{colors.ink}` /
   `{colors.surface-dark}`, e.g. `{component.filter-chip-active}`.
 

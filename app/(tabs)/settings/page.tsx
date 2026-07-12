@@ -35,7 +35,7 @@ export default async function SettingsPage() {
         <WeatherSection currentLabel={weatherLabel} />
         <section aria-label="Passcode">
           <h2 className="text-lg font-semibold">Passcode</h2>
-          <p className="mt-1 text-sm text-neutral-500">
+          <p className="mt-1 text-sm text-mute">
             Passcode management arrives in a later milestone.
           </p>
         </section>

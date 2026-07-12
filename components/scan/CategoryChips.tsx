@@ -32,7 +32,7 @@ export default function CategoryChips({
             role="radio"
             aria-checked={active}
             onClick={() => onChange(category)}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium ${active ? activeClass : idleClass}`}
+            className={`rounded-full px-4 py-2 text-sm font-bold ${active ? activeClass : idleClass}`}
           >
             {CATEGORY_LABELS[category]}
           </button>

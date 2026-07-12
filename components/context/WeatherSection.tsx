@@ -54,12 +54,12 @@ export default function WeatherSection({
   return (
     <section aria-label="Weather">
       <h2 className="text-lg font-semibold">Weather</h2>
-      <p className="mt-1 text-sm text-neutral-500">
+      <p className="mt-1 text-sm text-mute">
         Set a location for the daily forecast in the status bar.
       </p>
       {currentLabel ? (
         <div className="mt-2 flex items-center gap-3">
-          <p className="text-sm text-neutral-700">
+          <p className="text-sm text-body">
             📍 Weather location: {currentLabel}
           </p>
           <button
@@ -79,13 +79,13 @@ export default function WeatherSection({
             placeholder="City, e.g. Carlsbad"
             aria-label="City"
             disabled={busy}
-            className="flex-1 rounded-xl border border-neutral-300 p-2 text-sm"
+            className="flex-1 rounded-card border border-hairline p-2 text-sm"
           />
           <button
             type="button"
             disabled={busy || query.trim().length === 0}
             onClick={save}
-            className="rounded-xl bg-neutral-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+            className="rounded-full bg-pink px-4 py-2 text-sm font-semibold text-white active:bg-pink-deep disabled:opacity-50"
           >
             {busy ? "…" : "Set location"}
           </button>

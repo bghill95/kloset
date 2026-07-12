@@ -51,7 +51,7 @@ export default function AvatarSection({ photos }: { photos: BasePhoto[] }) {
   return (
     <section aria-label="Avatar">
       <h2 className="text-lg font-semibold">Avatar</h2>
-      <p className="mt-1 text-sm text-neutral-500">
+      <p className="mt-1 text-sm text-mute">
         Base photos are what outfits get rendered onto. Capture up to three;
         the primary one is used by default.
       </p>
@@ -65,7 +65,7 @@ export default function AvatarSection({ photos }: { photos: BasePhoto[] }) {
       <div className="mt-3 grid grid-cols-3 gap-3">
         {photos.map((photo) => (
           <div key={photo.id} className="flex flex-col gap-1">
-            <div className="relative h-40 overflow-hidden rounded-xl bg-neutral-100">
+            <div className="relative h-40 overflow-hidden rounded-card bg-card">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={photo.imageUrl}
@@ -75,7 +75,7 @@ export default function AvatarSection({ photos }: { photos: BasePhoto[] }) {
                 className="h-full w-full object-contain"
               />
               {photo.isPrimary && (
-                <span className="absolute left-1 top-1 rounded-full bg-neutral-900/80 px-2 py-0.5 text-xs font-semibold text-white">
+                <span className="absolute left-1 top-1 rounded-full bg-ink/80 px-2 py-0.5 text-xs font-semibold text-white">
                   Primary
                 </span>
               )}
@@ -85,7 +85,7 @@ export default function AvatarSection({ photos }: { photos: BasePhoto[] }) {
                 type="button"
                 disabled={busyId !== null}
                 onClick={() => makePrimary(photo.id)}
-                className="text-xs font-semibold text-neutral-700 underline disabled:opacity-50"
+                className="text-xs font-semibold text-mute underline disabled:opacity-50"
               >
                 Make primary
               </button>
@@ -105,12 +105,12 @@ export default function AvatarSection({ photos }: { photos: BasePhoto[] }) {
       {photos.length < 3 ? (
         <Link
           href="/avatar-capture"
-          className="mt-4 inline-block rounded-xl bg-neutral-900 px-4 py-2 text-sm font-semibold text-white"
+          className="mt-4 inline-block rounded-full bg-pink px-4 py-2 text-sm font-semibold text-white active:bg-pink-deep"
         >
           📷 Capture base photo
         </Link>
       ) : (
-        <p className="mt-4 text-sm text-neutral-500">
+        <p className="mt-4 text-sm text-mute">
           3 of 3 — delete one to retake.
         </p>
       )}
