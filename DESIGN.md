@@ -338,6 +338,20 @@ except the deliberately flat structural surfaces above.
 - Sits at the top of Closet / Studio / Stylist / Lookbook / Settings; the
   only script text on those screens besides the wordmark.
 
+### Dark chrome (camera screens)
+
+Scan and avatar-capture viewfinders run on an ink chrome so the camera feed
+reads true. The vocabulary, mirroring light chrome one-for-one:
+
+- Surface: `{colors.ink}` (`bg-ink`); wells (viewfinder, photo preview) are
+  white at 10% over ink (`bg-white/10`), `{rounded.card}`.
+- Primary action: exactly ONE canvas pill per dark screen (`bg-canvas
+  text-ink`, pill radius, `{typography.button-md}`) — the dark twin of the
+  one-pink-CTA rule. Kloset Pink itself never appears on dark chrome.
+- Secondary actions: white at 15% (`bg-white/15 text-white`), pill radius.
+- Helper and utility text: white at 70% (`text-white/70`).
+- No other colors on dark chrome; the shutter ring keeps `border-hairline`.
+
 ## Do's and Don'ts
 
 ### Do

@@ -52,12 +52,12 @@ export default function CaptureScreen({
   }
 
   return (
-    <div className="flex min-h-dvh flex-col gap-4 bg-neutral-950 p-4">
+    <div className="flex min-h-dvh flex-col gap-4 bg-ink p-4">
       <CategoryChips value={category} onChange={onCategoryChange} dark />
 
-      <div className="relative flex flex-1 items-center justify-center overflow-hidden rounded-card bg-neutral-800">
+      <div className="relative flex flex-1 items-center justify-center overflow-hidden rounded-card bg-white/10">
         {cameraError ? (
-          <p className="max-w-xs text-center text-sm text-neutral-300">
+          <p className="max-w-xs text-center text-sm text-white/70">
             Camera unavailable — use "Choose from library" below to add a photo
             instead.
           </p>
@@ -73,7 +73,7 @@ export default function CaptureScreen({
             <div className="absolute inset-0 flex items-center justify-center">
               <Outline category={category} />
             </div>
-            <p className="absolute bottom-3 w-full text-center text-xs text-neutral-200">
+            <p className="absolute bottom-3 w-full text-center text-xs text-white/80">
               {OUTLINE_HINTS[category]}
             </p>
           </>
@@ -81,7 +81,7 @@ export default function CaptureScreen({
       </div>
 
       <div className="flex items-center justify-between px-4 pb-2">
-        <label className="cursor-pointer text-sm text-neutral-300">
+        <label className="cursor-pointer text-sm text-white/70">
           🖼️ Choose from library
           <input
             type="file"
@@ -100,7 +100,7 @@ export default function CaptureScreen({
         <button
           type="button"
           onClick={onCancel}
-          className="text-sm text-neutral-300"
+          className="text-sm text-white/70"
         >
           ✕ Cancel
         </button>
