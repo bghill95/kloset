@@ -356,6 +356,9 @@ except the deliberately flat structural surfaces above.
   `{rounded.big}` (32px), and `{rounded.full}` (pill). Nothing else.
 - Build hierarchy from Inter's weight range (400 → 600 → 700) and size for
   UI text; reserve script exclusively for the three named contexts above.
+- On stacked form screens (Settings), apply the one-pink-CTA rule per section
+  card, not per screen: each section may carry one pink primary, so a single
+  scrolling screen of sections may legitimately show several.
 
 ### Don't
 - Don't use Great Vibes in body copy, buttons, form labels, filter chips, or
@@ -425,6 +428,6 @@ padding, extended to a 44px tappable area via parent padding.
    spec explicitly calls for a script moment.
 6. When touching Tailwind classes, use the utilities this file backs
    (`bg-canvas`, `bg-blush`/`bg-card`, `bg-pink`, `bg-pink-deep`, `text-ink`,
-   `text-body`, `text-mute`, `text-ash`, `border-hairline`, `font-script`,
-   `font-sans`, `rounded-card`, `rounded-big`) — never hand-roll a hex color
+   `text-body`, `text-mute`, `text-ash`, `border-hairline`, `text-error`,
+   `text-success-deep`, `font-script`, `font-sans`, `rounded-card`, `rounded-big`) — never hand-roll a hex color
    or arbitrary radius in a component.

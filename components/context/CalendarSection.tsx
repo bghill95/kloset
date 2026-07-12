@@ -62,8 +62,8 @@ export default function CalendarSection({
       <h2 className="text-lg font-semibold">Calendar</h2>
       <p className="mt-1 text-sm text-mute">
         Paste your iCloud shared-calendar link (iCloud Calendar → share →
-        public link). Events show in the status bar and feed outfit
-        suggestions later.
+        public link). Events show on your Today screen and feed outfit
+        suggestions.
       </p>
       {currentUrl ? (
         <div className="mt-2 flex items-center gap-3">
@@ -72,7 +72,7 @@ export default function CalendarSection({
             type="button"
             disabled={busy}
             onClick={remove}
-            className="text-xs text-red-600 underline disabled:opacity-50"
+            className="text-xs text-error underline disabled:opacity-50"
           >
             Remove
           </button>
@@ -98,12 +98,12 @@ export default function CalendarSection({
         </div>
       )}
       {message && (
-        <p role="status" className="mt-2 text-sm text-green-700">
+        <p role="status" className="mt-2 text-sm text-success-deep">
           {message}
         </p>
       )}
       {error && (
-        <p role="alert" className="mt-2 text-sm text-red-600">
+        <p role="alert" className="mt-2 text-sm text-error">
           {error}
         </p>
       )}

@@ -16,6 +16,9 @@
   --color-mute: #6e6270;
   --color-ash: #a396a0;
   --color-hairline: #ecdfe6;
+  --color-error: #9e0a0a;
+  --color-success-deep: #103c25;
+  --color-success-pale: #c7f0da;
 
   --radius-card: 1rem;
   --radius-big: 2rem;

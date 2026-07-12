@@ -74,7 +74,7 @@ export default function PasscodeForm({
           className="rounded-card border border-hairline bg-canvas p-4 text-lg text-ink placeholder:text-mute focus:outline-2 focus:outline-offset-2 focus:outline-ink"
         />
       )}
-      {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
+      {error && <p role="alert" className="text-sm text-error">{error}</p>}
       <button
         type="submit"
         disabled={busy}

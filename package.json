@@ -1,5 +1,5 @@
 {
-  "name": "styling-app",
+  "name": "kloset",
   "private": true,
   "scripts": {
     "dev": "next dev -p 8000",

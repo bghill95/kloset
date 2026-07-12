@@ -57,7 +57,7 @@ export default function AvatarSection({ photos }: { photos: BasePhoto[] }) {
       </p>
 
       {error && (
-        <p role="alert" className="mt-2 text-sm text-red-600">
+        <p role="alert" className="mt-2 text-sm text-error">
           {error}
         </p>
       )}
@@ -94,7 +94,7 @@ export default function AvatarSection({ photos }: { photos: BasePhoto[] }) {
               type="button"
               disabled={busyId !== null}
               onClick={() => remove(photo.id)}
-              className="text-xs text-red-600 underline disabled:opacity-50"
+              className="text-xs text-error underline disabled:opacity-50"
             >
               Delete
             </button>

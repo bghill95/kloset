@@ -108,7 +108,7 @@ export default function ConfirmSheet({
       <TagChips label="Style tags" values={styleTags} onChange={setStyleTags} />
 
       {error && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-error">
           {error}
         </p>
       )}

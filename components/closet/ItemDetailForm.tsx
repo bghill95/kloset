@@ -102,12 +102,12 @@ export default function ItemDetailForm({ item }: { item: ClosetItem }) {
       <TagChips label="Style tags" values={styleTags} onChange={touch(setStyleTags)} />
 
       {status === "saved" && (
-        <p role="status" className="text-sm text-green-700">
+        <p role="status" className="text-sm text-success-deep">
           Saved.
         </p>
       )}
       {status === "error" && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-error">
           {errorMessage ?? "Something went wrong — try again."}
         </p>
       )}
@@ -124,7 +124,7 @@ export default function ItemDetailForm({ item }: { item: ClosetItem }) {
         type="button"
         disabled={status === "busy"}
         onClick={remove}
-        className="text-sm text-red-600 underline disabled:opacity-50"
+        className="text-sm text-error underline disabled:opacity-50"
       >
         Delete item
       </button>

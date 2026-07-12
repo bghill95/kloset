@@ -55,7 +55,7 @@ export default function WeatherSection({
     <section aria-label="Weather">
       <h2 className="text-lg font-semibold">Weather</h2>
       <p className="mt-1 text-sm text-mute">
-        Set a location for the daily forecast in the status bar.
+        Set a location for the daily forecast on your Today screen.
       </p>
       {currentLabel ? (
         <div className="mt-2 flex items-center gap-3">
@@ -66,7 +66,7 @@ export default function WeatherSection({
             type="button"
             disabled={busy}
             onClick={remove}
-            className="text-xs text-red-600 underline disabled:opacity-50"
+            className="text-xs text-error underline disabled:opacity-50"
           >
             Remove
           </button>
@@ -92,7 +92,7 @@ export default function WeatherSection({
         </div>
       )}
       {error && (
-        <p role="alert" className="mt-2 text-sm text-red-600">
+        <p role="alert" className="mt-2 text-sm text-error">
           {error}
         </p>
       )}
