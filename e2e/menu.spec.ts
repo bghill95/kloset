@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { unlock } from "./helpers";
 
 test("health endpoint reports db connectivity without auth", async ({ request }) => {
   const res = await request.get("/api/health");
@@ -8,7 +7,7 @@ test("health endpoint reports db connectivity without auth", async ({ request })
 });
 
 test("full-screen menu navigates between all six screens", async ({ page }) => {
-  await unlock(page);
+  await page.goto("/today");
   for (const name of ["Closet", "Studio", "Stylist", "Lookbook", "Settings", "Today"]) {
     await page.getByRole("button", { name: "Open menu" }).click();
     const dialog = page.getByRole("dialog", { name: "Menu" });
@@ -20,7 +19,7 @@ test("full-screen menu navigates between all six screens", async ({ page }) => {
 });
 
 test("menu closes on Escape without navigating", async ({ page }) => {
-  await unlock(page);
+  await page.goto("/today");
   await page.getByRole("button", { name: "Open menu" }).click();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog", { name: "Menu" })).toBeHidden();
@@ -28,7 +27,7 @@ test("menu closes on Escape without navigating", async ({ page }) => {
 });
 
 test("Tab is trapped inside the open menu", async ({ page }) => {
-  await unlock(page);
+  await page.goto("/today");
   await page.getByRole("button", { name: "Open menu" }).click();
   // Focus starts on the close button; Shift+Tab must wrap to the last link.
   await page.keyboard.press("Shift+Tab");

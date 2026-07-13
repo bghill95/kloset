@@ -71,7 +71,7 @@ export default async function OutfitPage({
         />
 
         <section aria-label="Pieces" className="flex flex-col gap-2">
-          <h2 className="font-script text-3xl text-ink">Pieces</h2>
+          <h2 className="font-display text-3xl text-ink">Pieces</h2>
           {ordered.map((item) => (
             <Link
               key={item.id}
@@ -92,7 +92,7 @@ export default async function OutfitPage({
         </section>
 
         <section aria-label="Wear history" className="flex flex-col gap-2">
-          <h2 className="font-script text-3xl text-ink">Worn {history.length}×</h2>
+          <h2 className="font-display text-3xl text-ink">Worn {history.length}×</h2>
           {history.length === 0 ? (
             <p className="text-mute">Not worn yet.</p>
           ) : (

@@ -22,15 +22,14 @@ Vercel Blob · OpenAI (server-side only) · deployed on Vercel.
 ## Run it
 
 ```bash
-cp .env.example .env.local   # fill in DATABASE_URL + SESSION_SECRET
+cp .env.example .env.local   # fill in DATABASE_URL
 npm install
 npm run db:push              # push schema to your Postgres
 MOCK_AI=1 npm run dev        # http://localhost:8000
 ```
 
 `MOCK_AI=1` serves canned AI fixtures (no OpenAI/Blob calls) — the default
-for development and all tests. First visit walks you through creating a
-passcode.
+for development and all tests.
 
 ## Commands
 

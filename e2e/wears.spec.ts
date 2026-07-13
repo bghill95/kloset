@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { unlock } from "./helpers";
 
 // Seeds its own items/outfit/wear via the API — no dependence on leftovers.
 // NOTE: retries must stay 0 for this serial suite — a retry re-runs the seed.
@@ -7,7 +6,6 @@ test.describe.serial("wear history", () => {
   let outfitId: string;
 
   test("seed: outfit saved and worn via the API", async ({ page }) => {
-    await unlock(page);
     const ids: string[] = [];
     for (const [name, category] of [
       ["Wear-test tee", "top"],
@@ -39,7 +37,6 @@ test.describe.serial("wear history", () => {
   });
 
   test("lookbook shows the badge; detail shows history and actions", async ({ page }) => {
-    await unlock(page);
     await page.goto("/lookbook");
     const card = page.getByRole("link", { name: /Wear-test look/ });
     await expect(card.getByText("Worn 1×")).toBeVisible();
@@ -58,7 +55,6 @@ test.describe.serial("wear history", () => {
   });
 
   test("deleting the outfit removes it and its wears", async ({ page }) => {
-    await unlock(page);
     await page.goto(`/lookbook/${outfitId}`);
     await page.getByRole("button", { name: "Delete outfit" }).click();
     await page.getByRole("button", { name: "Delete", exact: true }).click();

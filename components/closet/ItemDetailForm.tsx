@@ -102,7 +102,7 @@ export default function ItemDetailForm({ item }: { item: ClosetItem }) {
       <TagChips label="Style tags" values={styleTags} onChange={touch(setStyleTags)} />
 
       {status === "saved" && (
-        <p role="status" className="text-sm text-success-deep">
+        <p role="status" className="text-sm text-success">
           Saved.
         </p>
       )}
@@ -116,7 +116,7 @@ export default function ItemDetailForm({ item }: { item: ClosetItem }) {
         type="button"
         disabled={status === "busy"}
         onClick={save}
-        className="rounded-full bg-pink p-3 font-semibold text-white active:bg-pink-deep disabled:opacity-50"
+        className="rounded-full bg-pink p-3 font-semibold text-on-pink active:bg-pink-deep disabled:opacity-50"
       >
         {status === "busy" ? "…" : "Save"}
       </button>

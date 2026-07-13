@@ -1,8 +1,7 @@
 import { expect, test } from "@playwright/test";
-import { unlock } from "./helpers";
 
 test("today shows heading, date, and fixture weather", async ({ page }) => {
-  await unlock(page); // lands on /today
+  await page.goto("/today");
   await expect(page.getByRole("heading", { level: 1, name: "Today" })).toBeVisible();
   // MOCK_AI fixture weather renders as a labeled chip.
   // FIXTURE_WEATHER in lib/context/fixtures.ts: ⛅ 18–24° Partly cloudy.
@@ -14,7 +13,7 @@ test("today shows heading, date, and fixture weather", async ({ page }) => {
 });
 
 test("wearing today toggles and survives reload", async ({ page }) => {
-  await unlock(page);
+  await page.goto("/today");
   // Runs after studio.spec's seed, so a pick always renders.
   await expect(page.getByLabel("Today's outfit")).toBeVisible();
   await page.getByRole("button", { name: "Wearing this today" }).click();

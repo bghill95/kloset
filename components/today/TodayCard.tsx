@@ -107,7 +107,7 @@ export default function TodayCard({ items }: { items: ClosetItem[] }) {
 
       {!dateKey ? null : outfit ? (
         <section aria-label="Today's outfit">
-          <h2 className="font-script text-3xl text-ink">Today&apos;s outfit</h2>
+          <h2 className="font-display text-3xl text-ink">Today&apos;s outfit</h2>
           <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
             {outfit.picks.map(({ category, item }) => (
               <Link
@@ -148,11 +148,11 @@ export default function TodayCard({ items }: { items: ClosetItem[] }) {
         </section>
       ) : (
         <div className="mt-8 flex flex-col items-center gap-3 text-center">
-          <p className="font-script text-3xl text-ink">Your closet awaits</p>
+          <p className="font-display text-3xl text-ink">Your closet awaits</p>
           <p className="text-mute">Add a top and bottom (or a dress) to see today&apos;s outfit.</p>
           <Link
             href="/scan"
-            className="rounded-full bg-pink px-5 py-3 text-sm font-bold text-white active:bg-pink-deep"
+            className="rounded-full bg-pink px-5 py-3 text-sm font-bold text-on-pink active:bg-pink-deep"
           >
             Scan your first item
           </Link>

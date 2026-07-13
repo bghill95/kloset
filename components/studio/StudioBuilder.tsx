@@ -18,7 +18,7 @@ type RenderState =
 
 function chipClass(active: boolean) {
   return `whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold ${
-    active ? "bg-ink text-white" : "bg-card text-ink"
+    active ? "bg-ink text-canvas" : "bg-card text-ink"
   }`;
 }
 
@@ -133,11 +133,11 @@ export default function StudioBuilder({
   if (items.length === 0) {
     return (
       <div className="mt-16 flex flex-col items-center gap-3 text-center">
-        <p className="font-script text-3xl text-ink">Nothing to style yet</p>
+        <p className="font-display text-3xl text-ink">Nothing to style yet</p>
         <p className="text-mute">Scan a few pieces, then come build looks.</p>
         <Link
           href="/scan"
-          className="rounded-full bg-pink px-5 py-3 text-sm font-bold text-white active:bg-pink-deep"
+          className="rounded-full bg-pink px-5 py-3 text-sm font-bold text-on-pink active:bg-pink-deep"
         >
           Scan an item
         </Link>
@@ -251,7 +251,7 @@ export default function StudioBuilder({
           type="button"
           onClick={() => void tryOn()}
           disabled={chosen.length === 0 || render.status === "loading"}
-          className="h-11 rounded-full bg-pink px-5 text-sm font-bold text-white active:bg-pink-deep disabled:opacity-40"
+          className="h-11 rounded-full bg-pink px-5 text-sm font-bold text-on-pink active:bg-pink-deep disabled:opacity-40"
         >
           {render.status === "loading" ? "Rendering…" : "Try it on"}
         </button>

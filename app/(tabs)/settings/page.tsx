@@ -33,12 +33,6 @@ export default async function SettingsPage() {
         <AvatarSection photos={photos} />
         <CalendarSection currentUrl={icsUrl} />
         <WeatherSection currentLabel={weatherLabel} />
-        <section aria-label="Passcode">
-          <h2 className="text-lg font-semibold">Passcode</h2>
-          <p className="mt-1 text-sm text-mute">
-            Passcode management arrives in a later milestone.
-          </p>
-        </section>
       </div>
     </>
   );

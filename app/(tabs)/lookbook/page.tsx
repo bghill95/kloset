@@ -22,11 +22,11 @@ export default async function LookbookPage() {
       <PageHeader title="Lookbook" />
       {allOutfits.length === 0 ? (
         <div className="mt-16 flex flex-col items-center gap-3 text-center">
-          <p className="font-script text-3xl text-ink">No looks yet</p>
+          <p className="font-display text-3xl text-ink">No looks yet</p>
           <p className="text-mute">Build your first outfit in the Studio.</p>
           <Link
             href="/studio"
-            className="rounded-full bg-pink px-5 py-3 text-sm font-bold text-white active:bg-pink-deep"
+            className="rounded-full bg-pink px-5 py-3 text-sm font-bold text-on-pink active:bg-pink-deep"
           >
             Open Studio
           </Link>

@@ -45,7 +45,7 @@ export default function DeleteOutfitButton({ outfitId }: { outfitId: string }) {
         type="button"
         onClick={del}
         disabled={busy}
-        className="rounded-full bg-error px-4 py-2 text-sm font-bold text-white disabled:opacity-50"
+        className="rounded-full bg-error px-4 py-2 text-sm font-bold text-canvas disabled:opacity-50"
       >
         Delete
       </button>

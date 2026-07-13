@@ -118,7 +118,7 @@ export default function ConfirmSheet({
           type="button"
           disabled={busy !== null}
           onClick={() => save("done")}
-          className="flex-1 rounded-full bg-pink p-3 font-semibold text-white active:bg-pink-deep disabled:opacity-50"
+          className="flex-1 rounded-full bg-pink p-3 font-semibold text-on-pink active:bg-pink-deep disabled:opacity-50"
         >
           {busy === "done" ? "…" : "Save"}
         </button>

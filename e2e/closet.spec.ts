@@ -1,17 +1,14 @@
 import path from "node:path";
 import { expect, test } from "@playwright/test";
-import { unlock } from "./helpers";
 
 test.describe.serial("closet", () => {
   test("empty closet shows the scan tile and empty state", async ({ page }) => {
-    await unlock(page);
     await page.goto("/closet");
     await expect(page.getByText("Your closet awaits")).toBeVisible();
     await expect(page.getByRole("link", { name: /Scan item/ })).toBeVisible();
   });
 
   test("viewfinder renders with the category outline", async ({ page }) => {
-    await unlock(page);
     await page.goto("/scan");
     await expect(page.getByTestId("outline-top")).toBeVisible();
     await expect(page.locator("video")).toBeVisible();
@@ -22,7 +19,6 @@ test.describe.serial("closet", () => {
   test("scan via library: ingest, confirm, save, appears in grid", async ({
     page,
   }) => {
-    await unlock(page);
     await page.goto("/scan");
     await page
       .locator('input[type="file"]')
@@ -39,7 +35,6 @@ test.describe.serial("closet", () => {
   });
 
   test("save & scan another returns to the camera", async ({ page }) => {
-    await unlock(page);
     await page.goto("/scan");
     await page
       .locator('input[type="file"]')
@@ -55,7 +50,6 @@ test.describe.serial("closet", () => {
   });
 
   test("category filter narrows the grid", async ({ page }) => {
-    await unlock(page);
     await page.goto("/closet?category=shoes");
     await expect(page.getByText("My test shirt")).not.toBeVisible();
     await page.goto("/closet?category=top");
@@ -63,7 +57,6 @@ test.describe.serial("closet", () => {
   });
 
   test("item detail edits persist", async ({ page }) => {
-    await unlock(page);
     await page.goto("/closet");
     await page.getByRole("link", { name: /My test shirt/ }).click();
     await expect(page.getByLabel("Name")).toHaveValue("My test shirt");
@@ -75,7 +68,6 @@ test.describe.serial("closet", () => {
   });
 
   test("deleting an item removes it from the grid", async ({ page }) => {
-    await unlock(page);
     await page.goto("/closet");
     await page.getByRole("link", { name: /Renamed shirt/ }).click();
     page.on("dialog", (dialog) => dialog.accept());

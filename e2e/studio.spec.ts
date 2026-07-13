@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { unlock } from "./helpers";
 
 // Runs after settings.spec (base photos: zero) and closet.spec (one leftover
 // top). Seeds its own items; Task 8's tests seed the base photo late so the
@@ -7,7 +6,6 @@ import { unlock } from "./helpers";
 // NOTE: retries must stay 0 for this serial suite — a retry re-runs the seed test and duplicates items.
 test.describe.serial("studio", () => {
   test("seed: three items land in the closet via the API", async ({ page }) => {
-    await unlock(page);
     for (const [name, category] of [
       ["Studio tee", "top"],
       ["Studio jeans", "bottom"],
@@ -28,7 +26,6 @@ test.describe.serial("studio", () => {
   });
 
   test("selecting pieces composes the flat-lay collage", async ({ page }) => {
-    await unlock(page);
     await page.goto("/studio");
     await page.getByRole("button", { name: "Studio tee" }).click();
     await expect(page.getByTestId("outfit-collage").locator("img")).toHaveCount(1);
@@ -41,7 +38,6 @@ test.describe.serial("studio", () => {
   });
 
   test("save outfit lands in the lookbook", async ({ page }) => {
-    await unlock(page);
     await page.goto("/studio");
     await page.getByRole("button", { name: "Studio tee" }).click();
     await page.getByRole("button", { name: "Bottoms" }).click();
@@ -55,7 +51,6 @@ test.describe.serial("studio", () => {
   });
 
   test("try it on without a base photo points to avatar capture", async ({ page }) => {
-    await unlock(page);
     await page.goto("/studio");
     await page.getByRole("button", { name: "Studio tee" }).click();
     await page.getByRole("button", { name: "Try it on" }).click();
@@ -65,7 +60,6 @@ test.describe.serial("studio", () => {
   });
 
   test("try it on renders the mock try-on photo", async ({ page }) => {
-    await unlock(page);
     const seeded = await page.request.post("/api/base-photos", {
       multipart: {
         photo: { name: "base.jpg", mimeType: "image/jpeg", buffer: Buffer.from("fake-jpeg-bytes") },

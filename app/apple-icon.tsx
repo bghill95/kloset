@@ -18,7 +18,7 @@ export default async function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#e60070",
+          background: "#a85a72",
           color: "#ffffff",
           fontFamily: "Great Vibes",
           fontSize: 120,

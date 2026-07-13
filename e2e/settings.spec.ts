@@ -1,10 +1,8 @@
 import path from "node:path";
 import { expect, test } from "@playwright/test";
-import { unlock } from "./helpers";
 
 test.describe.serial("avatar base photos", () => {
   test("avatar section starts empty with capture entry", async ({ page }) => {
-    await unlock(page);
     await page.goto("/settings");
     await expect(page.getByText("Base photos are what outfits")).toBeVisible();
     await expect(
@@ -15,7 +13,6 @@ test.describe.serial("avatar base photos", () => {
   test("take photo now → preview → use photo lands in settings as primary", async ({
     page,
   }) => {
-    await unlock(page);
     await page.goto("/avatar-capture");
     await expect(page.getByTestId("outline-body")).toBeVisible();
     await expect(page.locator("video")).toBeVisible();
@@ -26,7 +23,6 @@ test.describe.serial("avatar base photos", () => {
   });
 
   test("retake returns to a live viewfinder", async ({ page }) => {
-    await unlock(page);
     await page.goto("/avatar-capture");
     await page.getByRole("button", { name: "Take photo now" }).click();
     await expect(page.getByRole("button", { name: "↻ Retake" })).toBeVisible();
@@ -44,7 +40,6 @@ test.describe.serial("avatar base photos", () => {
   test("library photo becomes second; make primary flips the badge", async ({
     page,
   }) => {
-    await unlock(page);
     await page.goto("/avatar-capture");
     await page
       .locator('input[type="file"]')
@@ -64,7 +59,6 @@ test.describe.serial("avatar base photos", () => {
   });
 
   test("countdown overlay shows and cancels", async ({ page }) => {
-    await unlock(page);
     await page.goto("/avatar-capture");
     await page.getByRole("button", { name: /10s timer/ }).click();
     await expect(page.getByTestId("countdown-overlay")).toBeVisible();
@@ -77,7 +71,6 @@ test.describe.serial("avatar base photos", () => {
   });
 
   test("deleting both photos returns to the empty state", async ({ page }) => {
-    await unlock(page);
     await page.goto("/settings");
     page.on("dialog", (dialog) => dialog.accept());
     await page.getByRole("button", { name: "Delete" }).first().click();
@@ -91,7 +84,6 @@ test.describe.serial("avatar base photos", () => {
 
 test.describe.serial("calendar and weather settings flows", () => {
   test("calendar save & test connects in mock mode", async ({ page }) => {
-    await unlock(page);
     await page.goto("/settings");
     await page
       .getByLabel("Calendar link")
@@ -102,7 +94,6 @@ test.describe.serial("calendar and weather settings flows", () => {
   });
 
   test("weather location sets and clears", async ({ page }) => {
-    await unlock(page);
     await page.goto("/settings");
     await page.getByLabel("City").fill("Carlsbad");
     await page.getByRole("button", { name: "Set location" }).click();
@@ -115,7 +106,6 @@ test.describe.serial("calendar and weather settings flows", () => {
   });
 
   test("calendar removes cleanly", async ({ page }) => {
-    await unlock(page);
     await page.goto("/settings");
     await page
       .locator("section[aria-label='Calendar']")

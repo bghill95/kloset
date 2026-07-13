@@ -91,14 +91,14 @@ export default function CalendarSection({
             type="button"
             disabled={busy || url.trim().length === 0}
             onClick={save}
-            className="rounded-full bg-pink px-4 py-2 text-sm font-semibold text-white active:bg-pink-deep disabled:opacity-50"
+            className="rounded-full bg-pink px-4 py-2 text-sm font-semibold text-on-pink active:bg-pink-deep disabled:opacity-50"
           >
             {busy ? "…" : "Save & test"}
           </button>
         </div>
       )}
       {message && (
-        <p role="status" className="mt-2 text-sm text-success-deep">
+        <p role="status" className="mt-2 text-sm text-success">
           {message}
         </p>
       )}

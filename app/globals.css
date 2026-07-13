@@ -3,22 +3,24 @@
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-script: var(--font-great-vibes), cursive;
+  --font-display: var(--font-gloock), serif;
 
-  --color-canvas: #ffffff;
-  --color-blush: #fdf9fb;
-  --color-card: #f9f1f5;
-  --color-pink: #e60070;
-  --color-pink-deep: #c4005f;
-  --color-secondary: #f1e4ea;
-  --color-secondary-deep: #e2cdd8;
-  --color-ink: #111111;
-  --color-body: #383236;
-  --color-mute: #6e6270;
-  --color-ash: #a396a0;
-  --color-hairline: #ecdfe6;
-  --color-error: #9e0a0a;
-  --color-success-deep: #103c25;
-  --color-success-pale: #c7f0da;
+  --color-canvas: #1c1017;
+  --color-card: #2b1b24;
+  --color-pink: #e88fa6;
+  --color-pink-deep: #d97b95;
+  --color-on-pink: #26101a;
+  --color-secondary: #3a2530;
+  --color-secondary-deep: #47303c;
+  --color-ink: #f6ecf1;
+  --color-body: #dcc9d3;
+  --color-mute: #a88fa0;
+  --color-ash: #7c6a74;
+  --color-hairline: #3d2a34;
+  --color-menu: #a85a72;
+  --color-menu-active: #26101a;
+  --color-error: #f79a9a;
+  --color-success: #a9e4c4;
 
   --radius-card: 1rem;
   --radius-big: 2rem;

@@ -1,12 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { unlock } from "./helpers";
 
 // Runs after studio.spec (alphabetical), so the closet already holds the
 // studio seed items (tee/jeans/sneakers) plus closet.spec's leftover top —
 // enough for MOCK_AI's deterministic combos ("Mock look N").
 test.describe.serial("stylist", () => {
   test("inspiration feed renders mock combos with actions", async ({ page }) => {
-    await unlock(page);
     await page.goto("/stylist");
     await expect(page.getByRole("heading", { level: 1, name: "Stylist" })).toBeVisible();
     const first = page.getByTestId("suggestion-card").first();
@@ -18,7 +16,6 @@ test.describe.serial("stylist", () => {
   });
 
   test("occasion prompt returns dated looks", async ({ page }) => {
-    await unlock(page);
     await page.goto("/stylist");
     await page.getByLabel("Style an occasion").fill("Interview");
     await page.getByRole("button", { name: "Style me" }).click();
@@ -29,7 +26,6 @@ test.describe.serial("stylist", () => {
   });
 
   test("open in studio preloads the combo", async ({ page }) => {
-    await unlock(page);
     await page.goto("/stylist");
     const first = page.getByTestId("suggestion-card").first();
     await first.getByRole("link", { name: "Open in Studio" }).click();
@@ -39,7 +35,6 @@ test.describe.serial("stylist", () => {
   });
 
   test("saving a suggestion lands it in the lookbook", async ({ page }) => {
-    await unlock(page);
     await page.goto("/stylist");
     const first = page.getByTestId("suggestion-card").first();
     await first.getByRole("button", { name: "Save", exact: true }).click();

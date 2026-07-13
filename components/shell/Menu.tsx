@@ -64,14 +64,14 @@ export default function Menu() {
           role="dialog"
           aria-modal="true"
           aria-label="Menu"
-          className="fixed inset-0 z-50 flex flex-col bg-canvas"
+          className="fixed inset-0 z-50 flex flex-col bg-menu"
           onKeyDown={(e) => {
             if (e.key === "Escape") setOpen(false);
             trapTab(e);
           }}
         >
           <div className="flex items-center justify-between px-5 pt-5">
-            <span className="font-script text-3xl text-pink" aria-hidden="true">
+            <span className="font-script text-3xl text-white" aria-hidden="true">
               Kloset
             </span>
             <button
@@ -79,7 +79,7 @@ export default function Menu() {
               type="button"
               aria-label="Close menu"
               onClick={() => setOpen(false)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-card text-ink"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                 <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -94,7 +94,7 @@ export default function Menu() {
                   key={link.href}
                   href={link.href}
                   aria-current={active ? "page" : undefined}
-                  className={`py-1 font-script text-5xl ${active ? "text-pink" : "text-ink"}`}
+                  className={`py-1 font-display text-5xl ${active ? "text-menu-active" : "text-white"}`}
                 >
                   {link.label}
                 </Link>

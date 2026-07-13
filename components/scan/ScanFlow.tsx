@@ -90,7 +90,7 @@ export default function ScanFlow() {
           <button
             type="button"
             onClick={() => photo && ingest(photo)}
-            className="rounded-full bg-pink px-6 py-3 font-semibold text-white active:bg-pink-deep"
+            className="rounded-full bg-pink px-6 py-3 font-semibold text-on-pink active:bg-pink-deep"
           >
             Try again
           </button>
@@ -101,7 +101,7 @@ export default function ScanFlow() {
           className={
             canRetry
               ? "text-sm text-mute underline"
-              : "rounded-full bg-pink px-6 py-3 font-semibold text-white active:bg-pink-deep"
+              : "rounded-full bg-pink px-6 py-3 font-semibold text-on-pink active:bg-pink-deep"
           }
         >
           {canRetry ? "Back to camera" : "Retake photo"}

@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 
 function chipClass(active: boolean) {
   return `whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold ${
-    active ? "bg-ink text-white" : "bg-card text-ink"
+    active ? "bg-ink text-canvas" : "bg-card text-ink"
   }`;
 }
 
@@ -73,7 +73,7 @@ export default async function ClosetPage({
 
       {all.length === 0 && (
         <div className="mt-16 flex flex-col items-center gap-3 text-center">
-          <p className="font-script text-3xl text-ink">Your closet awaits</p>
+          <p className="font-display text-3xl text-ink">Your closet awaits</p>
           <p className="text-mute">Scan your first item to start your Kloset.</p>
         </div>
       )}
@@ -103,7 +103,7 @@ export default async function ClosetPage({
       <Link
         href="/scan"
         aria-label="Scan item"
-        className="fixed right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-pink text-white"
+        className="fixed right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-pink text-on-pink"
         style={{ bottom: "calc(1.25rem + env(safe-area-inset-bottom))" }}
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">

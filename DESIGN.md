@@ -1,39 +1,40 @@
 ---
-version: alpha
+version: velvet-boudoir
 name: Kloset-design-system
 description: |
-  A photography-first personal closet system: true-white canvas, blush-tinted
-  card surfaces, a single confident pink CTA, black ink for contrast moments,
-  and a cursive script display face (Great Vibes) for the Kloset wordmark,
-  page titles, and the full-screen menu. Garment cutout imagery is the
-  load-bearing visual element in a masonry grid of 16px-radius cards with
-  tight 8px gutters. Chrome stays quiet: Inter for all UI text, no shadows,
-  no gradients.
+  Velvet Boudoir: a photography-first personal closet system on a dark
+  wine/aubergine canvas — a dressing room lined in velvet. Dusty-rose accents,
+  light rose-tinted ink, Gloock (high-contrast display serif) for page titles
+  and the full-screen menu, Great Vibes script reserved for the "Kloset"
+  wordmark alone, Inter for all UI text. The full-screen menu is the system's
+  one drenched surface: deep rose with white serif links. Garment cutout
+  imagery is the load-bearing visual element in a masonry grid of
+  16px-radius cards with tight 8px gutters. No shadows, no gradients.
 
 colors:
-  primary: "#e60070"
-  on-primary: "#ffffff"
-  primary-pressed: "#c4005f"
-  ink: "#111111"
-  body: "#383236"
-  mute: "#6e6270"
-  ash: "#a396a0"
-  hairline: "#ecdfe6"
-  canvas: "#ffffff"
-  surface-soft: "#fdf9fb"
-  surface-card: "#f9f1f5"
-  secondary-bg: "#f1e4ea"
-  secondary-pressed: "#e2cdd8"
-  on-dark: "#ffffff"
-  surface-dark: "#111111"
-  error: "#9e0a0a"
-  success-deep: "#103c25"
-  success-pale: "#c7f0da"
+  canvas: "#1c1017"
+  surface-card: "#2b1b24"
+  primary: "#e88fa6"
+  primary-pressed: "#d97b95"
+  on-primary: "#26101a"
+  secondary-bg: "#3a2530"
+  secondary-pressed: "#47303c"
+  ink: "#f6ecf1"
+  body: "#dcc9d3"
+  mute: "#a88fa0"
+  ash: "#7c6a74"
+  hairline: "#3d2a34"
+  menu: "#a85a72"
+  menu-active: "#26101a"
+  on-menu: "#ffffff"
+  error: "#f79a9a"
+  success: "#a9e4c4"
 
 typography:
-  script-hero:      { fontFamily: Great Vibes, fontSize: 64px, fontWeight: 400, lineHeight: 1.1 }
-  script-title:     { fontFamily: Great Vibes, fontSize: 40px, fontWeight: 400, lineHeight: 1.1 }
-  script-menu:      { fontFamily: Great Vibes, fontSize: 48px, fontWeight: 400, lineHeight: 1.3 }
+  script-wordmark:  { fontFamily: Great Vibes, fontSize: 30px+, fontWeight: 400, lineHeight: 1.1 }
+  display-title:    { fontFamily: Gloock, fontSize: 36px, fontWeight: 400, lineHeight: 1.1 }
+  display-heading:  { fontFamily: Gloock, fontSize: 30px, fontWeight: 400, lineHeight: 1.2 }
+  display-menu:     { fontFamily: Gloock, fontSize: 48px, fontWeight: 400, lineHeight: 1.15 }
   heading-md:       { fontFamily: Inter, fontSize: 18px, fontWeight: 600, lineHeight: 1.3 }
   body-md:          { fontFamily: Inter, fontSize: 16px, fontWeight: 400, lineHeight: 1.4 }
   body-strong:      { fontFamily: Inter, fontSize: 16px, fontWeight: 600, lineHeight: 1.4 }
@@ -50,129 +51,133 @@ components:
   button-secondary: { backgroundColor: "{colors.secondary-bg}", textColor: "{colors.ink}", typography: "{typography.button-md}", rounded: "{rounded.full}", padding: 12px 20px, height: 44px }
   button-icon-circular: { backgroundColor: "{colors.surface-card}", textColor: "{colors.ink}", rounded: "{rounded.full}", size: 40px }
   filter-chip:      { backgroundColor: "{colors.surface-card}", textColor: "{colors.ink}", typography: "{typography.button-md}", rounded: "{rounded.full}", padding: 8px 16px }
-  filter-chip-active: { backgroundColor: "{colors.ink}", textColor: "{colors.on-dark}", typography: "{typography.button-md}", rounded: "{rounded.full}" }
+  filter-chip-active: { backgroundColor: "{colors.ink}", textColor: "{colors.canvas}", typography: "{typography.button-md}", rounded: "{rounded.full}" }
   pin-card:         { backgroundColor: "{colors.surface-card}", textColor: "{colors.ink}", rounded: "{rounded.card}", padding: 12px }
   pin-card-photo:   { backgroundColor: "{colors.surface-card}", textColor: "{colors.ink}", rounded: "{rounded.card}", padding: 0px }
   text-input:       { backgroundColor: "{colors.canvas}", textColor: "{colors.ink}", typography: "{typography.body-md}", rounded: "{rounded.card}", padding: 11px 15px, height: 44px }
-  menu-overlay:     { backgroundColor: "{colors.canvas}", textColor: "{colors.ink}", typography: "{typography.script-menu}", rounded: "{rounded.none}" }
-  page-header:      { backgroundColor: "{colors.canvas}", textColor: "{colors.ink}", typography: "{typography.script-title}", rounded: "{rounded.none}" }
+  menu-overlay:     { backgroundColor: "{colors.menu}", textColor: "{colors.on-menu}", typography: "{typography.display-menu}", rounded: "{rounded.none}" }
+  page-header:      { backgroundColor: "{colors.canvas}", textColor: "{colors.ink}", typography: "{typography.display-title}", rounded: "{rounded.none}" }
 ---
 
 ## Overview
 
 Kloset is a personal virtual closet, not a marketplace — the design system's
 job is to get out of the way of two things: garment photography and the
-wearer's own outfits. The chrome is a quiet, near-white palette
-(`{colors.canvas}`, `{colors.surface-soft}`, `{colors.surface-card}`) carrying
-Inter for every UI text role, with Kloset Pink (`{colors.primary}` —
-`#e60070`) reserved for exactly one primary action per screen. Black ink
-(`{colors.ink}`) supplies the system's only other high-contrast moment —
-active filter chips, the menu overlay, headline text — so the palette reads
-as white / blush / pink / black and nothing else.
+wearer's own outfits. Velvet Boudoir does that with a dark, deliberately
+*tinted* chrome: the canvas (`{colors.canvas}` — `#1c1017`) is wine/aubergine,
+not neutral black, and every neutral in the ramp (`{colors.surface-card}`,
+`{colors.hairline}`, `{colors.body}`, `{colors.mute}`) carries the same rose
+cast. Dusty rose (`{colors.primary}` — `#e88fa6`) is the single accent,
+reserved for one primary action per screen — and because it is a *light*
+rose, primary buttons carry dark text (`{colors.on-primary}`), not white.
 
-The system has two visual registers that never blend: **quiet chrome** (white
-canvas, blush card surfaces, Inter text, pill buttons, 16px-radius cards) and
-**script moments** (Great Vibes cursive, reserved strictly for the "Kloset"
-wordmark, page titles, and the full-screen menu's link list). Great Vibes
-never appears in body copy, buttons, form labels, or captions — the instant
-it shows up outside those three contexts, the hierarchy breaks. Garment
-imagery is the load-bearing visual element in the Closet's masonry grid: each
-cutout sits in a `{rounded.card}` (16px) tile with the standard
-`{spacing.md}` (12px) `{component.pin-card}` inset — keeping irregular
-cutout silhouettes off the rounded corners — and tight `{spacing.sm}` (8px)
-gutters between tiles, exactly as pin photography does in a pin-grid system
-— except the "pin" here is a photo of one item of clothing.
+The system has three type voices that never blend:
+
+- **Script** (Great Vibes) — the "Kloset" wordmark ONLY. It no longer
+  appears on page titles or menu links.
+- **Display serif** (Gloock) — page titles and the full-screen menu links.
+  High-contrast, romantic, and legible where script wasn't.
+- **UI sans** (Inter) — every other text role: headings, body, buttons,
+  chips, captions.
+
+Garment imagery is the load-bearing visual element in the Closet's masonry
+grid: each cutout sits in a `{rounded.card}` (16px) tile with the standard
+`{spacing.md}` (12px) `{component.pin-card}` inset and tight `{spacing.sm}`
+(8px) gutters. The dark surface makes cutouts and renders read like garments
+under boutique lighting.
 
 **Key Characteristics:**
-- Single-accent CTA: Kloset Pink (`{colors.primary}`) carries at most one
-  primary action per screen; everything else is white, blush, or ink
-- Script/sans split: Great Vibes for wordmark + page titles + full-screen
-  menu links only; Inter for every other text role, from headings down to
-  captions
-- Two-radius shape system plus pill: `{rounded.card}` (16px) for cards and
-  inputs, `{rounded.big}` (32px) reserved for the menu overlay and large
-  surfaces, `{rounded.full}` for buttons, chips, and circular controls
-- Masonry garment grid as the load-bearing visual element — each cutout
-  sits inset `{spacing.md}` (12px) inside its `{component.pin-card}`, off
-  the rounded corners; true photographs stay full-bleed in
-  `{component.pin-card-photo}`
+- Single-accent CTA: dusty rose (`{colors.primary}`) with dark
+  `{colors.on-primary}` text; at most one per screen
+- Script reduced to the wordmark; Gloock carries titles and the menu;
+  Inter carries everything else
+- The full-screen menu is the one drenched surface: deep rose
+  (`{colors.menu}` — `#a85a72`) with white Gloock links; the current page's
+  link drops to dark plum (`{colors.menu-active}`)
+- Two-radius shape system plus pill: 16px cards/inputs, 32px large surfaces,
+  pill buttons/chips
 - Flat elevation throughout: no card shadows anywhere; the only depth cue is
-  the full-screen menu's scrim over the page it covers
-- Blush-tinted neutral chrome (`{colors.surface-card}` — `#f9f1f5`) that
-  recedes behind garment photography without competing with it
+  the full-screen menu covering the page
+- One chrome for everything: the camera screens (scan, avatar capture) sit
+  on the same `{colors.canvas}` as the rest of the app — there is no longer
+  a separate "dark chrome" register, because the whole app is dark
 
 ## Colors
 
 ### Brand & Accent
-- **Kloset Pink** (`{colors.primary}` — `#e60070`): the only saturated color
-  in the system. Reserved for the single primary CTA on a screen — "Add
-  item", "Save outfit", "Generate look" — never decorative, never repeated
-  twice on the same screen.
-- **Kloset Pink Pressed** (`{colors.primary-pressed}` — `#c4005f`): pressed
-  state for `{component.button-primary}` — one notch deeper than brand pink.
+- **Rose** (`{colors.primary}` — `#e88fa6`): the only saturated accent.
+  Reserved for the single primary CTA on a screen — "Add item", "Save
+  outfit", "Generate look" — never decorative, never repeated twice on the
+  same screen. Because rose is light, CTA text is `{colors.on-primary}`
+  (`#26101a`), never white.
+- **Rose Pressed** (`{colors.primary-pressed}` — `#d97b95`): pressed state
+  for `{component.button-primary}`.
 
 ### Surface
-- **Canvas** (`{colors.canvas}` — `#ffffff`): true white. Base surface for
-  page backgrounds, the full-screen menu, modals, and text inputs.
-- **Surface Soft** (`{colors.surface-soft}` — `#fdf9fb`): a faint blush wash,
-  used where a page body needs to feel warmer than pure white without
-  competing with garment photography.
-- **Surface Card** (`{colors.surface-card}` — `#f9f1f5`): blush card and
-  garment-tile background. Carries `{component.pin-card}`, filter chips, and
-  the icon-circular button.
-- **Secondary BG** (`{colors.secondary-bg}` — `#f1e4ea`): `{component.button-secondary}`
-  fill — a notch deeper than `{colors.surface-card}`.
-- **Secondary Pressed** (`{colors.secondary-pressed}` — `#e2cdd8`): pressed
-  state for the secondary button.
-- **Surface Dark** (`{colors.surface-dark}` — `#111111`): matches `{colors.ink}`;
-  used only where a dark chrome block is required (rare — the menu overlay
-  itself stays white).
-- **Hairline** (`{colors.hairline}` — `#ecdfe6`): 1px dividers, list rows,
+- **Canvas** (`{colors.canvas}` — `#1c1017`): dark wine/aubergine. Base
+  surface for page backgrounds, text inputs, and the camera screens.
+- **Surface Card** (`{colors.surface-card}` — `#2b1b24`): garment-tile and
+  card background; also carries filter chips and the icon-circular button.
+- **Secondary BG** (`{colors.secondary-bg}` — `#3a2530`) /
+  **Secondary Pressed** (`{colors.secondary-pressed}` — `#47303c`):
+  `{component.button-secondary}` fill and pressed state.
+- **Menu** (`{colors.menu}` — `#a85a72`): deep rose, used ONLY as the
+  full-screen menu overlay surface and the app icon background. Never a
+  button, never a card.
+- **Hairline** (`{colors.hairline}` — `#3d2a34`): 1px dividers, list rows,
   input borders — the system's only border color.
 
 ### Text
-- **Ink** (`{colors.ink}` — `#111111`): headlines, active filter-chip text,
-  primary nav/menu text — the system's contrast moment, used deliberately and
-  sparingly outside of default body copy.
-- **Body** (`{colors.body}` — `#383236`): default paragraph and UI text on
-  `{colors.canvas}`.
-- **Mute** (`{colors.mute}` — `#6e6270`): metadata, secondary captions, helper
-  text.
-- **Ash** (`{colors.ash}` — `#a396a0`): disabled labels, least-emphasis
-  utility text. Not used for placeholder text — `{colors.mute}` carries
-  placeholders (contrast fix).
-- **On Dark** (`{colors.on-dark}` — `#ffffff`): text on `{colors.ink}` /
-  `{colors.surface-dark}`, e.g. `{component.filter-chip-active}`.
+- **Ink** (`{colors.ink}` — `#f6ecf1`): headlines, page titles, emphasized
+  UI text — and, inverted, the fill of `{component.filter-chip-active}`
+  (light pill, `{colors.canvas}` text).
+- **Body** (`{colors.body}` — `#dcc9d3`): default paragraph and UI text.
+- **Mute** (`{colors.mute}` — `#a88fa0`): metadata, captions, helper text,
+  placeholders.
+- **Ash** (`{colors.ash}` — `#7c6a74`): disabled labels only — never body
+  or placeholder text.
+- **On Primary** (`{colors.on-primary}` — `#26101a`): text on rose fills.
+- **On Menu** (`{colors.on-menu}` — `#ffffff`): menu wordmark and inactive
+  menu links; **Menu Active** (`{colors.menu-active}` — `#26101a`, dark
+  plum) marks the current page's link.
 
 ### Semantic
-- **Error** (`{colors.error}` — `#9e0a0a`): validation messages, destructive
-  confirmation copy.
-- **Success Deep** (`{colors.success-deep}` — `#103c25`): in-product success
-  messaging text.
-- **Success Pale** (`{colors.success-pale}` — `#c7f0da`): pale success-pill
-  background.
+- **Error** (`{colors.error}` — `#f79a9a`): validation and destructive
+  messaging text on dark surfaces; as a destructive button fill it carries
+  `{colors.canvas}` text.
+- **Success** (`{colors.success}` — `#a9e4c4`): success messaging text.
+
+### White-alpha utilities (photography overlays)
+On top of photographs and the camera feed, fixed white/black alphas are the
+sanctioned exception to the token palette: `bg-white/10` (viewfinder well),
+`bg-white/15` (secondary pill on camera screens and on the menu overlay),
+`text-white/70`–`/80` (camera helper text), `bg-black/50`–`/60` (countdown
+scrim, photo badges). These never appear on ordinary chrome.
 
 ## Typography
 
 ### Font Family
-**Great Vibes** is Kloset's cursive display face — used exclusively for the
-"Kloset" wordmark, page titles (`{typography.script-title}`), the Today
-hero (`{typography.script-hero}`), and the full-screen menu's link list
-(`{typography.script-menu}`). It carries a single weight (400) and never
-appears below 40px — at small sizes cursive script loses legibility, so it is
-structurally excluded from body, buttons, labels, and captions.
+**Great Vibes** survives in exactly one role: the "Kloset" wordmark (menu
+header and app icon). It never appears in titles, links, body, or labels.
 
-**Inter** carries every other text role in the system: headings, body copy,
-buttons, filter chips, captions. It falls back to `ui-sans-serif` →
+**Gloock** is the display face — `{typography.display-title}` for page
+titles (Today, Closet, Studio, Stylist, Lookbook, Settings),
+`{typography.display-heading}` for in-page section headings and empty-state
+hero lines ("Today's outfit", "Your closet awaits"), and
+`{typography.display-menu}` for the full-screen menu links. Single weight
+(400); its high stroke contrast does the work bolding would.
+
+**Inter** carries every other text role. Falls back to `ui-sans-serif` →
 `system-ui` → `sans-serif`.
 
 ### Hierarchy
 
 | Token | Size | Weight | Line Height | Use |
 |---|---|---|---|---|
-| `{typography.script-hero}` | 64px | 400 | 1.1 | Today screen hero moment |
-| `{typography.script-menu}` | 48px | 400 | 1.3 | Full-screen menu link list |
-| `{typography.script-title}` | 40px | 400 | 1.1 | Page title (Closet, Studio, Stylist, Lookbook) |
+| `{typography.display-menu}` | 48px | 400 | 1.15 | Full-screen menu link list (Gloock) |
+| `{typography.display-title}` | 36px | 400 | 1.1 | Page title (Gloock) |
+| `{typography.display-heading}` | 30px | 400 | 1.2 | Section heading, empty-state hero (Gloock) |
+| `{typography.script-wordmark}` | 30px+ | 400 | 1.1 | "Kloset" wordmark only (Great Vibes) |
 | `{typography.heading-md}` | 18px | 600 | 1.3 | Card title, section heading |
 | `{typography.body-strong}` | 16px | 600 | 1.4 | Form label, inline emphasis |
 | `{typography.body-md}` | 16px | 400 | 1.4 | Default paragraph, modal body |
@@ -181,63 +186,46 @@ buttons, filter chips, captions. It falls back to `ui-sans-serif` →
 | `{typography.button-md}` | 14px | 700 | 1 | Button and chip label |
 
 ### Principles
-Great Vibes only ever appears at three fixed sizes (`script-hero`,
-`script-title`, `script-menu`) — it is not a general-purpose display tier
-that scales down; below 40px it is replaced outright by Inter
-`{typography.heading-md}`. Body copy sits at a comfortable 1.4 line-height,
-matching the "let it breathe" quality of the reference system while keeping
-the working font single (Inter) so the UI never has to reconcile a second
-sans-serif face.
+Gloock appears at exactly three fixed sizes (48 / 36 / 30px) and never
+below 30px — below that, hierarchy is built from Inter's weight range
+(400 → 600 → 700). Script never appears outside the wordmark, at any size.
+Body copy sits at 1.4 line-height.
 
 ## Layout
 
 ### Spacing System
-- **Base unit:** 8px, with finer 4/6px steps for tight inline gaps in pill
-  buttons and chips.
+- **Base unit:** 8px, with finer 4/6px steps for tight inline gaps.
 - **Tokens (front matter):** `{spacing.xxs}` (4px) · `{spacing.xs}` (6px) ·
   `{spacing.sm}` (8px) · `{spacing.md}` (12px) · `{spacing.lg}` (16px) ·
   `{spacing.xl}` (24px) · `{spacing.xxl}` (32px) · `{spacing.section}` (64px).
-- **Garment grid gutters:** `{spacing.sm}` (8px) between masonry tiles — tight
-  enough that cutout photography reads as a continuous wall of garments.
+- **Garment grid gutters:** `{spacing.sm}` (8px) between masonry tiles.
 
 ### Grid & Container
-- **Phone-first:** the app is a single-column mobile viewport; the masonry
-  garment grid runs 2 columns at phone width, widening to 3–4 columns only at
-  tablet/desktop breakpoints if the PWA is used on a larger screen.
-- **Closet masonry grid:** each tile preserves the garment cutout's natural
-  aspect ratio — no forced square crop. Gutters are `{spacing.sm}` (8px)
-  horizontal and vertical.
+- **Phone-first:** single-column mobile viewport; the garment grid runs 2
+  columns at phone width, 3–4 at tablet/desktop.
+- **Closet masonry grid:** each tile preserves the cutout's natural aspect
+  ratio — no forced square crop.
 - **Full-screen menu:** covers the entire viewport on open — not a drawer,
-  not a partial overlay. Script links stack vertically, generously spaced.
+  not a partial overlay. Gloock links stack vertically, generously spaced.
 
 ### Whitespace Philosophy
 Section rhythm uses `{spacing.section}` (64px) between major page blocks on
-the Today and Studio screens, while the Closet grid collapses to the tight
-8px gutter so garment imagery tiles edge-to-edge. As in the reference system,
-Kloset reads as two tools sharing one chrome: a calm single-item viewer
-(Today / Studio / page headers) and a dense discovery grid (Closet).
+Today and Studio; the Closet grid collapses to the tight 8px gutter so
+garment imagery tiles edge-to-edge. Kloset reads as two tools sharing one
+chrome: a calm single-item viewer and a dense discovery grid.
 
 ## Elevation & Depth
 
 | Level | Treatment | Use |
 |---|---|---|
-| 0 — Flat | No border, no shadow | Default for every card, including `{component.pin-card}` — the dominant treatment in the system |
-| 1 — Hairline border | 1px solid `{colors.hairline}` | Inputs, list-row dividers, filter-chip default state |
-| 2 — Modal scrim | Full-screen menu / modal sits over a scrim on the page content | Full-screen menu open, confirmation modals |
+| 0 — Flat | No border, no shadow | Default for every card — the dominant treatment |
+| 1 — Hairline border | 1px solid `{colors.hairline}` | Inputs, list-row dividers |
+| 2 — Menu takeover | Full-screen menu covers the page outright | Menu open, confirmation modals |
 
-Kloset has **no card shadows anywhere** — this is a hard rule, not a
-default that gets exceptions. Depth is communicated only by the modal/menu
-scrim; every other surface, including garment cards, sits perfectly flat on
-the canvas.
-
-### Decorative Depth
-Depth comes entirely from the garment photography itself:
-- **Garment cutouts** carry their own depth through the product photography
-  (studio lighting, natural drape) — the card adds no shadow, gradient, or
-  border to reinforce it.
-- **Menu scrim** — the only elevation gesture in the system: the full-screen
-  menu covers the page content outright (not a translucent overlay), so there
-  is no dual-layer shadow stack to maintain.
+Kloset has **no card shadows anywhere** — a hard rule. On a dark canvas,
+separation comes from the surface step (`{colors.canvas}` →
+`{colors.surface-card}`), not from shadow. Depth otherwise comes entirely
+from the garment photography itself.
 
 ## Shapes
 
@@ -245,162 +233,121 @@ Depth comes entirely from the garment photography itself:
 
 | Token | Value | Use |
 |---|---|---|
-| `{rounded.none}` | 0px | Full-screen menu, page headers — flat structural surfaces |
-| `{rounded.card}` | 16px | Garment cards, text inputs — the dominant component radius |
-| `{rounded.big}` | 32px | Reserved for large surfaces (e.g. a hero image block) |
-| `{rounded.full}` | 9999px | Buttons, filter chips, icon-circular controls |
+| `{rounded.none}` | 0px | Full-screen menu, page headers |
+| `{rounded.card}` | 16px | Garment cards, text inputs — dominant radius |
+| `{rounded.big}` | 32px | Reserved for large surfaces |
+| `{rounded.full}` | 9999px | Buttons, filter chips, circular controls |
 
-There are exactly **three radius values** in the system: 16px, 32px, and
-pill. Nothing sits between 16px and 32px, and nothing is sharp-cornered
-except the deliberately flat structural surfaces above.
+Exactly **three radius values**: 16px, 32px, and pill. Nothing between.
 
 ### Photography Geometry
-- **Garment cutouts:** natural aspect ratio preserved inside `{rounded.card}`
-  (16px) corners, inset by the standard `{spacing.md}` (12px)
-  `{component.pin-card}` padding — the blush surface reads as backdrop
-  behind the cutout, not a frame around a photo.
+- **Garment cutouts:** natural aspect ratio inside `{rounded.card}` corners,
+  inset by the standard `{spacing.md}` `{component.pin-card}` padding — the
+  dark card surface reads as backdrop, not frame.
 - **True photographs** (avatar base photos, outfit renders): full-bleed,
-  zero internal padding, in `{component.pin-card-photo}` — the photograph
-  IS the card.
-- **Avatar / profile renders:** circular at `{rounded.full}` where used in
-  Studio.
+  zero internal padding, in `{component.pin-card-photo}`.
+- **Overlay labels on photos:** `{colors.canvas}` pill with `{colors.ink}`
+  text (e.g. item-name badges on grid tiles).
 
 ## Components
 
 ### Buttons
 
 **`button-primary`** — the single Kloset CTA
-- Background `{colors.primary}`, text `{colors.on-primary}`, type
-  `{typography.button-md}`, padding `12px 20px`, height `44px`, rounded
-  `{rounded.full}`.
-- Exactly one per screen: "Add item", "Save outfit", "Generate look". Never a
-  secondary or tertiary pink button on the same screen.
+- Background `{colors.primary}`, text `{colors.on-primary}` (dark — never
+  white on rose), type `{typography.button-md}`, padding `12px 20px`, height
+  `44px`, rounded `{rounded.full}`. Pressed: `{colors.primary-pressed}`.
+- Exactly one per screen.
 
-**`button-secondary`** — blush alternative
-- Background `{colors.secondary-bg}`, text `{colors.ink}`, type
-  `{typography.button-md}`, padding `12px 20px`, height `44px`, rounded
-  `{rounded.full}`.
-- "Cancel", "Skip", second-tier actions paired with the pink primary.
+**`button-secondary`**
+- Background `{colors.secondary-bg}`, text `{colors.ink}`, pressed
+  `{colors.secondary-pressed}`; same geometry as primary.
+- "Cancel", "Skip", second-tier actions.
 
 **`button-icon-circular`**
 - Background `{colors.surface-card}`, icon `{colors.ink}`, rounded
-  `{rounded.full}`, size `40px`.
-- Menu-open button, close buttons, small floating controls over imagery.
+  `{rounded.full}`, size `40px`. Menu-open trigger, small controls.
+- On the menu overlay itself, the close button runs `bg-white/15` +
+  white icon instead (rose context).
 
 ### Filter & Tab Chips
 
 **`filter-chip`** + **`filter-chip-active`**
-- Default: background `{colors.surface-card}`, text `{colors.ink}`, type
-  `{typography.button-md}`, rounded `{rounded.full}`, padding `8px 16px`.
-- Active: background `{colors.ink}`, text `{colors.on-dark}` — fully inverted
-  on selection, matching the reference system's chip behavior.
-- Used for category filters (`top | bottom | dress | jacket | shoes | hat |
-  accessory`) atop the Closet grid.
+- Default: background `{colors.surface-card}`, text `{colors.ink}`.
+- Active: **inverted to light** — background `{colors.ink}`, text
+  `{colors.canvas}`. This is the system's selected-state signature
+  everywhere, including the camera screens.
 
 ### Inputs & Forms
 
 **`text-input`**
-- Background `{colors.canvas}`, text `{colors.ink}`, type
-  `{typography.body-md}`, padding `11px 15px`, height `44px`, rounded
-  `{rounded.card}`, 1px `{colors.hairline}` border.
-- Used across passcode entry, item detail edit fields, settings.
+- Background `{colors.canvas}`, text `{colors.ink}`, placeholder
+  `{colors.mute}`, 1px `{colors.hairline}` border, height 44px, rounded
+  `{rounded.card}`.
 
 ### Cards & Containers
 
-**`pin-card`** — the standard garment cutout tile
-- Container: background `{colors.surface-card}`, rounded `{rounded.card}`
-  (16px), padding `{spacing.md}` (12px).
-- Layout: garment cutout at its natural aspect ratio, inset `{spacing.md}`
-  (12px) on every side so the cutout's irregular silhouette never collides
-  with the rounded corners — the blush card surface reads as the backdrop
-  the garment sits on, not a photo frame. No shadow, ever. This is the
-  Closet grid's card.
+**`pin-card`** — the standard garment cutout tile: `{colors.surface-card}`,
+16px radius, `{spacing.md}` inset. No shadow, ever.
 
-**`pin-card-photo`** — the full-bleed photographic tile
-- Container: background `{colors.surface-card}`, rounded `{rounded.card}`
-  (16px), padding `0px`.
-- Layout: full-bleed photograph at its natural aspect ratio with **no
-  internal padding** — the photograph IS the card, exactly as in the
-  reference masonry system. No shadow, ever. Reserved for true photographs
-  — avatar base photos, future outfit renders — never for garment cutouts.
+**`pin-card-photo`** — the full-bleed photographic tile: same surface, zero
+padding — the photograph IS the card. Labels sit as overlays.
 
 ### Overlays
 
 **`menu-overlay`** — the full-screen navigation menu
-- Background `{colors.canvas}`, text `{colors.ink}`, type
-  `{typography.script-menu}`, rounded `{rounded.none}`.
-- Covers the entire viewport; script links stack vertically. Replaces a
-  conventional tab bar.
+- Background `{colors.menu}` (deep rose) — the one drenched surface in the
+  system. Wordmark: Great Vibes, `{colors.on-menu}` white. Links:
+  `{typography.display-menu}` Gloock, white; the current page's link is
+  `{colors.menu-active}` dark plum. Close button: `bg-white/15`, white icon.
+- Covers the entire viewport; replaces a conventional tab bar.
 
-**`page-header`** — script page title
-- Background `{colors.canvas}`, text `{colors.ink}`, type
-  `{typography.script-title}`, rounded `{rounded.none}`.
-- Sits at the top of Closet / Studio / Stylist / Lookbook / Settings; the
-  only script text on those screens besides the wordmark.
+**`page-header`** — Gloock page title
+- Background `{colors.canvas}`, text `{colors.ink}`,
+  `{typography.display-title}`. Sits at the top of every tab screen; the
+  menu trigger (icon-circular) sits opposite.
 
-### Dark chrome (camera screens)
+### Camera screens (scan, avatar capture)
 
-Scan and avatar-capture viewfinders run on an ink chrome so the camera feed
-reads true. The vocabulary, mirroring light chrome one-for-one:
-
-- Surface: `{colors.ink}` (`bg-ink`); wells (viewfinder, photo preview) are
-  white at 10% over ink (`bg-white/10`), `{rounded.card}`.
-- Primary action: exactly ONE canvas pill per dark screen for the *action*
-  role (`bg-canvas text-ink`, pill radius, `{typography.button-md}`) — the
-  dark twin of the one-pink-CTA rule. Kloset Pink itself never appears on
-  dark chrome. A selected-state chip (e.g. the active category chip on the
-  scan screen) may independently render as a canvas pill too — that's the
-  dark twin of `{component.filter-chip-active}`'s ink-inversion, a distinct
-  selected-state role, not a second action pill. A dark screen can
-  legitimately show one action pill and one selected chip at once.
-- Secondary actions: white at 15% (`bg-white/15 text-white`), pill radius.
-- Helper and utility text: white at 70% (`text-white/70`); a lighter
-  hint/status tier — viewfinder captions, upload-error status text — runs at
-  white at 80% (`text-white/80`) for slightly higher legibility over the
-  camera feed.
-- The countdown timer overlay is the one full-screen scrim on dark chrome:
-  black at 50% (`bg-black/50`) over the viewfinder, holding the numeral.
-- No other colors on dark chrome; the shutter ring keeps `border-hairline`.
+The camera screens share the app chrome — `{colors.canvas}` background —
+with photography-specific overlays:
+- Viewfinder / photo wells: `bg-white/10`, `{rounded.card}`.
+- Primary action per camera screen: ONE light pill — `{colors.ink}` fill
+  with `{colors.canvas}` text (the filter-chip-active inversion at button
+  size). The rose CTA never appears on camera screens.
+- Secondary actions: `bg-white/15` + white text, pill radius.
+- Helper text: `text-white/70`–`/80`. Countdown scrim: `bg-black/50`.
+- The shutter ring keeps its `{colors.hairline}` border on an
+  `{colors.ink}` fill.
 
 ## Do's and Don'ts
 
 ### Do
-- Reserve `{colors.primary}` (Kloset Pink) for exactly one primary CTA per
-  screen. It is never decorative and never doubled up.
-- Use Great Vibes only for the Kloset wordmark, `{component.page-header}`
-  page titles, and `{component.menu-overlay}` menu links. Every other text
-  role — body, buttons, labels, captions — is Inter.
-- Stage every garment cutout inside a `{component.pin-card}` with its
-  standard `{spacing.md}` (12px) inset; stage true photographs (avatar base
-  photos, outfit renders) inside `{component.pin-card-photo}` full-bleed —
-  the photograph IS the card.
-- Keep cards and surfaces flat: no shadows, ever. The full-screen menu scrim
-  is the only elevation gesture in the system.
-- Use only the three radii in the system: `{rounded.card}` (16px),
-  `{rounded.big}` (32px), and `{rounded.full}` (pill). Nothing else.
-- Build hierarchy from Inter's weight range (400 → 600 → 700) and size for
-  UI text; reserve script exclusively for the three named contexts above.
-- On stacked form screens (Settings), apply the one-pink-CTA rule per section
-  card, not per screen: each section may carry one pink primary, so a single
-  scrolling screen of sections may legitimately show several.
+- Reserve `{colors.primary}` (rose) for exactly one primary CTA per screen,
+  always with `{colors.on-primary}` dark text.
+- Use Great Vibes ONLY for the "Kloset" wordmark; Gloock ONLY for page
+  titles, section headings/empty states, and menu links; Inter for
+  everything else.
+- Keep cards and surfaces flat: separation is the canvas→card surface step,
+  never a shadow.
+- Use only the three radii: 16px, 32px, pill.
+- Use `{colors.ink}`-fill + `{colors.canvas}`-text as the universal
+  selected/active inversion (chips, camera action pills).
+- On stacked form screens (Settings), apply the one-rose-CTA rule per
+  section card, not per screen.
 
 ### Don't
-- Don't use Great Vibes in body copy, buttons, form labels, filter chips, or
-  captions — script is a display face for three fixed contexts only.
-- Don't introduce a second pink CTA on the same screen. If two actions
-  compete, the second one is `{component.button-secondary}`.
-- Don't add drop shadows to cards. There is no shadow token in this system —
-  not even a soft one — cards are flat, and only the menu scrim reads as
-  "above" the page.
-- Don't exceed `{component.pin-card}`'s standard `{spacing.md}` (12px)
-  inset — that padding is reserved for garment cutouts, to keep silhouettes
-  off the rounded corners. Don't pad `{component.pin-card-photo}` at all;
-  any label sits as an overlay, not as internal padding pushing the photo
-  inward.
-- Don't introduce a radius value between 16px and 32px, or any sharp corner
-  on an interactive element. The vocabulary is exactly 16 / 32 / pill.
-- Don't replace `{colors.primary}` with another pink or a gradient. The brand
-  pink is precise — `#e60070`.
+- Don't put white text on rose fills — rose is light; `{colors.on-primary}`
+  is the pair. (White is correct on `{colors.menu}` deep rose only.)
+- Don't use script anywhere but the wordmark — not titles, not the menu,
+  not headings. That was the old system.
+- Don't add drop shadows. No shadow token exists.
+- Don't introduce neutral grays: every neutral in this system carries the
+  wine cast. A `#222`-style gray reads as dirt against this canvas.
+- Don't use `{colors.menu}` outside the menu overlay and app icon.
+- Don't hand-roll hex values in components — if a color isn't backed by a
+  token in `app/globals.css`, it doesn't ship (white/black alphas over
+  photography excepted).
 
 ## Responsive Behavior
 
@@ -408,51 +355,52 @@ reads true. The vocabulary, mirroring light chrome one-for-one:
 
 | Name | Width | Key Changes |
 |---|---|---|
-| phone | 375–430px | Default target — single-column layout, 2-column garment grid, full-screen menu |
-| tablet | 768px | Garment grid widens to 3 columns; page content gains outer gutters |
-| desktop | 1024px+ | Garment grid widens to 4 columns; content clamps to a centered column so the phone-first chrome doesn't stretch edge-to-edge |
+| phone | 375–430px | Default target — single-column, 2-column garment grid, full-screen menu |
+| tablet | 768px | Garment grid 3 columns; outer gutters grow |
+| desktop | 1024px+ | Garment grid 4 columns; content clamps to a centered column |
 
 ### Touch Targets
-All interactive elements meet WCAG AA (≥ 44×44px). `{component.button-primary}`
-and `{component.button-secondary}` sit at 44px height. `{component.text-input}`
-sits at 44px. `{component.filter-chip}` is ~36–40px with 16px horizontal
-padding, extended to a 44px tappable area via parent padding.
-`{component.button-icon-circular}` is 40×40 with hit-target padding to 48×48.
+All interactive elements meet WCAG AA (≥ 44×44px effective). Buttons and
+inputs sit at 44px; chips extend to 44px via parent padding; the 40px
+icon-circular button pads to 48×48.
 
 ### Collapsing Strategy
-- **Full-screen menu:** identical full-viewport takeover at every
-  breakpoint — it does not become a sidebar or dropdown on wider screens.
-- **Garment masonry grid:** 2-up → 3-up → 4-up at phone → tablet → desktop.
-  Gutters hold at `{spacing.sm}` (8px) throughout — they never widen.
-- **Page header:** `{typography.script-title}` holds its 40px size across
-  breakpoints; only the surrounding page gutters grow.
+- **Full-screen menu:** identical full-viewport takeover at every breakpoint.
+- **Garment masonry grid:** 2-up → 3-up → 4-up; gutters hold at 8px.
+- **Page header:** `{typography.display-title}` holds its size; only
+  gutters grow.
 
 ### Image Behavior
-- Garment cutouts preserve their natural aspect ratio at every breakpoint;
-  the column count changes, the aspect never does.
+- Garment cutouts preserve natural aspect ratio at every breakpoint.
 - Cutouts are transparent-background PNGs composited onto
   `{colors.surface-card}` — no crop, no letterboxing.
+
+## Accessibility
+
+Verified contrast (WCAG AA) on the shipped pairs: body on canvas 11.7:1,
+body on card 10.4:1, mute on canvas 6.3:1, on-primary on rose 7.6:1, white
+on menu 4.8:1, menu-active on menu 3.7:1 (48px display text — large-text
+threshold applies), error on canvas 8.4:1, ink-fill chips 15:1. When adding
+a new pair, hold body text to ≥ 4.5:1 and large display text to ≥ 3:1.
 
 ## Iteration Guide
 
 1. Focus on ONE component at a time. Pull its YAML entry and verify every
    property resolves against this file's front matter.
-2. Reference tokens directly (`{colors.primary}`, `{component.pin-card}`,
-   `{rounded.card}`) in code and PRs — do not paraphrase hex values or pixel
-   sizes inline.
-3. Before adding a new UI role, check whether an existing component
-   (`button-primary`, `pin-card`, `filter-chip`, `text-input`) already covers
-   it. This system is deliberately small — most new screens should compose
-   existing tokens, not add new ones.
-4. Keep `{colors.primary}` scarce — at most one Kloset-pink CTA per screen,
-   counting header, body, and any sticky action together.
-5. Keep Great Vibes scarce — at most the wordmark + one page title + the menu
-   per screen. If a new text role feels like it wants script, default it to
-   Inter `{typography.heading-md}` instead and revisit only if the product
-   spec explicitly calls for a script moment.
+2. Reference tokens directly (`{colors.primary}`, `{component.pin-card}`)
+   in code and PRs — do not paraphrase hex values inline.
+3. Before adding a new UI role, check whether an existing component already
+   covers it. This system is deliberately small.
+4. Keep rose scarce — at most one rose CTA per screen (per section card on
+   Settings).
+5. Keep the type voices separate — script = wordmark, Gloock = titles+menu,
+   Inter = everything else. If a new role feels like it wants display type,
+   default it to Inter `{typography.heading-md}` and revisit.
 6. When touching Tailwind classes, use the utilities this file backs
-   (`bg-canvas`, `bg-blush`/`bg-card`, `bg-pink`, `bg-pink-deep`, `text-ink`,
-   `text-body`, `text-mute`, `text-ash`, `border-hairline`, `text-error`,
-   `text-success-deep`, `font-script`, `font-sans`, `rounded-card`,
-   `rounded-big`) — never hand-roll a hex color or arbitrary radius in a
-   component.
+   (`bg-canvas`, `bg-card`, `bg-pink`, `bg-pink-deep`, `text-on-pink`,
+   `bg-menu`, `text-menu-active`, `text-ink`, `text-body`, `text-mute`,
+   `text-ash`, `border-hairline`, `text-error`, `text-success`,
+   `bg-secondary`, `font-script`, `font-display`, `font-sans`,
+   `rounded-card`, `rounded-big`) — never hand-roll a hex color or
+   arbitrary radius in a component. (The Tailwind token names `pink` /
+   `pink-deep` / `on-pink` map to this file's `primary` roles.)

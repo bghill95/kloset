@@ -19,9 +19,7 @@ export default function CategoryChips({
     <div className="flex flex-wrap justify-center gap-2" role="radiogroup" aria-label="Category">
       {CATEGORIES.map((category) => {
         const active = category === value;
-        const activeClass = dark
-          ? "bg-canvas text-ink"
-          : "bg-ink text-white";
+        const activeClass = "bg-ink text-canvas";
         const idleClass = dark
           ? "bg-white/15 text-white"
           : "bg-card text-ink";

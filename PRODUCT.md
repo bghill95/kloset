@@ -8,9 +8,11 @@ stylist suggestions, and track wears in the Lookbook.
 ## Register
 
 product — app UI; the design serves the clothes. Brand personality lives in
-the Kloset script identity (Great Vibes) and the single pink accent, applied
-per DESIGN.md.
+the Kloset script wordmark (Great Vibes), the Gloock display serif, and a
+single dusty-rose accent on a dark velvet canvas, applied per DESIGN.md.
 
 ## Platform
 
-web — phone-first responsive PWA (installable, passcode-gated).
+web
+
+Phone-first responsive PWA (installable).

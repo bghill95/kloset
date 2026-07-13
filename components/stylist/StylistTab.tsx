@@ -154,7 +154,7 @@ export default function StylistTab() {
           <button
             type="submit"
             disabled={resultsLoading || occasion.trim().length === 0}
-            className="ml-auto rounded-full bg-pink px-5 py-3 text-sm font-bold text-white active:bg-pink-deep disabled:opacity-50"
+            className="ml-auto rounded-full bg-pink px-5 py-3 text-sm font-bold text-on-pink active:bg-pink-deep disabled:opacity-50"
           >
             Style me
           </button>
@@ -170,7 +170,7 @@ export default function StylistTab() {
       {results && !resultsLoading && (
         <section aria-label="Occasion looks" className="flex flex-col gap-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-script text-3xl text-ink">For the occasion</h2>
+            <h2 className="font-display text-3xl text-ink">For the occasion</h2>
             <button
               type="button"
               onClick={() => setResults(null)}
@@ -189,7 +189,7 @@ export default function StylistTab() {
 
       <section aria-label="Inspiration feed" className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
-          <h2 className="font-script text-3xl text-ink">Inspiration</h2>
+          <h2 className="font-display text-3xl text-ink">Inspiration</h2>
           <button
             type="button"
             onClick={() => void loadFeed()}
@@ -207,11 +207,11 @@ export default function StylistTab() {
         {feedError && <p className="text-sm text-error">{feedError}</p>}
         {feed && !feedLoading && feed.length === 0 && (
           <div className="flex flex-col items-center gap-3 py-8 text-center">
-            <p className="font-script text-3xl text-ink">Not enough to style yet</p>
+            <p className="font-display text-3xl text-ink">Not enough to style yet</p>
             <p className="text-mute">Scan a few tops and bottoms (or a dress) first.</p>
             <Link
               href="/scan"
-              className="rounded-full bg-ink px-5 py-3 text-sm font-bold text-white"
+              className="rounded-full bg-ink px-5 py-3 text-sm font-bold text-canvas"
             >
               Scan an item
             </Link>

@@ -52,7 +52,7 @@ export default function CaptureScreen({
   }
 
   return (
-    <div className="flex min-h-dvh flex-col gap-4 bg-ink p-4">
+    <div className="flex min-h-dvh flex-col gap-4 bg-canvas p-4">
       <CategoryChips value={category} onChange={onCategoryChange} dark />
 
       <div className="relative flex flex-1 items-center justify-center overflow-hidden rounded-card bg-white/10">
@@ -95,7 +95,7 @@ export default function CaptureScreen({
           aria-label="Take photo"
           onClick={snap}
           disabled={cameraError || snapping}
-          className="h-16 w-16 touch-manipulation rounded-full border-4 border-hairline bg-canvas disabled:opacity-30"
+          className="h-16 w-16 touch-manipulation rounded-full border-4 border-hairline bg-ink disabled:opacity-30"
         />
         <button
           type="button"

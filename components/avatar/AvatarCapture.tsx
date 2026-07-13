@@ -126,7 +126,7 @@ export default function AvatarCapture() {
 
   if (phase === "preview" || phase === "uploading") {
     return (
-      <div className="flex min-h-dvh flex-col bg-ink p-4">
+      <div className="flex min-h-dvh flex-col bg-canvas p-4">
         <div className="flex flex-1 items-center justify-center overflow-hidden rounded-card bg-white/10">
           {previewUrl && (
             // eslint-disable-next-line @next/next/no-img-element
@@ -142,7 +142,7 @@ export default function AvatarCapture() {
             type="button"
             disabled={phase === "uploading"}
             onClick={upload}
-            className="flex-1 rounded-full bg-canvas p-3 text-sm font-bold text-ink disabled:opacity-50"
+            className="flex-1 rounded-full bg-ink p-3 text-sm font-bold text-canvas disabled:opacity-50"
           >
             {phase === "uploading" ? "Uploading…" : "Use photo"}
           </button>
@@ -162,7 +162,7 @@ export default function AvatarCapture() {
   if (phase === "error") {
     const canRetry = error?.canRetry !== false;
     return (
-      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-ink p-6">
+      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-canvas p-6">
         <p role="status" className="text-white/80">
           {error?.message ?? "Upload failed — try again."}
         </p>
@@ -170,7 +170,7 @@ export default function AvatarCapture() {
           <button
             type="button"
             onClick={upload}
-            className="rounded-full bg-canvas px-6 py-3 text-sm font-bold text-ink"
+            className="rounded-full bg-ink px-6 py-3 text-sm font-bold text-canvas"
           >
             Try again
           </button>
@@ -181,7 +181,7 @@ export default function AvatarCapture() {
           className={
             canRetry
               ? "text-sm text-white/70 underline"
-              : "rounded-full bg-canvas px-6 py-3 text-sm font-bold text-ink"
+              : "rounded-full bg-ink px-6 py-3 text-sm font-bold text-canvas"
           }
         >
           Retake photo
@@ -191,7 +191,7 @@ export default function AvatarCapture() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col gap-4 bg-ink p-4">
+    <div className="flex min-h-dvh flex-col gap-4 bg-canvas p-4">
       <p className="text-center text-sm text-white/70">
         Set the device down, step back, and fit your whole body in the outline.
       </p>
@@ -236,7 +236,7 @@ export default function AvatarCapture() {
           type="button"
           disabled={cameraError || !videoReady || countdown !== null}
           onClick={() => setCountdown(TIMER_SECONDS)}
-          className="touch-manipulation rounded-full bg-canvas px-5 py-3 text-sm font-bold text-ink disabled:opacity-30"
+          className="touch-manipulation rounded-full bg-ink px-5 py-3 text-sm font-bold text-canvas disabled:opacity-30"
         >
           ⏱ 10s timer
         </button>

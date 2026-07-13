@@ -75,7 +75,7 @@ export default function AvatarSection({ photos }: { photos: BasePhoto[] }) {
                 className="h-full w-full object-contain"
               />
               {photo.isPrimary && (
-                <span className="absolute left-1 top-1 rounded-full bg-ink/80 px-2 py-0.5 text-xs font-semibold text-white">
+                <span className="absolute left-1 top-1 rounded-full bg-black/60 px-2 py-0.5 text-xs font-semibold text-white">
                   Primary
                 </span>
               )}
@@ -105,7 +105,7 @@ export default function AvatarSection({ photos }: { photos: BasePhoto[] }) {
       {photos.length < 3 ? (
         <Link
           href="/avatar-capture"
-          className="mt-4 inline-block rounded-full bg-pink px-4 py-2 text-sm font-semibold text-white active:bg-pink-deep"
+          className="mt-4 inline-block rounded-full bg-pink px-4 py-2 text-sm font-semibold text-on-pink active:bg-pink-deep"
         >
           📷 Capture base photo
         </Link>

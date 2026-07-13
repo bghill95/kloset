@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Great_Vibes, Inter } from "next/font/google";
+import { Gloock, Great_Vibes, Inter } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -7,6 +7,11 @@ const greatVibes = Great_Vibes({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-great-vibes",
+});
+const gloock = Gloock({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-gloock",
 });
 
 export const metadata: Metadata = {
@@ -16,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#1c1017",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -26,7 +31,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${greatVibes.variable}`}>
+    <html lang="en" className={`${inter.variable} ${greatVibes.variable} ${gloock.variable}`}>
       <body className="min-h-dvh font-sans antialiased">{children}</body>
     </html>
   );

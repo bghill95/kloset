@@ -2,7 +2,7 @@
 
 Personal virtual closet PWA (Kloset): catalog clothes by photo, Today screen
 with weather/calendar-aware outfit, build outfits on AI photoreal renders,
-AI stylist suggestions. Single user, passcode-gated.
+AI stylist suggestions. Single user.
 
 - Spec: docs/superpowers/specs/2026-06-10-virtual-closet-design.md
 - Current plan: docs/superpowers/plans/2026-07-11-kloset-p3-stylist-wears.md
@@ -10,7 +10,7 @@ AI stylist suggestions. Single user, passcode-gated.
 ## Stack
 
 Next.js App Router (TS, Tailwind v4) on Vercel · Neon Postgres via Drizzle ·
-Vercel Blob · OpenAI API (all AI; superseded Gemini per the M2 spec) · jose sessions + bcryptjs passcode.
+Vercel Blob · OpenAI API (all AI; superseded Gemini per the M2 spec).
 Dev/tests always run with MOCK_AI=1 (mocks ALL external services — OpenAI, Blob;
 canned fixtures, no network calls).
 Currently resolved to Next 16 / React 19 / TS 6 (see package-lock.json).
@@ -42,13 +42,13 @@ Currently resolved to Next 16 / React 19 / TS 6 (see package-lock.json).
 - Never read env vars or construct external clients at module scope — it crashes
   `next build` when the var is missing. Use a lazy getter (see lib/db/client.ts).
 - Always wrap `await req.json()` in try/catch and return 400 — malformed bodies
-  otherwise 500 (see app/api/auth/*/route.ts).
+  otherwise 500 (see app/api/items/route.ts).
 - Next 16 uses the `proxy.ts` convention (renamed from `middleware.ts` in M2);
   the exported function is `proxy`, semantics unchanged.
 - Next 16 injects a route announcer with role="alert" — Playwright must use
   precise locators (e.g., `p[role='alert']`), not `getByRole("alert")`.
-- e2e spec files run alphabetically with a single DB wipe up front: auth-flow
-  creates the passcode that tabs.spec relies on. Name new spec files accordingly.
+- e2e spec files run alphabetically with a single DB wipe up front; later specs
+  may rely on earlier specs' seeds. Name new spec files accordingly.
 - Don't commit `tsconfig.tsbuildinfo` (build cache — gitignored).
 - Next dev blocks its own dev assets for origins not in `allowedDevOrigins`
   (next.config.ts). Symptom: pages load via a LAN/tailnet IP but never hydrate,
@@ -56,3 +56,7 @@ Currently resolved to Next 16 / React 19 / TS 6 (see package-lock.json).
 - `npm run db:push` always re-emits `ALTER ... SET DEFAULT '{}'::text[]` for
   text-array columns — a drizzle-kit diffing quirk, not schema drift. The
   statements are no-ops; don't "fix" the schema in response.
+- Turbopack's persistent cache can serve stale `@theme` token values from
+  `app/globals.css` even across a dev-server restart (and stale route types
+  to `tsc` after deleting routes). When a token edit doesn't show up or
+  typecheck errors on deleted files: stop the server, `rm -rf .next`, restart.

@@ -85,7 +85,7 @@ export default function WeatherSection({
             type="button"
             disabled={busy || query.trim().length === 0}
             onClick={save}
-            className="rounded-full bg-pink px-4 py-2 text-sm font-semibold text-white active:bg-pink-deep disabled:opacity-50"
+            className="rounded-full bg-pink px-4 py-2 text-sm font-semibold text-on-pink active:bg-pink-deep disabled:opacity-50"
           >
             {busy ? "…" : "Set location"}
           </button>
