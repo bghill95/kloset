@@ -54,11 +54,11 @@ const MOCK_SHAPES = [
   { file: "/fixtures/pin-4.svg", width: 800, height: 1400 },
 ];
 
-// djb2 — stable per-query id block so client dedup never collides across queries.
+// djb2 — full 32-bit hash gives each query its own id block so client dedup does not collide across queries.
 function hashQuery(query: string): number {
   let h = 5381;
   for (let i = 0; i < query.length; i++) h = ((h * 33) ^ query.charCodeAt(i)) >>> 0;
-  return h % 100_000;
+  return h;
 }
 
 export function mockPins(query: string, page: number, perPage: number): Pin[] {
