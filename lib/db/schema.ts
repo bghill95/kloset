@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { boolean, date, pgTable, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
+import { bigint, boolean, date, integer, pgTable, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
 
 export const settings = pgTable("settings", {
   key: text("key").primaryKey(),
@@ -51,3 +51,19 @@ export const wears = pgTable(
   // Same outfit + same day is a toggle, never a duplicate.
   (t) => [unique().on(t.outfitId, t.wornOn)],
 );
+
+// Saved Explore pins (external Pexels photos). Stored denormalized so the
+// Saved view renders without re-querying Pexels; unique pexels_id makes the
+// heart a clean save/unsave toggle.
+export const pins = pgTable("pins", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  pexelsId: bigint("pexels_id", { mode: "number" }).notNull().unique(),
+  imageUrl: text("image_url").notNull(),
+  alt: text("alt").notNull().default(""),
+  photographer: text("photographer").notNull().default(""),
+  photographerUrl: text("photographer_url").notNull().default(""),
+  pexelsUrl: text("pexels_url").notNull().default(""),
+  width: integer("width").notNull(),
+  height: integer("height").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});

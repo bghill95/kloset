@@ -39,9 +39,23 @@ export default async function globalSetup() {
     worn_on date NOT NULL,
     UNIQUE (outfit_id, worn_on)
   )`;
+  // Keep in sync with lib/db/schema.ts
+  await sql`CREATE TABLE IF NOT EXISTS pins (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    pexels_id bigint NOT NULL UNIQUE,
+    image_url text NOT NULL,
+    alt text NOT NULL DEFAULT '',
+    photographer text NOT NULL DEFAULT '',
+    photographer_url text NOT NULL DEFAULT '',
+    pexels_url text NOT NULL DEFAULT '',
+    width integer NOT NULL,
+    height integer NOT NULL,
+    created_at timestamp NOT NULL DEFAULT now()
+  )`;
   await sql`DELETE FROM settings`;
   await sql`DELETE FROM items`;
   await sql`DELETE FROM base_photos`;
   await sql`DELETE FROM outfits`;
   await sql`DELETE FROM wears`;
+  await sql`DELETE FROM pins`;
 }
