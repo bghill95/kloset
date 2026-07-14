@@ -47,6 +47,20 @@ export default function PinLightbox({ pin, saved, onToggleSave, onClose }: Props
     }
   }
 
+  function trapTab(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (e.key !== "Tab") return;
+    const focusables = e.currentTarget.querySelectorAll<HTMLElement>("a[href], button");
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
   return (
     <div
       role="dialog"
@@ -55,6 +69,7 @@ export default function PinLightbox({ pin, saved, onToggleSave, onClose }: Props
       className="fixed inset-0 z-50 overflow-y-auto bg-canvas p-4"
       onKeyDown={(e) => {
         if (e.key === "Escape") onClose();
+        trapTab(e);
       }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
