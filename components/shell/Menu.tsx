@@ -102,6 +102,9 @@ export default function Menu() {
               );
             })}
           </nav>
+          <p className="px-8 pb-8 text-xs font-medium text-white/70">
+            built by Pseudo Engineering Studios
+          </p>
         </div>
       )}
     </>

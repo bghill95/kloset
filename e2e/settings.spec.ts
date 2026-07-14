@@ -114,3 +114,8 @@ test.describe.serial("calendar and weather settings flows", () => {
     await expect(page.getByLabel("Calendar link")).toBeVisible();
   });
 });
+
+test("studio credit signs the foot of the page", async ({ page }) => {
+  await page.goto("/settings");
+  await expect(page.getByText("built by Pseudo Engineering Studios")).toBeVisible();
+});

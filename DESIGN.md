@@ -57,6 +57,8 @@ components:
   text-input:       { backgroundColor: "{colors.canvas}", textColor: "{colors.ink}", typography: "{typography.body-md}", rounded: "{rounded.card}", padding: 11px 15px, height: 44px }
   menu-overlay:     { backgroundColor: "{colors.menu}", textColor: "{colors.on-menu}", typography: "{typography.display-menu}", rounded: "{rounded.none}" }
   page-header:      { backgroundColor: "{colors.canvas}", textColor: "{colors.ink}", typography: "{typography.display-title}", rounded: "{rounded.none}" }
+  studio-credit:    { backgroundColor: "{colors.canvas}", textColor: "{colors.ash}", typography: "{typography.caption}" }
+  studio-credit-menu: { backgroundColor: "{colors.menu}", textColor: "{colors.on-menu} at 70%", typography: "{typography.caption}" }
 ---
 
 ## Overview

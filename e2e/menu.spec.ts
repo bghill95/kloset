@@ -18,6 +18,16 @@ test("full-screen menu navigates between all seven screens", async ({ page }) =>
   }
 });
 
+test("studio credit signs the open menu", async ({ page }) => {
+  await page.goto("/today");
+  await page.getByRole("button", { name: "Open menu" }).click();
+  await expect(
+    page
+      .getByRole("dialog", { name: "Menu" })
+      .getByText("built by Pseudo Engineering Studios"),
+  ).toBeVisible();
+});
+
 test("menu closes on Escape without navigating", async ({ page }) => {
   await page.goto("/today");
   await page.getByRole("button", { name: "Open menu" }).click();

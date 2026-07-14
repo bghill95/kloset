@@ -34,6 +34,9 @@ export default async function SettingsPage() {
         <CalendarSection currentUrl={icsUrl} />
         <WeatherSection currentLabel={weatherLabel} />
       </div>
+      <p className="mt-16 pb-8 text-center text-xs font-medium text-ash">
+        built by Pseudo Engineering Studios
+      </p>
     </>
   );
 }
