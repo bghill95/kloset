@@ -6,9 +6,9 @@ test("health endpoint reports db connectivity without auth", async ({ request })
   expect(await res.json()).toEqual({ ok: true, db: true });
 });
 
-test("full-screen menu navigates between all six screens", async ({ page }) => {
+test("full-screen menu navigates between all seven screens", async ({ page }) => {
   await page.goto("/today");
-  for (const name of ["Closet", "Studio", "Stylist", "Lookbook", "Settings", "Today"]) {
+  for (const name of ["Closet", "Studio", "Stylist", "Explore", "Lookbook", "Settings", "Today"]) {
     await page.getByRole("button", { name: "Open menu" }).click();
     const dialog = page.getByRole("dialog", { name: "Menu" });
     await expect(dialog).toBeVisible();
