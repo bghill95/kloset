@@ -2,9 +2,9 @@
   "name": "kloset",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 8000",
+    "dev": "next dev -p 4100",
     "build": "next build",
-    "start": "next start -p 8000",
+    "start": "next start -p 4100",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

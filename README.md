@@ -25,7 +25,7 @@ Vercel Blob · OpenAI (server-side only) · deployed on Vercel.
 cp .env.example .env.local   # fill in DATABASE_URL
 npm install
 npm run db:push              # push schema to your Postgres
-MOCK_AI=1 npm run dev        # http://localhost:8000
+MOCK_AI=1 npm run dev        # http://localhost:4100
 ```
 
 `MOCK_AI=1` serves canned AI fixtures (no OpenAI/Blob calls) — the default
@@ -35,7 +35,7 @@ for development and all tests.
 
 | Command | What it does |
 |---|---|
-| `npm run dev` | dev server on :8000 |
+| `npm run dev` | dev server on :4100 |
 | `npm test` | Vitest unit tests |
 | `npm run test:e2e` | Playwright e2e (**wipes** settings/items/base_photos — never point `DATABASE_URL` at data you care about) |
 | `npm run typecheck` | `tsc --noEmit` |
