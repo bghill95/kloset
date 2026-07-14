@@ -17,7 +17,7 @@ Currently resolved to Next 16 / React 19 / TS 6 (see package-lock.json).
 
 ## Commands
 
-- `npm run dev` — dev server on :8000
+- `npm run dev` — dev server on :4100
 - `npm test` — Vitest unit tests (patterns in vitest.config.ts: lib/**/*.test.ts and lib/**/*.spec.ts)
 - `npm run test:e2e` — Playwright (creates + wipes the settings, items, base_photos, outfits, wears and pins tables on each run!)
 - `npm run typecheck` — tsc --noEmit

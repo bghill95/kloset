@@ -177,7 +177,8 @@ export default function ExploreFeed({ savedPins }: { savedPins: SavedPin[] }) {
           !loading &&
           hasMore &&
           seed !== null &&
-          pins.length > 0
+          pins.length > 0 &&
+          !error
         ) {
           void loadPage(page + 1, seed, q, pins);
         }
@@ -186,7 +187,7 @@ export default function ExploreFeed({ savedPins }: { savedPins: SavedPin[] }) {
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [view, loading, hasMore, seed, q, page, pins, loadPage]);
+  }, [view, loading, hasMore, seed, q, page, pins, error, loadPage]);
 
   function shuffle() {
     if (loading) return;
