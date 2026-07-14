@@ -2,53 +2,16 @@
 
 import Link from "next/link";
 import { type FormEvent, useEffect, useState } from "react";
-import OutfitActions from "@/components/outfits/OutfitActions";
-import OutfitCollage from "@/components/studio/OutfitCollage";
-import type { ClosetItem } from "@/lib/closet/types";
+import SuggestionCard, {
+  fetchStylistOutfits,
+  type StylistOutfit,
+} from "@/components/outfits/SuggestionCard";
 import { localDateKey } from "@/lib/today/date";
-
-type StylistOutfit = { name: string; reason: string; items: ClosetItem[] };
 
 const FEED_CACHE_KEY = "kloset-stylist-feed";
 const FEED_COUNT = 6;
 const OCCASION_COUNT = 3;
 const MAX_DATE_OFFSET_DAYS = 15; // open-meteo forecast horizon
-
-async function fetchOutfits(body: {
-  count: number;
-  occasion?: string;
-  date?: string;
-}): Promise<StylistOutfit[]> {
-  const res = await fetch("/api/stylist", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  const data = (await res.json().catch(() => null)) as
-    | { outfits?: StylistOutfit[]; error?: string }
-    | null;
-  if (!res.ok || !data?.outfits) {
-    throw new Error(data?.error ?? "Styling failed — try again.");
-  }
-  return data.outfits;
-}
-
-function SuggestionCard({ outfit }: { outfit: StylistOutfit }) {
-  return (
-    <div className="flex flex-col gap-3" data-testid="suggestion-card">
-      <OutfitCollage items={outfit.items} />
-      <div>
-        <p className="font-bold text-ink">{outfit.name}</p>
-        {outfit.reason && <p className="text-sm text-mute">{outfit.reason}</p>}
-      </div>
-      <OutfitActions
-        name={outfit.name}
-        itemIds={outfit.items.map((i) => i.id)}
-        source="stylist"
-      />
-    </div>
-  );
-}
 
 export default function StylistTab() {
   const [feed, setFeed] = useState<StylistOutfit[] | null>(null);
@@ -65,7 +28,7 @@ export default function StylistTab() {
     setFeedLoading(true);
     setFeedError(null);
     try {
-      const outfits = await fetchOutfits({ count: FEED_COUNT });
+      const outfits = await fetchStylistOutfits({ count: FEED_COUNT });
       setFeed(outfits);
       if (outfits.length > 0) {
         try {
@@ -105,7 +68,7 @@ export default function StylistTab() {
     setResultsError(null);
     try {
       setResults(
-        await fetchOutfits({
+        await fetchStylistOutfits({
           count: OCCASION_COUNT,
           occasion: occasion.trim(),
           date: date || undefined,
