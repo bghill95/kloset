@@ -1,6 +1,6 @@
 // lib/explore/pexels.test.ts
-import { describe, expect, it } from "vitest";
-import { mockPins, parsePexelsResponse } from "./pexels";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { mockPins, parsePexelsResponse, searchPexels } from "./pexels";
 
 const photo = (id: number, over: Record<string, unknown> = {}) => ({
   id,
@@ -65,5 +65,49 @@ describe("mockPins", () => {
     expect(first.width).toBeGreaterThan(0);
     expect(first.height).toBeGreaterThan(0);
     expect(first.alt).toBe("Mock pin parisian chic 1");
+  });
+});
+
+describe("searchPexels", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+
+  it("serves mock pins under MOCK_AI=1 when no key is set", async () => {
+    vi.stubEnv("MOCK_AI", "1");
+    vi.stubEnv("PEXELS_API_KEY", "");
+    const fetchSpy = vi.fn();
+    vi.stubGlobal("fetch", fetchSpy);
+    const { pins } = await searchPexels("boho outfit", 1, 4);
+    expect(pins[0].imageUrl).toMatch(/^\/fixtures\/pin-\d\.svg$/);
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it("calls the real API when a key is set, even under MOCK_AI=1", async () => {
+    vi.stubEnv("MOCK_AI", "1");
+    vi.stubEnv("PEXELS_API_KEY", "test-key");
+    const fetchSpy = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ photos: [] }),
+    });
+    vi.stubGlobal("fetch", fetchSpy);
+    await searchPexels("boho outfit", 1, 4);
+    expect(fetchSpy).toHaveBeenCalledOnce();
+    expect(fetchSpy.mock.calls[0][1].headers.Authorization).toBe("test-key");
+  });
+
+  it("biases every real query toward women's fashion", async () => {
+    vi.stubEnv("MOCK_AI", "0");
+    vi.stubEnv("PEXELS_API_KEY", "test-key");
+    const fetchSpy = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ photos: [] }),
+    });
+    vi.stubGlobal("fetch", fetchSpy);
+    await searchPexels("street style fashion", 1, 4);
+    expect(fetchSpy.mock.calls[0][0]).toContain(
+      encodeURIComponent("women street style fashion"),
+    );
   });
 });

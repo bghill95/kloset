@@ -21,6 +21,8 @@ export default defineConfig({
     command: "npm run dev",
     url: BASE,
     reuseExistingServer: !process.env.CI,
-    env: { ...process.env, MOCK_AI: "1" } as Record<string, string>,
+    // PEXELS_API_KEY is blanked so Explore stays on canned pins even when the
+    // developer's .env.local has a real key (a real key overrides MOCK_AI).
+    env: { ...process.env, MOCK_AI: "1", PEXELS_API_KEY: "" } as Record<string, string>,
   },
 });

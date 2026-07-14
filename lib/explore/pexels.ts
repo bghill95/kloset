@@ -84,11 +84,15 @@ export async function searchPexels(
   page: number,
   perPage: number,
 ): Promise<FeedPage> {
-  if (process.env.MOCK_AI === "1") return { pins: mockPins(query, page, perPage), hasMore: true };
   // Lazy env read — never at module scope (learned rule).
   const key = process.env.PEXELS_API_KEY;
+  // A real key wins over MOCK_AI: Pexels is free/read-only, so Explore can go
+  // live while OpenAI/Blob stay mocked. e2e pins PEXELS_API_KEY="" to stay canned.
+  if (process.env.MOCK_AI === "1" && !key)
+    return { pins: mockPins(query, page, perPage), hasMore: true };
   if (!key) throw new Error("PEXELS_API_KEY is not set");
-  const url = `${PEXELS_SEARCH_URL}?query=${encodeURIComponent(query)}&page=${page}&per_page=${perPage}`;
+  // Women's fashion only — Pexels otherwise mixes in menswear.
+  const url = `${PEXELS_SEARCH_URL}?query=${encodeURIComponent(`women ${query}`)}&page=${page}&per_page=${perPage}`;
   const res = await fetch(url, {
     headers: { Authorization: key },
     signal: AbortSignal.timeout(10_000),
