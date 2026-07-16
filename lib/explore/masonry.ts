@@ -5,6 +5,7 @@ import type { Pin } from "./pexels";
 // pins already placed never move when a new page is appended — CSS `columns`
 // would reflow them on every append.
 export function splitColumns(pins: Pin[], count: number): Pin[][] {
+  if (count < 1) return [];
   const heights = Array.from({ length: count }, () => 0);
   const cols: Pin[][] = Array.from({ length: count }, () => []);
   for (const pin of pins) {

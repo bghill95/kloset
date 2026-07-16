@@ -38,8 +38,11 @@ export function parsePexelsResponse(raw: unknown): FeedPage {
       height: p.height,
       alt: typeof p.alt === "string" ? p.alt : "",
       photographer: typeof p.photographer === "string" ? p.photographer : "",
-      photographerUrl: typeof p.photographer_url === "string" ? p.photographer_url : "",
-      pexelsUrl: typeof p.url === "string" ? p.url : "",
+      photographerUrl:
+        typeof p.photographer_url === "string" && p.photographer_url.startsWith("https://")
+          ? p.photographer_url
+          : "",
+      pexelsUrl: typeof p.url === "string" && p.url.startsWith("https://") ? p.url : "",
       imageUrl: src.large,
     });
   }

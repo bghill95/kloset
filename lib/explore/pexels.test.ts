@@ -111,3 +111,42 @@ describe("searchPexels", () => {
     );
   });
 });
+
+describe("parsePexelsResponse credit links", () => {
+  it("blanks non-https photographer and pexels urls", () => {
+    const { pins } = parsePexelsResponse({
+      photos: [photo(9, { photographer_url: "http://insecure.example", url: "javascript:alert(1)" })],
+    });
+    expect(pins[0].photographerUrl).toBe("");
+    expect(pins[0].pexelsUrl).toBe("");
+  });
+});
+
+describe("searchPexels", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+
+  it("returns canned pins under MOCK_AI without a key", async () => {
+    vi.stubEnv("MOCK_AI", "1");
+    vi.stubEnv("PEXELS_API_KEY", "");
+    await expect(searchPexels("boho", 1, 4)).resolves.toEqual({
+      pins: mockPins("boho", 1, 4),
+      hasMore: true,
+    });
+  });
+
+  it("throws without a key when not mocked", async () => {
+    vi.stubEnv("MOCK_AI", "0");
+    vi.stubEnv("PEXELS_API_KEY", "");
+    await expect(searchPexels("boho", 1, 4)).rejects.toThrow("PEXELS_API_KEY");
+  });
+
+  it("throws on a non-OK response", async () => {
+    vi.stubEnv("MOCK_AI", "0");
+    vi.stubEnv("PEXELS_API_KEY", "k");
+    vi.stubGlobal("fetch", vi.fn(async () => ({ ok: false, status: 429 })));
+    await expect(searchPexels("boho", 1, 4)).rejects.toThrow("429");
+  });
+});

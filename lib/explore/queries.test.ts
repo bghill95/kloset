@@ -41,3 +41,12 @@ describe("buildFeedQueries", () => {
     expect(orders.size).toBeGreaterThan(1);
   });
 });
+
+describe("buildFeedQueries dedup", () => {
+  it("drops a closet query that duplicates a staple", () => {
+    const items = [{ styleTags: ["casual chic"], colors: [] }];
+    const qs = buildFeedQueries(items, 1);
+    expect(qs).toHaveLength(STAPLE_QUERIES.length);
+    expect(new Set(qs).size).toBe(qs.length);
+  });
+});

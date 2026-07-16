@@ -1,14 +1,9 @@
 // app/api/pins/route.ts
-import { desc, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db/client";
 import { pins } from "@/lib/db/schema";
 import { validatePinBody } from "@/lib/explore/validation";
-
-export async function GET() {
-  const rows = await getDb().select().from(pins).orderBy(desc(pins.createdAt));
-  return NextResponse.json({ pins: rows });
-}
 
 // Toggle, like /api/wears: posting an already-saved pexelsId unsaves it.
 export async function POST(req: NextRequest) {
@@ -29,6 +24,12 @@ export async function POST(req: NextRequest) {
     await db.delete(pins).where(eq(pins.pexelsId, pin.pexelsId));
     return NextResponse.json({ saved: false });
   }
-  const [row] = await db.insert(pins).values(pin).returning();
+  const [row] = await db.insert(pins).values(pin).onConflictDoNothing().returning();
+  if (!row) {
+    // Lost a double-click race — the concurrent request saved it first.
+    const [existing] = await db.select().from(pins).where(eq(pins.pexelsId, pin.pexelsId));
+    if (!existing) return NextResponse.json({ saved: false });
+    return NextResponse.json({ saved: true, pin: existing });
+  }
   return NextResponse.json({ saved: true, pin: row }, { status: 201 });
 }

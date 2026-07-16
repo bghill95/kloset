@@ -9,6 +9,18 @@ const CACHE_KEY = "kloset-explore-feed";
 
 type Cached = { seed: number; page: number; q: string; pins: Pin[]; hasMore: boolean };
 
+function isCached(v: unknown): v is Cached {
+  if (typeof v !== "object" || v === null) return false;
+  const c = v as Record<string, unknown>;
+  return (
+    typeof c.seed === "number" &&
+    typeof c.page === "number" &&
+    typeof c.q === "string" &&
+    typeof c.hasMore === "boolean" &&
+    Array.isArray(c.pins)
+  );
+}
+
 function chipClass(active: boolean) {
   return `rounded-full px-4 py-2 text-sm font-bold ${
     active ? "bg-ink text-canvas" : "bg-card text-ink"
@@ -116,9 +128,15 @@ export default function ExploreFeed({ savedPins }: { savedPins: SavedPin[] }) {
         if (!res.ok || !data?.pins) {
           throw new Error(data?.error ?? "Couldn't load inspiration — try again.");
         }
-        // Neighboring queries can return the same photo — drop repeats.
+        // Neighboring queries — and a single page — can repeat a photo; drop repeats.
         const seen = new Set(current.map((p) => p.pexelsId));
-        const merged = [...current, ...data.pins.filter((p) => !seen.has(p.pexelsId))];
+        const merged = [...current];
+        for (const p of data.pins) {
+          if (!seen.has(p.pexelsId)) {
+            seen.add(p.pexelsId);
+            merged.push(p);
+          }
+        }
         setPins(merged);
         setPage(nextPage);
         setHasMore(data.hasMore ?? false);
@@ -148,14 +166,16 @@ export default function ExploreFeed({ savedPins }: { savedPins: SavedPin[] }) {
     try {
       const raw = sessionStorage.getItem(CACHE_KEY);
       if (raw) {
-        const c = JSON.parse(raw) as Cached;
-        setPins(c.pins);
-        setPage(c.page);
-        setSeed(c.seed);
-        setQ(c.q);
-        setSearchInput(c.q);
-        setHasMore(c.hasMore);
-        return;
+        const c: unknown = JSON.parse(raw);
+        if (isCached(c)) {
+          setPins(c.pins);
+          setPage(c.page);
+          setSeed(c.seed);
+          setQ(c.q);
+          setSearchInput(c.q);
+          setHasMore(c.hasMore);
+          return;
+        }
       }
     } catch {
       // Bad cache — fall through to a fresh load.
@@ -320,6 +340,9 @@ export default function ExploreFeed({ savedPins }: { savedPins: SavedPin[] }) {
       {view === "forYou" ? (
         <>
           {grid(pins, "pin-grid")}
+          {!loading && !error && q && pins.length === 0 && (
+            <p className="text-mute">Nothing for “{q}” — try another search.</p>
+          )}
           {loading && (
             <p role="status" className="text-sm text-mute">
               Finding inspiration…

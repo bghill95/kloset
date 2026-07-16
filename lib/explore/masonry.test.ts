@@ -32,4 +32,9 @@ describe("splitColumns", () => {
   it("a single column keeps feed order", () => {
     expect(splitColumns([pin(1, 500), pin(2, 900)], 1)[0].map((p) => p.pexelsId)).toEqual([1, 2]);
   });
+
+  it("returns no columns for a non-positive count", () => {
+    expect(splitColumns([pin(1, 500)], 0)).toEqual([]);
+    expect(splitColumns([pin(1, 500)], -2)).toEqual([]);
+  });
 });

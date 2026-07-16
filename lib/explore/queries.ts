@@ -36,7 +36,7 @@ function rng(seed: number): () => number {
 }
 
 export function buildFeedQueries(items: Seedable[], seed: number): string[] {
-  const pool = [...closetQueries(items), ...STAPLE_QUERIES];
+  const pool = [...new Set([...closetQueries(items), ...STAPLE_QUERIES])];
   const rand = rng(seed);
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(rand() * (i + 1));
