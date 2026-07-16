@@ -1,4 +1,5 @@
 import type { ContextEvent, WeatherSummary } from "./types";
+import { addDaysKey, type DayForecast } from "./weather";
 
 // Mock-mode fixtures derive from the requested window so the status bar always
 // has content in dev/e2e regardless of wall-clock time.
@@ -40,3 +41,14 @@ export const FIXTURE_LOCATION = {
   lon: -117.35,
   label: "Mock City",
 };
+
+// Deterministic per-day forecast for MOCK_AI trips: same summary every day.
+export function fixtureForecastRange(start: string, end: string): DayForecast[] {
+  const out: DayForecast[] = [];
+  let d = start;
+  while (d <= end && out.length < 16) {
+    out.push({ date: d, ...FIXTURE_WEATHER });
+    d = addDaysKey(d, 1);
+  }
+  return out;
+}

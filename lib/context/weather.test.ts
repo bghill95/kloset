@@ -1,9 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
+  addDaysKey,
+  buildForecastRangeUrl,
   buildForecastUrl,
   buildGeocodeUrl,
+  clampForecastWindow,
   parseGeocode,
   summarizeForecast,
+  summarizeForecastRange,
   weatherLabel,
 } from "./weather";
 
@@ -84,5 +88,53 @@ describe("buildForecastUrl with a date", () => {
     const url = new URL(buildForecastUrl(40, -70));
     expect(url.searchParams.get("forecast_days")).toBe("1");
     expect(url.searchParams.get("start_date")).toBeNull();
+  });
+});
+
+describe("range forecast", () => {
+  it("addDaysKey does date math on YYYY-MM-DD keys", () => {
+    expect(addDaysKey("2026-07-15", 15)).toBe("2026-07-30");
+    expect(addDaysKey("2026-12-30", 3)).toBe("2027-01-02");
+  });
+
+  it("buildForecastRangeUrl requests the span", () => {
+    const url = buildForecastRangeUrl(48.85, 2.35, "2026-07-20", "2026-07-23");
+    expect(url).toContain("start_date=2026-07-20");
+    expect(url).toContain("end_date=2026-07-23");
+    expect(url).toContain("daily=weathercode");
+  });
+
+  it("summarizeForecastRange maps parallel daily arrays and skips bad rows", () => {
+    const days = summarizeForecastRange({
+      daily: {
+        time: ["2026-07-20", "2026-07-21", "2026-07-22"],
+        temperature_2m_min: [14.2, null, 15.1],
+        temperature_2m_max: [22.8, 24, 25.4],
+        weathercode: [2, 3, 61],
+      },
+    });
+    expect(days).toHaveLength(2);
+    expect(days[0]).toEqual({
+      date: "2026-07-20",
+      tempMin: 14,
+      tempMax: 23,
+      code: 2,
+      label: "Partly cloudy",
+      emoji: "⛅",
+    });
+    expect(days[1].date).toBe("2026-07-22");
+    expect(summarizeForecastRange(null)).toEqual([]);
+  });
+
+  it("clampForecastWindow clips to today..today+15 and nulls beyond", () => {
+    expect(clampForecastWindow("2026-08-10", "2026-08-12", "2026-07-15")).toBeNull();
+    expect(clampForecastWindow("2026-07-10", "2026-09-01", "2026-07-15")).toEqual({
+      start: "2026-07-15",
+      end: "2026-07-30",
+    });
+    expect(clampForecastWindow("2026-07-20", "2026-07-23", "2026-07-15")).toEqual({
+      start: "2026-07-20",
+      end: "2026-07-23",
+    });
   });
 });
