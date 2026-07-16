@@ -19,7 +19,17 @@ export default function StylistTab() {
   const [feedError, setFeedError] = useState<string | null>(null);
 
   const [occasion, setOccasion] = useState("");
-  const [date, setDate] = useState(() => localDateKey());
+  // Client-only date init: the server's local date can differ from the
+  // viewer's (same family as TodayCard's dateKey fix).
+  const [date, setDate] = useState("");
+  const [dateBounds, setDateBounds] = useState<{ min: string; max: string } | null>(null);
+  useEffect(() => {
+    setDate(localDateKey());
+    setDateBounds({
+      min: localDateKey(),
+      max: localDateKey(new Date(Date.now() + MAX_DATE_OFFSET_DAYS * 24 * 60 * 60 * 1000)),
+    });
+  }, []);
   const [results, setResults] = useState<StylistOutfit[] | null>(null);
   const [resultsLoading, setResultsLoading] = useState(false);
   const [resultsError, setResultsError] = useState<string | null>(null);
@@ -82,11 +92,6 @@ export default function StylistTab() {
     }
   }
 
-  const minDate = localDateKey();
-  const maxDate = localDateKey(
-    new Date(Date.now() + MAX_DATE_OFFSET_DAYS * 24 * 60 * 60 * 1000),
-  );
-
   return (
     <div className="mt-4 flex flex-col gap-8">
       <form onSubmit={styleOccasion} className="flex flex-col gap-2 rounded-card bg-card p-4">
@@ -109,8 +114,8 @@ export default function StylistTab() {
             id="occasion-date"
             type="date"
             value={date}
-            min={minDate}
-            max={maxDate}
+            min={dateBounds?.min}
+            max={dateBounds?.max}
             onChange={(e) => setDate(e.target.value)}
             className="rounded-full bg-canvas px-4 py-2 text-sm text-ink"
           />
@@ -129,7 +134,7 @@ export default function StylistTab() {
           Styling your occasion…
         </p>
       )}
-      {resultsError && <p className="text-sm text-error">{resultsError}</p>}
+      {resultsError && <p role="alert" className="text-sm text-error">{resultsError}</p>}
       {results && !resultsLoading && (
         <section aria-label="Occasion looks" className="flex flex-col gap-6">
           <div className="flex items-center justify-between">
@@ -167,7 +172,7 @@ export default function StylistTab() {
             Styling your closet…
           </p>
         )}
-        {feedError && <p className="text-sm text-error">{feedError}</p>}
+        {feedError && <p role="alert" className="text-sm text-error">{feedError}</p>}
         {feed && !feedLoading && feed.length === 0 && (
           <div className="flex flex-col items-center gap-3 py-8 text-center">
             <p className="font-display text-3xl text-ink">Not enough to style yet</p>

@@ -1,8 +1,8 @@
 import OutfitActions from "@/components/outfits/OutfitActions";
 import OutfitCollage from "@/components/studio/OutfitCollage";
-import type { ClosetItem } from "@/lib/closet/types";
+import type { SerializedClosetItem } from "@/lib/closet/types";
 
-export type StylistOutfit = { name: string; reason: string; items: ClosetItem[] };
+export type StylistOutfit = { name: string; reason: string; items: SerializedClosetItem[] };
 
 export async function fetchStylistOutfits(body: {
   count: number;

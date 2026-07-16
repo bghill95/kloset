@@ -57,7 +57,7 @@ export default function DeleteOutfitButton({ outfitId }: { outfitId: string }) {
       >
         Keep
       </button>
-      {error && <p className="w-full text-sm text-error">{error}</p>}
+      {error && <p role="alert" className="w-full text-sm text-error">{error}</p>}
     </div>
   );
 }

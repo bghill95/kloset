@@ -335,7 +335,7 @@ export default function ExploreFeed({ savedPins }: { savedPins: SavedPin[] }) {
         )}
       </div>
 
-      {error && <p className="text-sm text-error">{error}</p>}
+      {error && <p role="alert" className="text-sm text-error">{error}</p>}
 
       {view === "forYou" ? (
         <>

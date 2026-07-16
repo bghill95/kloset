@@ -60,5 +60,8 @@ test.describe.serial("wear history", () => {
     await page.getByRole("button", { name: "Delete", exact: true }).click();
     await expect(page).toHaveURL(/\/lookbook$/);
     await expect(page.getByRole("link", { name: /Wear-test look/ })).toHaveCount(0);
+    // The delete route sweeps orphan wears (no FK) — verify via the API.
+    const swept = await page.request.get("/api/wears?on=2026-07-01");
+    expect((await swept.json()).wears).toEqual([]);
   });
 });

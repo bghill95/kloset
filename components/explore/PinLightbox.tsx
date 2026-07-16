@@ -22,12 +22,15 @@ export default function PinLightbox({ pin, saved, onToggleSave, onClose }: Props
   const [styling, setStyling] = useState(false);
   const [styleError, setStyleError] = useState<string | null>(null);
 
-  // Same dialog manners as the Menu overlay: lock scroll, focus the close button.
+  // Same dialog manners as the Menu overlay: lock scroll, focus the close
+  // button, and hand focus back to the opener on close.
   useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
     document.body.style.overflow = "hidden";
     closeRef.current?.focus();
     return () => {
       document.body.style.overflow = "";
+      opener?.focus();
     };
   }, []);
 
@@ -142,7 +145,7 @@ export default function PinLightbox({ pin, saved, onToggleSave, onClose }: Props
             Styling your closet…
           </p>
         )}
-        {styleError && <p className="text-sm text-error">{styleError}</p>}
+        {styleError && <p role="alert" className="text-sm text-error">{styleError}</p>}
         {looks && !styling && (
           <section aria-label="Looks from your closet" className="flex flex-col gap-6">
             <h2 className="font-display text-3xl text-ink">From your closet</h2>

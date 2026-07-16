@@ -10,3 +10,6 @@ export type ClosetItem = {
   originalImageUrl: string;
   createdAt: Date;
 };
+
+// ClosetItem as it crosses a JSON boundary (Date serializes to an ISO string).
+export type SerializedClosetItem = Omit<ClosetItem, "createdAt"> & { createdAt: string };

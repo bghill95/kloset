@@ -15,7 +15,9 @@ const ZONES: Record<Category, CSSProperties> = {
   accessory: { left: "38%", top: "74%", width: "22%" },
 };
 
-export default function OutfitCollage({ items }: { items: ClosetItem[] }) {
+type CollageItem = Pick<ClosetItem, "id" | "name" | "category" | "imageUrl">;
+
+export default function OutfitCollage({ items }: { items: CollageItem[] }) {
   const ordered = CATEGORIES.flatMap((c) => items.filter((i) => i.category === c));
   return (
     <div
