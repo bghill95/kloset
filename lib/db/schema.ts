@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { bigint, boolean, date, integer, pgTable, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
+import { bigint, boolean, date, doublePrecision, integer, pgTable, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
 
 export const settings = pgTable("settings", {
   key: text("key").primaryKey(),
@@ -83,5 +83,19 @@ export const preferences = pgTable("preferences", {
   source: text("source", { enum: ["studio", "stylist", "today"] })
     .notNull()
     .default("stylist"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// Trips with an AI packing capsule. capsule = JSON-encoded {itemId, role}[]
+// (deleted items drop out at read time); packed_ids = the ticked subset.
+export const trips = pgTable("trips", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  destination: text("destination").notNull(),
+  lat: doublePrecision("lat").notNull(),
+  lon: doublePrecision("lon").notNull(),
+  startDate: date("start_date").notNull(),
+  endDate: date("end_date").notNull(),
+  capsule: text("capsule").notNull().default("[]"),
+  packedIds: uuid("packed_ids").array().notNull().default(sql`'{}'::uuid[]`),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });

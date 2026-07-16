@@ -61,6 +61,18 @@ export default async function globalSetup() {
     source text NOT NULL DEFAULT 'stylist',
     created_at timestamp NOT NULL DEFAULT now()
   )`;
+  // Keep in sync with lib/db/schema.ts
+  await sql`CREATE TABLE IF NOT EXISTS trips (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    destination text NOT NULL,
+    lat double precision NOT NULL,
+    lon double precision NOT NULL,
+    start_date date NOT NULL,
+    end_date date NOT NULL,
+    capsule text NOT NULL DEFAULT '[]',
+    packed_ids uuid[] NOT NULL DEFAULT '{}',
+    created_at timestamp NOT NULL DEFAULT now()
+  )`;
   await sql`DELETE FROM settings`;
   await sql`DELETE FROM items`;
   await sql`DELETE FROM base_photos`;
@@ -68,4 +80,5 @@ export default async function globalSetup() {
   await sql`DELETE FROM wears`;
   await sql`DELETE FROM pins`;
   await sql`DELETE FROM preferences`;
+  await sql`DELETE FROM trips`;
 }
