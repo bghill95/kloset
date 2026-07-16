@@ -48,8 +48,10 @@ export const wears = pgTable(
     // date column ⇒ "YYYY-MM-DD" strings, matching the client's local dateKey.
     wornOn: date("worn_on").notNull(),
   },
-  // Same outfit + same day is a toggle, never a duplicate. Name pinned to the
-  // live DB's (Postgres auto-name from e2e's CREATE TABLE) so db:push agrees.
+  // Same outfit + same day is a toggle, never a duplicate. Name pinned here,
+  // in the e2e mirror, and in the live DB so all three agree and db:push
+  // never tries to recreate it (residual DROP/ADD churn on every push is a
+  // separate upstream drizzle-kit bug, see CLAUDE.md learned rule).
   (t) => [unique("wears_outfit_id_worn_on_unique").on(t.outfitId, t.wornOn)],
 );
 
