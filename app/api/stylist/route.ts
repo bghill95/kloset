@@ -5,8 +5,9 @@ import { FIXTURE_WEATHER } from "@/lib/context/fixtures";
 import type { WeatherSummary } from "@/lib/context/types";
 import { buildForecastUrl, summarizeForecast } from "@/lib/context/weather";
 import { getDb } from "@/lib/db/client";
-import { items } from "@/lib/db/schema";
+import { items, preferences } from "@/lib/db/schema";
 import { getSetting } from "@/lib/db/settings";
+import { prefsSignal } from "@/lib/prefs/aggregate";
 
 const REVALIDATE_SECONDS = 900;
 
@@ -24,6 +25,9 @@ export async function POST(req: NextRequest) {
   const { count, occasion, date } = parsed.value;
 
   const all = await getDb().select().from(items).orderBy(desc(items.createdAt));
+
+  const votes = await getDb().select().from(preferences);
+  const prefs = votes.length > 0 ? prefsSignal(votes, all) : null;
 
   // Weather degrades to null; styling still works without it.
   let weather: WeatherSummary | null = null;
@@ -49,7 +53,7 @@ export async function POST(req: NextRequest) {
 
   let combos;
   try {
-    combos = await suggestOutfits(all, { count, occasion, date, weather });
+    combos = await suggestOutfits(all, { count, occasion, date, weather, prefs });
   } catch (err) {
     console.error("[stylist] suggestion failed:", err);
     return NextResponse.json({ error: "Styling failed — try again." }, { status: 502 });

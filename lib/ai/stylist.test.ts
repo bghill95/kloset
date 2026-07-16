@@ -4,6 +4,7 @@ import type { ClosetItem } from "@/lib/closet/types";
 import {
   closetCanDress,
   mockCombos,
+  stylistPrompt,
   suggestOutfits,
   validateCombos,
   validateStylistBody,
@@ -120,5 +121,38 @@ describe("validateStylistBody", () => {
     expect(validateStylistBody({ count: 2.5 }).ok).toBe(false);
     expect(validateStylistBody({ date: "next friday" }).ok).toBe(false);
     expect(validateStylistBody(null).ok).toBe(false);
+  });
+});
+
+describe("stylistPrompt", () => {
+  const promptItem = (id: string, category: Category, tags: string[]): ClosetItem => ({
+    id,
+    name: `Item ${id}`,
+    category,
+    colors: ["black"],
+    styleTags: tags,
+    imageUrl: "/x.svg",
+    originalImageUrl: "/x.svg",
+    createdAt: new Date("2026-01-01"),
+  });
+  const items = [promptItem("id-1", "top", ["minimalist"]), promptItem("id-2", "bottom", [])];
+  const prefs = {
+    scores: { "id-1": { likes: 2, dislikes: 1 } },
+    profile: { likedTags: ["minimalist"], dislikedTags: ["neon"], likedColors: [], dislikedColors: [] },
+  };
+
+  it("flags feedback inline and adds taste lines", () => {
+    const prompt = stylistPrompt(items, { count: 3, prefs });
+    expect(prompt).toContain("id-1 | top | Item id-1");
+    expect(prompt).toContain("feedback: liked 2×, disliked 1×");
+    expect(prompt).toContain("Her feedback says she likes: minimalist.");
+    expect(prompt).toContain("Her feedback says to avoid: neon.");
+    expect(prompt).toContain("Honor the feedback signals");
+  });
+
+  it("omits feedback plumbing without prefs", () => {
+    const prompt = stylistPrompt(items, { count: 3 });
+    expect(prompt).not.toContain("feedback:");
+    expect(prompt).not.toContain("Honor the feedback signals");
   });
 });

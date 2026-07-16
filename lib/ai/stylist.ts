@@ -2,6 +2,7 @@ import type { Category } from "@/lib/closet/categories";
 import { type Result } from "@/lib/closet/item-validation";
 import type { ClosetItem } from "@/lib/closet/types";
 import type { WeatherSummary } from "@/lib/context/types";
+import { type PrefsSignal, tasteLines } from "@/lib/prefs/aggregate";
 import { DATE_KEY_RE } from "@/lib/wears/validation";
 import { getOpenAI } from "./openai";
 
@@ -19,9 +20,10 @@ export type StylistOptions = {
   occasion?: string;
   date?: string; // YYYY-MM-DD, prompt context only
   weather?: WeatherSummary | null;
+  prefs?: PrefsSignal | null;
 };
 
-function isMockAi(): boolean {
+export function isMockAi(): boolean {
   return process.env.MOCK_AI === "1";
 }
 
@@ -92,13 +94,42 @@ export function mockCombos(items: ClosetItem[], count: number): StylistCombo[] {
   return combos;
 }
 
-function inventoryLines(items: ClosetItem[]): string {
+export function inventoryLines(items: ClosetItem[], prefs?: PrefsSignal | null): string {
   return items
-    .map(
-      (i) =>
-        `- ${i.id} | ${i.category} | ${i.name} | colors: ${i.colors.join(", ") || "n/a"} | tags: ${i.styleTags.join(", ") || "n/a"}`,
-    )
+    .map((i) => {
+      const s = prefs?.scores[i.id];
+      const parts: string[] = [];
+      if (s?.likes) parts.push(`liked ${s.likes}×`);
+      if (s?.dislikes) parts.push(`disliked ${s.dislikes}×`);
+      const feedback = parts.length > 0 ? ` | feedback: ${parts.join(", ")}` : "";
+      return `- ${i.id} | ${i.category} | ${i.name} | colors: ${i.colors.join(", ") || "n/a"} | tags: ${i.styleTags.join(", ") || "n/a"}${feedback}`;
+    })
     .join("\n");
+}
+
+export function stylistPrompt(items: ClosetItem[], opts: StylistOptions): string {
+  const contextLines = [
+    opts.occasion
+      ? `Occasion: ${opts.occasion}${opts.date ? ` on ${opts.date}` : ""}.`
+      : "General inspiration — varied, everyday looks.",
+    opts.weather
+      ? `Weather that day: ${opts.weather.tempMin}–${opts.weather.tempMax}°, ${opts.weather.label}.`
+      : null,
+    ...(opts.prefs ? tasteLines(opts.prefs.profile) : []),
+  ]
+    .filter(Boolean)
+    .join("\n");
+  const feedbackRule = opts.prefs
+    ? "Honor the feedback signals: favor liked items and styles, avoid disliked ones unless nothing else fits. "
+    : "";
+  return (
+    `You are a personal stylist. Compose ${opts.count} distinct outfits using ONLY items from this closet, referenced by their exact ids:\n` +
+    `${inventoryLines(items, opts.prefs)}\n\n${contextLines}\n\n` +
+    `Rules: every outfit needs either a dress, or a top and a bottom. At most one item per category. ` +
+    `Add shoes/jacket/hat/accessory only when they suit the look. ` +
+    feedbackRule +
+    `Give each outfit a short evocative name and a one-sentence reason.`
+  );
 }
 
 export async function suggestOutfits(
@@ -107,17 +138,6 @@ export async function suggestOutfits(
 ): Promise<StylistCombo[]> {
   if (!closetCanDress(items)) return [];
   if (isMockAi()) return mockCombos(items, opts.count);
-
-  const contextLines = [
-    opts.occasion
-      ? `Occasion: ${opts.occasion}${opts.date ? ` on ${opts.date}` : ""}.`
-      : "General inspiration — varied, everyday looks.",
-    opts.weather
-      ? `Weather that day: ${opts.weather.tempMin}–${opts.weather.tempMax}°, ${opts.weather.label}.`
-      : null,
-  ]
-    .filter(Boolean)
-    .join("\n");
 
   const res = await getOpenAI().chat.completions.create({
     model: STYLIST_MODEL,
@@ -151,12 +171,7 @@ export async function suggestOutfits(
     messages: [
       {
         role: "user",
-        content:
-          `You are a personal stylist. Compose ${opts.count} distinct outfits using ONLY items from this closet, referenced by their exact ids:\n` +
-          `${inventoryLines(items)}\n\n${contextLines}\n\n` +
-          `Rules: every outfit needs either a dress, or a top and a bottom. At most one item per category. ` +
-          `Add shoes/jacket/hat/accessory only when they suit the look. ` +
-          `Give each outfit a short evocative name and a one-sentence reason.`,
+        content: stylistPrompt(items, opts),
       },
     ],
   });
