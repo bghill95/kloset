@@ -95,3 +95,24 @@ describe("pickOutfit", () => {
     ]);
   });
 });
+
+describe("pickOutfit dislike filter", () => {
+  it("skips excluded items when alternatives exist", () => {
+    const t1 = item("top");
+    const t2 = item("top");
+    const b1 = item("bottom");
+    const closet = [t1, t2, b1];
+    for (const day of ["2026-07-15", "2026-07-16", "2026-07-17"]) {
+      const picked = pickOutfit(closet, null, day, new Set([t1.id]));
+      expect(picked?.picks.find((p) => p.category === "top")?.item.id).toBe(t2.id);
+    }
+  });
+
+  it("falls back to excluded items rather than emptying a category", () => {
+    const t1 = item("top");
+    const b1 = item("bottom");
+    const closet = [t1, b1];
+    const picked = pickOutfit(closet, null, "2026-07-15", new Set([t1.id, b1.id]));
+    expect(picked?.picks.map((p) => p.item.id).sort()).toEqual([t1.id, b1.id].sort());
+  });
+});

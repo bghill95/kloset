@@ -19,9 +19,13 @@ function choose(
   all: ClosetItem[],
   category: Category,
   dateKey: string,
+  excluded: ReadonlySet<string>,
 ): ClosetItem | null {
-  const candidates = all.filter((i) => i.category === category);
-  if (candidates.length === 0) return null;
+  const pool = all.filter((i) => i.category === category);
+  if (pool.length === 0) return null;
+  // Dislike filter with a fallback: feedback may never empty a category.
+  const preferred = pool.filter((i) => !excluded.has(i.id));
+  const candidates = preferred.length > 0 ? preferred : pool;
   return candidates[fnv1a(dateKey + category) % candidates.length];
 }
 
@@ -29,28 +33,29 @@ export function pickOutfit(
   all: ClosetItem[],
   weather: WeatherSummary | null,
   dateKey: string,
+  excludedIds: ReadonlySet<string> = new Set(),
 ): OutfitPick | null {
   const picks: OutfitPick["picks"] = [];
 
-  const top = choose(all, "top", dateKey);
-  const bottom = choose(all, "bottom", dateKey);
+  const top = choose(all, "top", dateKey, excludedIds);
+  const bottom = choose(all, "bottom", dateKey, excludedIds);
   if (top && bottom) {
     picks.push({ category: "top", item: top }, { category: "bottom", item: bottom });
   } else {
-    const dress = choose(all, "dress", dateKey);
+    const dress = choose(all, "dress", dateKey, excludedIds);
     if (!dress) return null;
     picks.push({ category: "dress", item: dress });
   }
 
-  const shoes = choose(all, "shoes", dateKey);
+  const shoes = choose(all, "shoes", dateKey, excludedIds);
   if (shoes) picks.push({ category: "shoes", item: shoes });
 
   if (weather && weather.tempMax <= 15) {
-    const jacket = choose(all, "jacket", dateKey);
+    const jacket = choose(all, "jacket", dateKey, excludedIds);
     if (jacket) picks.push({ category: "jacket", item: jacket });
   }
   if (weather && weather.tempMax <= 5) {
-    const hat = choose(all, "hat", dateKey);
+    const hat = choose(all, "hat", dateKey, excludedIds);
     if (hat) picks.push({ category: "hat", item: hat });
   }
 

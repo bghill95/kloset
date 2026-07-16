@@ -18,7 +18,13 @@ function formatTime(iso: string): string {
   });
 }
 
-export default function TodayCard({ items }: { items: ClosetItem[] }) {
+export default function TodayCard({
+  items,
+  dislikedIds = [],
+}: {
+  items: ClosetItem[];
+  dislikedIds?: string[];
+}) {
   const [context, setContext] = useState<ContextResponse | null>(null);
 
   useEffect(() => {
@@ -74,7 +80,7 @@ export default function TodayCard({ items }: { items: ClosetItem[] }) {
     return () => controller.abort();
   }, [dateKey]);
 
-  const outfit = dateKey ? pickOutfit(items, weather, dateKey) : null;
+  const outfit = dateKey ? pickOutfit(items, weather, dateKey, new Set(dislikedIds)) : null;
 
   return (
     <div className="flex flex-col gap-6">
