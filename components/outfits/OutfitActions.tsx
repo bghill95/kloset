@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { OutfitSource } from "@/lib/outfits/validation";
 import { localDateKey } from "@/lib/today/date";
 
@@ -37,6 +37,46 @@ export default function OutfitActions({
   const [worn, setWorn] = useState(initialWorn);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [vote, setVote] = useState<"like" | "dislike" | null>(null);
+
+  // Show the existing vote when this exact combo reappears (matched by item-set).
+  // ponytail: one lookup per mounted card — fine for a single-user app.
+  useEffect(() => {
+    if (itemIds.length === 0) return;
+    const controller = new AbortController();
+    (async () => {
+      try {
+        const res = await fetch(`/api/preferences?items=${itemIds.join(",")}`, {
+          signal: controller.signal,
+        });
+        if (res.ok) {
+          const data = (await res.json()) as { vote: "like" | "dislike" | null };
+          setVote(data.vote);
+        }
+      } catch {
+        // Lookup is best-effort; thumbs start neutral.
+      }
+    })();
+    return () => controller.abort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const voteOutfit = (verdict: "like" | "dislike") =>
+    run(async () => {
+      const res = await fetch("/api/preferences", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ itemIds, verdict, source }),
+      });
+      const data = (await res.json().catch(() => null)) as
+        | { vote?: "like" | "dislike" | null; error?: string }
+        | null;
+      if (!res.ok || !data || !("vote" in data)) {
+        throw new Error(data?.error ?? "Couldn't save your feedback — try again.");
+      }
+      setVote(data.vote ?? null);
+    });
 
   async function ensureSaved(): Promise<string> {
     if (outfitId) return outfitId;
@@ -116,6 +156,26 @@ export default function OutfitActions({
         <Link href={`/studio?items=${itemIds.join(",")}`} className={pillClass(false)}>
           Open in Studio
         </Link>
+        <button
+          type="button"
+          onClick={() => voteOutfit("like")}
+          disabled={busy}
+          aria-pressed={vote === "like"}
+          aria-label="Like this outfit"
+          className={pillClass(vote === "like")}
+        >
+          👍
+        </button>
+        <button
+          type="button"
+          onClick={() => voteOutfit("dislike")}
+          disabled={busy}
+          aria-pressed={vote === "dislike"}
+          aria-label="Dislike this outfit"
+          className={pillClass(vote === "dislike")}
+        >
+          👎
+        </button>
       </div>
       {error && <p role="alert" className="text-sm text-error">{error}</p>}
     </div>
