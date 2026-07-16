@@ -37,7 +37,7 @@ export default async function globalSetup() {
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     outfit_id uuid NOT NULL,
     worn_on date NOT NULL,
-    UNIQUE (outfit_id, worn_on)
+    CONSTRAINT wears_outfit_id_worn_on_unique UNIQUE (outfit_id, worn_on)
   )`;
   // Keep in sync with lib/db/schema.ts
   await sql`CREATE TABLE IF NOT EXISTS pins (

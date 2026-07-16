@@ -5,7 +5,7 @@ with weather/calendar-aware outfit, build outfits on AI photoreal renders,
 AI stylist suggestions. Single user.
 
 - Spec: docs/superpowers/specs/2026-06-10-virtual-closet-design.md
-- Current plan: docs/superpowers/plans/2026-07-11-kloset-p3-stylist-wears.md
+- Current plan: docs/superpowers/plans/2026-07-15-kloset-p4-preferences-trips-gaps.md
 
 ## Stack
 
@@ -56,6 +56,12 @@ Currently resolved to Next 16 / React 19 / TS 6 (see package-lock.json).
 - `npm run db:push` always re-emits `ALTER ... SET DEFAULT '{}'::text[]` for
   text-array columns — a drizzle-kit diffing quirk, not schema drift. The
   statements are no-ops; don't "fix" the schema in response.
+- `npm run db:push` also always re-emits `DROP CONSTRAINT` + `ADD CONSTRAINT`
+  for the `wears` composite unique constraint on every run, even with no
+  schema change — a known drizzle-kit push bug (composite unique-constraint
+  column-ordering in its introspection; see drizzle-orm issues #2888, #3274,
+  #3764, #4789). Metadata-only, no data loss, no confirmation prompt. Don't
+  try to "fix" it by renaming or restructuring the constraint.
 - Turbopack's persistent cache can serve stale `@theme` token values from
   `app/globals.css` even across a dev-server restart (and stale route types
   to `tsc` after deleting routes). When a token edit doesn't show up or

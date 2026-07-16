@@ -48,8 +48,9 @@ export const wears = pgTable(
     // date column ⇒ "YYYY-MM-DD" strings, matching the client's local dateKey.
     wornOn: date("worn_on").notNull(),
   },
-  // Same outfit + same day is a toggle, never a duplicate.
-  (t) => [unique().on(t.outfitId, t.wornOn)],
+  // Same outfit + same day is a toggle, never a duplicate. Name pinned to the
+  // live DB's (Postgres auto-name from e2e's CREATE TABLE) so db:push agrees.
+  (t) => [unique("wears_outfit_id_worn_on_unique").on(t.outfitId, t.wornOn)],
 );
 
 // Saved Explore pins (external Pexels photos). Stored denormalized so the
