@@ -52,10 +52,20 @@ export default async function globalSetup() {
     height integer NOT NULL,
     created_at timestamp NOT NULL DEFAULT now()
   )`;
+  // Keep in sync with lib/db/schema.ts
+  await sql`CREATE TABLE IF NOT EXISTS preferences (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    item_key text NOT NULL UNIQUE,
+    item_ids uuid[] NOT NULL,
+    verdict text NOT NULL,
+    source text NOT NULL DEFAULT 'stylist',
+    created_at timestamp NOT NULL DEFAULT now()
+  )`;
   await sql`DELETE FROM settings`;
   await sql`DELETE FROM items`;
   await sql`DELETE FROM base_photos`;
   await sql`DELETE FROM outfits`;
   await sql`DELETE FROM wears`;
   await sql`DELETE FROM pins`;
+  await sql`DELETE FROM preferences`;
 }

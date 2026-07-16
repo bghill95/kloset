@@ -70,3 +70,18 @@ export const pins = pgTable("pins", {
   height: integer("height").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+// Outfit-combo feedback (👍/👎 on suggestion cards). item_key is the
+// canonical sorted id list — one vote per distinct combo, so re-voting
+// toggles or flips in place. No FK (house pattern): deleted items simply
+// stop matching at aggregation time.
+export const preferences = pgTable("preferences", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  itemKey: text("item_key").notNull().unique(),
+  itemIds: uuid("item_ids").array().notNull(),
+  verdict: text("verdict", { enum: ["like", "dislike"] }).notNull(),
+  source: text("source", { enum: ["studio", "stylist", "today"] })
+    .notNull()
+    .default("stylist"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
