@@ -42,4 +42,10 @@ test.describe.serial("stylist", () => {
     await page.goto("/lookbook");
     await expect(page.getByText("Mock look 1").first()).toBeVisible();
   });
+
+  test("gaps card suggests additions below the feed", async ({ page }) => {
+    await page.goto("/stylist");
+    await expect(page.getByRole("heading", { name: "More outfits if you add" })).toBeVisible();
+    await expect(page.getByTestId("gap-suggestion").first()).toBeVisible();
+  });
 });

@@ -6,9 +6,11 @@ import SuggestionCard, {
   fetchStylistOutfits,
   type StylistOutfit,
 } from "@/components/outfits/SuggestionCard";
+import type { GapSuggestion } from "@/lib/ai/gaps";
 import { localDateKey } from "@/lib/today/date";
 
 const FEED_CACHE_KEY = "kloset-stylist-feed";
+const GAPS_CACHE_KEY = "kloset-stylist-gaps";
 const FEED_COUNT = 6;
 const OCCASION_COUNT = 3;
 const MAX_DATE_OFFSET_DAYS = 15; // open-meteo forecast horizon
@@ -68,6 +70,51 @@ export default function StylistTab() {
       // Bad cache — fall through to a fresh fetch.
     }
     void loadFeed();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [gaps, setGaps] = useState<GapSuggestion[] | null>(null);
+  const [gapsLoading, setGapsLoading] = useState(false);
+  const [gapsError, setGapsError] = useState<string | null>(null);
+
+  async function loadGaps() {
+    setGapsLoading(true);
+    setGapsError(null);
+    try {
+      const res = await fetch("/api/gaps");
+      const data = (await res.json().catch(() => null)) as
+        | { gaps?: GapSuggestion[]; error?: string }
+        | null;
+      if (!res.ok || !data?.gaps) {
+        throw new Error(data?.error ?? "Couldn't size up your closet — try again.");
+      }
+      setGaps(data.gaps);
+      if (data.gaps.length > 0) {
+        try {
+          sessionStorage.setItem(GAPS_CACHE_KEY, JSON.stringify(data.gaps));
+        } catch {
+          // Cache is an optimization — a failed write is not a failure.
+        }
+      }
+    } catch (err) {
+      setGapsError(err instanceof Error ? err.message : "Couldn't size up your closet — try again.");
+    } finally {
+      setGapsLoading(false);
+    }
+  }
+
+  // Same session-cache manners as the feed: shown instantly on return visits.
+  useEffect(() => {
+    try {
+      const cached = sessionStorage.getItem(GAPS_CACHE_KEY);
+      if (cached) {
+        setGaps(JSON.parse(cached) as GapSuggestion[]);
+        return;
+      }
+    } catch {
+      // Bad cache — fall through to a fresh fetch.
+    }
+    void loadGaps();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -190,6 +237,24 @@ export default function StylistTab() {
           feed.length > 0 &&
           feed.map((o, i) => <SuggestionCard key={`${o.name}-${i}`} outfit={o} />)}
       </section>
+
+      {(gapsLoading || gapsError || (gaps && gaps.length > 0)) && (
+        <section aria-label="Closet gaps" className="flex flex-col gap-3">
+          <h2 className="font-display text-3xl text-ink">More outfits if you add</h2>
+          {gapsLoading && (
+            <p role="status" className="text-sm text-mute">
+              Sizing up your closet…
+            </p>
+          )}
+          {gapsError && <p role="alert" className="text-sm text-error">{gapsError}</p>}
+          {gaps?.map((g) => (
+            <div key={g.piece} data-testid="gap-suggestion" className="rounded-card bg-card p-4">
+              <p className="font-bold text-ink">{g.piece}</p>
+              {g.reason && <p className="text-sm text-mute">{g.reason}</p>}
+            </div>
+          ))}
+        </section>
+      )}
     </div>
   );
 }
