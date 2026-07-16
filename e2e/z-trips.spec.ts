@@ -46,8 +46,15 @@ test.describe.serial("trips", () => {
     ).toBeChecked();
 
     // Regenerate keeps the tick — the mock capsule is deterministic.
+    const regenerated = page.waitForResponse(
+      (res) => res.request().method() === "POST" && res.url().includes("/capsule"),
+    );
     await page.getByRole("button", { name: "Regenerate capsule" }).click();
+    await regenerated;
     await expect(page.getByText(/1\/\d+ packed/)).toBeVisible();
+    await expect(
+      page.getByTestId("capsule-item").first().getByRole("checkbox"),
+    ).toBeChecked();
   });
 
   test("delete removes the trip", async ({ page }) => {
