@@ -1695,7 +1695,8 @@ export default function PinterestSection({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ boards: chosen }),
       });
-      if (!res.ok) throw new Error("Couldn't save boards — try again.");
+      const data = (await res.json().catch(() => null)) as { error?: string } | null;
+      if (!res.ok) throw new Error(data?.error ?? "Couldn't save boards — try again.");
       await runSync();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Sync failed — try again.");
@@ -1719,9 +1720,14 @@ export default function PinterestSection({
 
   async function disconnect() {
     setBusy(true);
+    setError(null);
+    setMessage(null);
     try {
-      await fetch("/api/pinterest/auth", { method: "DELETE" });
+      const res = await fetch("/api/pinterest/auth", { method: "DELETE" });
+      if (!res.ok) throw new Error("Couldn't disconnect — try again.");
       router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Couldn't disconnect — try again.");
     } finally {
       setBusy(false);
     }
@@ -1896,6 +1902,10 @@ Expected: only hits inside the four files being deleted + `playwright.config.ts`
 ```bash
 git rm lib/explore/pexels.ts lib/explore/pexels.test.ts lib/explore/queries.ts lib/explore/queries.test.ts
 ```
+
+- [ ] **Step 2b: Decouple `lib/explore/masonry.test.ts` from the deleted pexels module**
+
+Task 7 generalized `splitColumns` to `<T extends { width: number; height: number }>`, so the masonry test no longer needs the Pin type at all. Remove its `import ... from "./pexels"` line and replace its pin fixtures with minimal `{ width, height }` object literals (keep every existing assertion — only the fixture shape and import change).
 
 - [ ] **Step 3: `.env.example`** — replace the `PEXELS_API_KEY` block (comment + var) with:
 
