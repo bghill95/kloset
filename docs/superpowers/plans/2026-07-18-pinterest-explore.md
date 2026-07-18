@@ -1101,10 +1101,14 @@ export function validateBoardsBody(raw: unknown): Result<Board[]> {
     if (typeof b.id !== "string" || b.id.length === 0 || b.id.length > MAX_ID) {
       return { ok: false, error: "Each board needs a non-empty string id." };
     }
-    if (typeof b.name !== "string" || b.name.trim().length === 0 || b.name.length > MAX_NAME) {
+    if (typeof b.name !== "string") {
       return { ok: false, error: "Each board needs a non-empty name." };
     }
-    boards.push({ id: b.id, name: b.name.trim() });
+    const name = b.name.trim();
+    if (name.length === 0 || name.length > MAX_NAME) {
+      return { ok: false, error: "Each board needs a non-empty name." };
+    }
+    boards.push({ id: b.id, name });
   }
   return { ok: true, value: boards };
 }
@@ -1115,12 +1119,12 @@ export function validateBoardsBody(raw: unknown): Result<Board[]> {
 Create `lib/explore/sync.ts`:
 
 ```ts
-import { eq, notInArray } from "drizzle-orm";
 import { getDb } from "@/lib/db/client";
 import { pinterestPins } from "@/lib/db/schema";
 import { getSetting, setSetting } from "@/lib/db/settings";
 import {
   type Board,
+  type BoardPin,
   MOCK_BOARDS,
   getFreshAccessToken,
   isPinterestMock,
@@ -1159,25 +1163,24 @@ export async function syncPinterest(): Promise<{ synced: boolean; pinCount: numb
   const token = await getFreshAccessToken();
   const boards = await getSelectedBoards();
   if (!token || boards.length === 0) return { synced: false, pinCount: 0 };
-  const db = getDb();
-  let pinCount = 0;
+  // Fetch everything BEFORE touching the DB — a network failure mid-sync
+  // leaves the old cache fully intact (isStale retries on the next feed load).
+  const byId = new Map<string, BoardPin>();
   for (const board of boards) {
-    const boardPins = await listBoardPins(token, board);
-    pinCount += boardPins.length;
-    // Replace wholesale per board — pins deleted on Pinterest drop out too.
-    await db.delete(pinterestPins).where(eq(pinterestPins.boardId, board.id));
-    for (let i = 0; i < boardPins.length; i += 500) {
-      await db
-        .insert(pinterestPins)
-        .values(boardPins.slice(i, i + 500))
-        .onConflictDoNothing(); // same pin saved to two boards: first board wins
+    for (const pin of await listBoardPins(token, board)) {
+      if (!byId.has(pin.id)) byId.set(pin.id, pin);
     }
   }
-  await db.delete(pinterestPins).where(
-    notInArray(pinterestPins.boardId, boards.map((b) => b.id)),
-  );
+  const all = [...byId.values()];
+  const db = getDb();
+  // Full replace: deselected boards, deleted pins, and moved pins all drop
+  // out together — no stale boardId rows can survive a sync.
+  await db.delete(pinterestPins);
+  for (let i = 0; i < all.length; i += 500) {
+    await db.insert(pinterestPins).values(all.slice(i, i + 500));
+  }
   await setSetting(PINTEREST_SYNCED_KEY, String(Date.now()));
-  return { synced: true, pinCount };
+  return { synced: true, pinCount: all.length };
 }
 
 export async function syncIfStale(): Promise<void> {
