@@ -42,7 +42,9 @@ export default async function globalSetup() {
   // Keep in sync with lib/db/schema.ts
   await sql`CREATE TABLE IF NOT EXISTS pins (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    pexels_id bigint NOT NULL UNIQUE,
+    source text NOT NULL DEFAULT 'pexels',
+    external_id text NOT NULL,
+    pexels_id bigint,
     image_url text NOT NULL,
     alt text NOT NULL DEFAULT '',
     photographer text NOT NULL DEFAULT '',
@@ -50,7 +52,22 @@ export default async function globalSetup() {
     pexels_url text NOT NULL DEFAULT '',
     width integer NOT NULL,
     height integer NOT NULL,
-    created_at timestamp NOT NULL DEFAULT now()
+    created_at timestamp NOT NULL DEFAULT now(),
+    CONSTRAINT pins_source_external_id_unique UNIQUE (source, external_id)
+  )`;
+  // Keep in sync with lib/db/schema.ts
+  await sql`CREATE TABLE IF NOT EXISTS pinterest_pins (
+    id text PRIMARY KEY,
+    board_id text NOT NULL,
+    board_name text NOT NULL DEFAULT '',
+    title text NOT NULL DEFAULT '',
+    description text NOT NULL DEFAULT '',
+    link text NOT NULL DEFAULT '',
+    image_url text NOT NULL,
+    width integer NOT NULL,
+    height integer NOT NULL,
+    saved_at timestamp,
+    synced_at timestamp NOT NULL DEFAULT now()
   )`;
   // Keep in sync with lib/db/schema.ts
   await sql`CREATE TABLE IF NOT EXISTS preferences (
@@ -79,6 +96,7 @@ export default async function globalSetup() {
   await sql`DELETE FROM outfits`;
   await sql`DELETE FROM wears`;
   await sql`DELETE FROM pins`;
+  await sql`DELETE FROM pinterest_pins`;
   await sql`DELETE FROM preferences`;
   await sql`DELETE FROM trips`;
 }

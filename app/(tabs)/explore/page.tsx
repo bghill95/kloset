@@ -11,7 +11,7 @@ export default async function ExplorePage() {
   const rows = await getDb().select().from(pins).orderBy(desc(pins.createdAt));
   const savedPins: SavedPin[] = rows.map((r) => ({
     id: r.id,
-    pexelsId: r.pexelsId,
+    pexelsId: r.pexelsId ?? 0, // shim until Task 7 switches to savedRowToPin
     width: r.width,
     height: r.height,
     alt: r.alt,

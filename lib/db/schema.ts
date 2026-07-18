@@ -55,20 +55,48 @@ export const wears = pgTable(
   (t) => [unique("wears_outfit_id_worn_on_unique").on(t.outfitId, t.wornOn)],
 );
 
-// Saved Explore pins (external Pexels photos). Stored denormalized so the
-// Saved view renders without re-querying Pexels; unique pexels_id makes the
-// heart a clean save/unsave toggle.
-export const pins = pgTable("pins", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  pexelsId: bigint("pexels_id", { mode: "number" }).notNull().unique(),
+// Saved Explore pins (hearted from the feed). Stored denormalized so the
+// Saved view renders without re-querying the source; unique (source,
+// external_id) makes the heart a clean save/unsave toggle. Column names
+// photographer/photographer_url/pexels_url are legacy Pexels-era names —
+// they now hold credit/credit_url/source_url for any source.
+export const pins = pgTable(
+  "pins",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    source: text("source", { enum: ["pexels", "pinterest"] })
+      .notNull()
+      .default("pexels"),
+    externalId: text("external_id").notNull(),
+    // ponytail: dead Pexels-era column — kept nullable to avoid drizzle-kit
+    // rename prompts on push; drop manually whenever convenient.
+    pexelsId: bigint("pexels_id", { mode: "number" }),
+    imageUrl: text("image_url").notNull(),
+    alt: text("alt").notNull().default(""),
+    photographer: text("photographer").notNull().default(""),
+    photographerUrl: text("photographer_url").notNull().default(""),
+    pexelsUrl: text("pexels_url").notNull().default(""),
+    width: integer("width").notNull(),
+    height: integer("height").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (t) => [unique("pins_source_external_id_unique").on(t.source, t.externalId)],
+);
+
+// Cache of pins pulled from the user's selected Pinterest boards. Replaced
+// wholesale per board on each sync; the Explore feed reads only this table.
+export const pinterestPins = pgTable("pinterest_pins", {
+  id: text("id").primaryKey(), // Pinterest pin id — numeric string, can exceed 2^53
+  boardId: text("board_id").notNull(),
+  boardName: text("board_name").notNull().default(""),
+  title: text("title").notNull().default(""),
+  description: text("description").notNull().default(""),
+  link: text("link").notNull().default(""),
   imageUrl: text("image_url").notNull(),
-  alt: text("alt").notNull().default(""),
-  photographer: text("photographer").notNull().default(""),
-  photographerUrl: text("photographer_url").notNull().default(""),
-  pexelsUrl: text("pexels_url").notNull().default(""),
   width: integer("width").notNull(),
   height: integer("height").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+  savedAt: timestamp("saved_at"),
+  syncedAt: timestamp("synced_at").notNull().defaultNow(),
 });
 
 // Outfit-combo feedback (👍/👎 on suggestion cards). item_key is the

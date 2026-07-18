@@ -24,7 +24,11 @@ export async function POST(req: NextRequest) {
     await db.delete(pins).where(eq(pins.pexelsId, pin.pexelsId));
     return NextResponse.json({ saved: false });
   }
-  const [row] = await db.insert(pins).values(pin).onConflictDoNothing().returning();
+  const [row] = await db
+    .insert(pins)
+    .values({ ...pin, externalId: String(pin.pexelsId) }) // shim until Task 6 rewrites this route
+    .onConflictDoNothing()
+    .returning();
   if (!row) {
     // Lost a double-click race — the concurrent request saved it first.
     const [existing] = await db.select().from(pins).where(eq(pins.pexelsId, pin.pexelsId));
