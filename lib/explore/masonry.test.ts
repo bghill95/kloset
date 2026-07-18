@@ -1,16 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { splitColumns } from "./masonry";
-import type { Pin } from "./pexels";
 
-const pin = (id: number, height: number): Pin => ({
+const pin = (id: number, height: number) => ({
   pexelsId: id,
   width: 800,
   height,
-  alt: "",
-  photographer: "",
-  photographerUrl: "",
-  pexelsUrl: "",
-  imageUrl: "/fixtures/pin-1.svg",
 });
 
 describe("splitColumns", () => {

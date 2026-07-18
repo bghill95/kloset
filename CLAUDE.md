@@ -67,7 +67,7 @@ Currently resolved to Next 16 / React 19 / TS 6 (see package-lock.json).
   to `tsc` after deleting routes). When a token edit doesn't show up or
   typecheck errors on deleted files: stop the server, `rm -rf .next`, restart.
 - A manually-started dev server left running poisons e2e: playwright.config.ts
-  only pins MOCK_AI=1 / PEXELS_API_KEY="" on servers IT starts, and
+  only pins MOCK_AI=1 / PINTEREST_APP_ID="" on servers IT starts, and
   `reuseExistingServer` makes it adopt whatever is already on :4100 — real
-  Pexels photos then break z-explore's mock-pin assertions. Kill the dev
+  Pinterest pins then break z-explore's mock-pin assertions. Kill the dev
   server (or never leave one running) before `npm run test:e2e`.
