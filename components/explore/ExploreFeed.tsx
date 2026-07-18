@@ -3,7 +3,7 @@
 import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import PinLightbox from "@/components/explore/PinLightbox";
 import { splitColumns } from "@/lib/explore/masonry";
-import type { Pin, SavedPin } from "@/lib/explore/pexels";
+import type { Pin, SavedPin } from "@/lib/explore/pinterest";
 
 const CACHE_KEY = "kloset-explore-feed";
 
@@ -17,7 +17,9 @@ function isCached(v: unknown): v is Cached {
     typeof c.page === "number" &&
     typeof c.q === "string" &&
     typeof c.hasMore === "boolean" &&
-    Array.isArray(c.pins)
+    Array.isArray(c.pins) &&
+    (c.pins.length === 0 ||
+      typeof (c.pins[0] as Record<string, unknown>).externalId === "string")
   );
 }
 
@@ -96,8 +98,8 @@ export default function ExploreFeed({ savedPins }: { savedPins: SavedPin[] }) {
 
   const [searchInput, setSearchInput] = useState("");
   const [view, setView] = useState<"forYou" | "saved">("forYou");
-  const [saved, setSaved] = useState<Map<number, SavedPin>>(
-    () => new Map(savedPins.map((p) => [p.pexelsId, p])),
+  const [saved, setSaved] = useState<Map<string, SavedPin>>(
+    () => new Map(savedPins.map((p) => [p.externalId, p])),
   );
   const [lightbox, setLightbox] = useState<Pin | null>(null);
   const [cols, setCols] = useState(2);
@@ -129,11 +131,11 @@ export default function ExploreFeed({ savedPins }: { savedPins: SavedPin[] }) {
           throw new Error(data?.error ?? "Couldn't load inspiration — try again.");
         }
         // Neighboring queries — and a single page — can repeat a photo; drop repeats.
-        const seen = new Set(current.map((p) => p.pexelsId));
+        const seen = new Set(current.map((p) => p.externalId));
         const merged = [...current];
         for (const p of data.pins) {
-          if (!seen.has(p.pexelsId)) {
-            seen.add(p.pexelsId);
+          if (!seen.has(p.externalId)) {
+            seen.add(p.externalId);
             merged.push(p);
           }
         }
@@ -255,8 +257,8 @@ export default function ExploreFeed({ savedPins }: { savedPins: SavedPin[] }) {
       }
       setSaved((prev) => {
         const next = new Map(prev);
-        if (data.saved && data.pin) next.set(pin.pexelsId, data.pin);
-        else next.delete(pin.pexelsId);
+        if (data.saved && data.pin) next.set(pin.externalId, data.pin);
+        else next.delete(pin.externalId);
         return next;
       });
     } catch (err) {
@@ -271,9 +273,9 @@ export default function ExploreFeed({ savedPins }: { savedPins: SavedPin[] }) {
           <div key={ci} className="flex min-w-0 flex-1 flex-col gap-2">
             {col.map((pin) => (
               <PinCard
-                key={pin.pexelsId}
+                key={pin.externalId}
                 pin={pin}
-                saved={saved.has(pin.pexelsId)}
+                saved={saved.has(pin.externalId)}
                 onOpen={() => setLightbox(pin)}
                 onToggleSave={() => void toggleSave(pin)}
               />
@@ -292,7 +294,7 @@ export default function ExploreFeed({ savedPins }: { savedPins: SavedPin[] }) {
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           maxLength={100}
-          placeholder="Search fashion inspiration…"
+          placeholder="Search your saved pins…"
           className="min-w-0 flex-1 rounded-full bg-card px-4 py-3 text-ink placeholder:text-mute"
         />
         <button
@@ -312,7 +314,7 @@ export default function ExploreFeed({ savedPins }: { savedPins: SavedPin[] }) {
             aria-pressed={view === "forYou"}
             className={chipClass(view === "forYou")}
           >
-            {q ? `“${q}”` : "For You"}
+            {q ? `“${q}”` : "Pinterest"}
           </button>
           <button
             type="button"
@@ -340,6 +342,11 @@ export default function ExploreFeed({ savedPins }: { savedPins: SavedPin[] }) {
       {view === "forYou" ? (
         <>
           {grid(pins, "pin-grid")}
+          {!loading && !error && !q && pins.length === 0 && (
+            <p className="text-mute">
+              Nothing here yet — connect Pinterest in Settings and pick your boards.
+            </p>
+          )}
           {!loading && !error && q && pins.length === 0 && (
             <p className="text-mute">Nothing for “{q}” — try another search.</p>
           )}
@@ -362,7 +369,7 @@ export default function ExploreFeed({ savedPins }: { savedPins: SavedPin[] }) {
       {lightbox && (
         <PinLightbox
           pin={lightbox}
-          saved={saved.has(lightbox.pexelsId)}
+          saved={saved.has(lightbox.externalId)}
           onToggleSave={() => void toggleSave(lightbox)}
           onClose={() => setLightbox(null)}
         />

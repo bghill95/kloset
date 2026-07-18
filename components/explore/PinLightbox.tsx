@@ -5,7 +5,7 @@ import SuggestionCard, {
   fetchStylistOutfits,
   type StylistOutfit,
 } from "@/components/outfits/SuggestionCard";
-import type { Pin } from "@/lib/explore/pexels";
+import type { Pin } from "@/lib/explore/pinterest";
 
 const STYLE_COUNT = 3;
 
@@ -102,22 +102,25 @@ export default function PinLightbox({ pin, saved, onToggleSave, onClose }: Props
         />
         {pin.alt && <p className="text-body">{pin.alt}</p>}
         <p className="text-sm text-mute">
-          Photo by{" "}
-          {pin.photographerUrl ? (
-            <a className="underline" href={pin.photographerUrl} target="_blank" rel="noreferrer">
-              {pin.photographer || "unknown"}
+          From{" "}
+          {pin.creditUrl ? (
+            <a className="underline" href={pin.creditUrl} target="_blank" rel="noreferrer">
+              {pin.credit || "unknown"}
             </a>
           ) : (
-            pin.photographer || "unknown"
+            pin.credit || "unknown"
           )}{" "}
           on{" "}
           <a
             className="underline"
-            href={pin.pexelsUrl || "https://www.pexels.com"}
+            href={
+              pin.sourceUrl ||
+              (pin.source === "pinterest" ? "https://www.pinterest.com" : "https://www.pexels.com")
+            }
             target="_blank"
             rel="noreferrer"
           >
-            Pexels
+            {pin.source === "pinterest" ? "Pinterest" : "Pexels"}
           </a>
         </p>
         <div className="flex flex-wrap gap-2">
