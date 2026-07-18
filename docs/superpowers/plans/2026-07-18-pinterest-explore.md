@@ -1214,9 +1214,14 @@ import { PINTEREST_BOARDS_KEY, getSelectedBoards } from "@/lib/explore/sync";
 import { validateBoardsBody } from "@/lib/explore/validation";
 
 export async function GET() {
-  const token = await getFreshAccessToken();
-  if (!token) return NextResponse.json({ error: "Pinterest is not connected." }, { status: 401 });
+  // getFreshAccessToken throws on a refresh failure (transient) and returns
+  // null only when not connected — keep it inside the try so a Pinterest
+  // hiccup 502s with a friendly message instead of an unhandled 500.
   try {
+    const token = await getFreshAccessToken();
+    if (!token) {
+      return NextResponse.json({ error: "Pinterest is not connected." }, { status: 401 });
+    }
     const [boards, selected] = await Promise.all([listBoards(token), getSelectedBoards()]);
     return NextResponse.json({ boards, selectedIds: selected.map((b) => b.id) });
   } catch (err) {
