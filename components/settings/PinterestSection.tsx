@@ -64,7 +64,8 @@ export default function PinterestSection({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ boards: chosen }),
       });
-      if (!res.ok) throw new Error("Couldn't save boards — try again.");
+      const data = (await res.json().catch(() => null)) as { error?: string } | null;
+      if (!res.ok) throw new Error(data?.error ?? "Couldn't save boards — try again.");
       await runSync();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Sync failed — try again.");
@@ -88,9 +89,14 @@ export default function PinterestSection({
 
   async function disconnect() {
     setBusy(true);
+    setError(null);
+    setMessage(null);
     try {
-      await fetch("/api/pinterest/auth", { method: "DELETE" });
+      const res = await fetch("/api/pinterest/auth", { method: "DELETE" });
+      if (!res.ok) throw new Error("Couldn't disconnect — try again.");
       router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Couldn't disconnect — try again.");
     } finally {
       setBusy(false);
     }
