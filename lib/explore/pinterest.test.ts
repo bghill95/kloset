@@ -6,6 +6,7 @@ import {
   parseBoardPinsResponse,
   parseBoardsResponse,
 } from "./pinterest";
+import { needsRefresh, parseTokenResponse, type PinterestAuth } from "./pinterest";
 
 const BOARD = { id: "b1", name: "Fits" };
 
@@ -95,5 +96,46 @@ describe("isPinterestMock", () => {
     expect(isPinterestMock()).toBe(true);
     process.env.PINTEREST_APP_ID = "real";
     expect(isPinterestMock()).toBe(false);
+  });
+});
+
+describe("token lifecycle", () => {
+  const NOW = 1_800_000_000_000;
+  const AUTH: PinterestAuth = {
+    accessToken: "a",
+    refreshToken: "r",
+    accessExpiresAt: NOW + 60 * 60_000,
+    refreshExpiresAt: NOW + 1000 * 60_000,
+  };
+
+  it("needsRefresh only inside the 5-minute margin", () => {
+    expect(needsRefresh(AUTH, NOW)).toBe(false);
+    expect(needsRefresh({ ...AUTH, accessExpiresAt: NOW + 2 * 60_000 }, NOW)).toBe(true);
+    expect(needsRefresh({ ...AUTH, accessExpiresAt: NOW - 1 }, NOW)).toBe(true);
+  });
+
+  it("parseTokenResponse maps a code-exchange response", () => {
+    const out = parseTokenResponse(
+      { access_token: "at", refresh_token: "rt", expires_in: 2592000, refresh_token_expires_in: 31536000 },
+      NOW,
+    );
+    expect(out).toEqual({
+      accessToken: "at",
+      refreshToken: "rt",
+      accessExpiresAt: NOW + 2592000 * 1000,
+      refreshExpiresAt: NOW + 31536000 * 1000,
+    });
+  });
+
+  it("carries the previous refresh token when the refresh grant omits it", () => {
+    const out = parseTokenResponse({ access_token: "at2", expires_in: 100 }, NOW, AUTH);
+    expect(out?.refreshToken).toBe("r");
+    expect(out?.refreshExpiresAt).toBe(AUTH.refreshExpiresAt);
+  });
+
+  it("rejects malformed responses", () => {
+    expect(parseTokenResponse({ access_token: "x" }, NOW)).toBeNull();
+    expect(parseTokenResponse(null, NOW)).toBeNull();
+    expect(parseTokenResponse({ access_token: "x", expires_in: 5 }, NOW)).toBeNull(); // no refresh token anywhere
   });
 });
