@@ -3,8 +3,10 @@ import { expect, test } from "@playwright/test";
 // Named z- to run LAST: by now studio.spec's tee/jeans/sneakers are seeded,
 // so MOCK_AI stylist combos work for the "Style this" flow.
 // NOTE: retries must stay 0 — the save-toggle test assumes a clean pins table.
+// Mock Pinterest: 2 boards × 45 pins = 90 cached pins → exactly 3 feed pages.
+// The first /api/explore call auto-syncs the mock boards into pinterest_pins.
 test.describe.serial("explore", () => {
-  test("feed renders a masonry of mock pins", async ({ page }) => {
+  test("feed renders a masonry of mock pinterest pins", async ({ page }) => {
     await page.goto("/explore");
     await expect(page.getByRole("heading", { level: 1, name: "Explore" })).toBeVisible();
     await expect(page.getByTestId("pin-card")).toHaveCount(30);
@@ -17,20 +19,20 @@ test.describe.serial("explore", () => {
     await expect(page.getByTestId("pin-card")).toHaveCount(60);
   });
 
-  test("search swaps the feed to the query", async ({ page }) => {
+  test("search filters the cached pins", async ({ page }) => {
     await page.goto("/explore");
-    await page.getByLabel("Search inspiration").fill("parisian chic");
+    await page.getByLabel("Search inspiration").fill("parisian");
     await page.getByRole("button", { name: "Search" }).click();
-    await expect(page.locator('img[alt="Mock pin parisian chic 1"]')).toBeVisible();
-    await expect(page.getByRole("button", { name: "“parisian chic”" })).toBeVisible();
+    await expect(page.locator('img[alt="Mock pin Parisian Chic 1"]')).toBeVisible();
+    await expect(page.getByRole("button", { name: "“parisian”" })).toBeVisible();
   });
 
-  test("lightbox shows credit and styles the look from the closet", async ({ page }) => {
+  test("lightbox credits Pinterest and styles the look from the closet", async ({ page }) => {
     await page.goto("/explore");
     await page.getByRole("button", { name: /^Open pin/ }).first().click();
     const dialog = page.getByRole("dialog", { name: "Pin detail" });
     await expect(dialog).toBeVisible();
-    await expect(dialog.getByRole("link", { name: "Pexels" })).toBeVisible();
+    await expect(dialog.getByRole("link", { name: "Pinterest" })).toBeVisible();
     await dialog.getByRole("button", { name: "Style this from my closet" }).click();
     await expect(dialog.getByTestId("suggestion-card").first()).toBeVisible();
     await expect(dialog.getByText("Mock look 1")).toBeVisible();
