@@ -61,6 +61,10 @@ describe("validateBoardsBody", () => {
   it("accepts a boards array and trims names", () => {
     const out = validateBoardsBody({ boards: [{ id: "1", name: "  Fits " }] });
     expect(out).toEqual({ ok: true, value: [{ id: "1", name: "Fits" }] });
+    // 100-char name padded with whitespace is valid after trimming.
+    expect(
+      validateBoardsBody({ boards: [{ id: "2", name: ` ${"x".repeat(100)} ` }] }),
+    ).toEqual({ ok: true, value: [{ id: "2", name: "x".repeat(100) }] });
   });
   it("rejects non-arrays, bad entries, and oversized lists", () => {
     expect(validateBoardsBody({}).ok).toBe(false);

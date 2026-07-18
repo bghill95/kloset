@@ -90,10 +90,14 @@ export function validateBoardsBody(raw: unknown): Result<Board[]> {
     if (typeof b.id !== "string" || b.id.length === 0 || b.id.length > MAX_ID) {
       return { ok: false, error: "Each board needs a non-empty string id." };
     }
-    if (typeof b.name !== "string" || b.name.trim().length === 0 || b.name.length > MAX_NAME) {
+    if (typeof b.name !== "string") {
       return { ok: false, error: "Each board needs a non-empty name." };
     }
-    boards.push({ id: b.id, name: b.name.trim() });
+    const name = b.name.trim();
+    if (name.length === 0 || name.length > MAX_NAME) {
+      return { ok: false, error: "Each board needs a non-empty name." };
+    }
+    boards.push({ id: b.id, name });
   }
   return { ok: true, value: boards };
 }
