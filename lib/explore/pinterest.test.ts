@@ -3,10 +3,12 @@ import {
   MOCK_BOARDS,
   isPinterestMock,
   mockBoardPins,
+  needsRefresh,
   parseBoardPinsResponse,
   parseBoardsResponse,
+  parseTokenResponse,
+  type PinterestAuth,
 } from "./pinterest";
-import { needsRefresh, parseTokenResponse, type PinterestAuth } from "./pinterest";
 
 const BOARD = { id: "b1", name: "Fits" };
 

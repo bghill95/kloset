@@ -5,8 +5,13 @@ import { PINTEREST_AUTH_KEY, exchangeCode, requestOrigin } from "@/lib/explore/p
 
 export async function GET(req: NextRequest) {
   const origin = requestOrigin(req.headers);
-  const fail = (msg: string) =>
-    NextResponse.redirect(new URL(`/settings?pinterest_error=${encodeURIComponent(msg)}`, origin));
+  const fail = (msg: string) => {
+    const res = NextResponse.redirect(
+      new URL(`/settings?pinterest_error=${encodeURIComponent(msg)}`, origin),
+    );
+    res.cookies.delete("pinterest_state");
+    return res;
+  };
   const code = req.nextUrl.searchParams.get("code");
   const state = req.nextUrl.searchParams.get("state");
   const cookieState = req.cookies.get("pinterest_state")?.value;
