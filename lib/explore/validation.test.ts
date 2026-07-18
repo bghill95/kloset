@@ -27,33 +27,36 @@ describe("validateFeedParams", () => {
 });
 
 describe("validatePinBody", () => {
-  const good = {
-    pexelsId: 7,
+  const GOOD = {
+    source: "pinterest",
+    externalId: "1104578219333637375",
     width: 800,
-    height: 1200,
-    alt: "A look",
-    photographer: "Ada",
-    photographerUrl: "https://www.pexels.com/@ada",
-    pexelsUrl: "https://www.pexels.com/photo/7/",
-    imageUrl: "https://images.pexels.com/7-large.jpg",
+    height: 1000,
+    alt: "Linen set",
+    credit: "Fits",
+    creditUrl: "",
+    sourceUrl: "https://www.pinterest.com/pin/1104578219333637375/",
+    imageUrl: "https://i.pinimg.com/1200x/a.jpg",
   };
 
-  it("accepts a full pin, and root-relative mock images", () => {
-    expect(validatePinBody(good)).toEqual({ ok: true, value: good });
-    expect(validatePinBody({ ...good, imageUrl: "/fixtures/pin-1.svg" }).ok).toBe(true);
+  it("accepts a valid pinterest pin", () => {
+    const out = validatePinBody(GOOD);
+    expect(out).toEqual({ ok: true, value: GOOD });
   });
 
-  it("rejects bad ids, dimensions, and image urls", () => {
+  it("rejects bad source, empty externalId, and bad dimensions", () => {
+    expect(validatePinBody({ ...GOOD, source: "tumblr" }).ok).toBe(false);
+    expect(validatePinBody({ ...GOOD, externalId: "" }).ok).toBe(false);
+    expect(validatePinBody({ ...GOOD, width: 0 }).ok).toBe(false);
+    expect(validatePinBody({ ...GOOD, height: 1.5 }).ok).toBe(false);
     expect(validatePinBody(null).ok).toBe(false);
-    expect(validatePinBody({ ...good, pexelsId: "7" }).ok).toBe(false);
-    expect(validatePinBody({ ...good, width: 0 }).ok).toBe(false);
-    expect(validatePinBody({ ...good, imageUrl: "http://insecure.example/x.jpg" }).ok).toBe(false);
-    expect(validatePinBody({ ...good, imageUrl: "//evil.example/x.jpg" }).ok).toBe(false);
   });
 
-  it("blanks non-https credit links instead of failing", () => {
-    const r = validatePinBody({ ...good, photographerUrl: "javascript:alert(1)" });
-    expect(r.ok && r.value.photographerUrl).toBe("");
+  it("blanks non-https credit/source urls and requires a valid imageUrl", () => {
+    const out = validatePinBody({ ...GOOD, creditUrl: "http://x", sourceUrl: "javascript:x" });
+    expect(out.ok && out.value.creditUrl).toBe("");
+    expect(out.ok && out.value.sourceUrl).toBe("");
+    expect(validatePinBody({ ...GOOD, imageUrl: "http://plain" }).ok).toBe(false);
   });
 });
 

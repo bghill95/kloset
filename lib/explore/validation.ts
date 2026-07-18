@@ -1,6 +1,5 @@
 import { isImageUrl, type Result } from "@/lib/closet/item-validation";
-import type { Pin } from "./pexels";
-import type { Board } from "./pinterest";
+import type { Board, Pin } from "./pinterest";
 
 const MAX_QUERY = 100;
 const MAX_PAGE = 100;
@@ -38,8 +37,11 @@ export function validatePinBody(raw: unknown): Result<Pin> {
     return { ok: false, error: "Body must be an object." };
   }
   const o = raw as Record<string, unknown>;
-  if (typeof o.pexelsId !== "number" || !Number.isInteger(o.pexelsId) || o.pexelsId < 0) {
-    return { ok: false, error: "pexelsId must be a non-negative integer." };
+  if (o.source !== "pexels" && o.source !== "pinterest") {
+    return { ok: false, error: "source must be pexels or pinterest." };
+  }
+  if (typeof o.externalId !== "string" || o.externalId.length === 0 || o.externalId.length > 100) {
+    return { ok: false, error: "externalId must be a non-empty string." };
   }
   if (
     typeof o.width !== "number" ||
@@ -57,13 +59,14 @@ export function validatePinBody(raw: unknown): Result<Pin> {
   return {
     ok: true,
     value: {
-      pexelsId: o.pexelsId,
+      source: o.source,
+      externalId: o.externalId,
       width: o.width,
       height: o.height,
       alt: textOrBlank(o.alt),
-      photographer: textOrBlank(o.photographer),
-      photographerUrl: httpsOrBlank(o.photographerUrl),
-      pexelsUrl: httpsOrBlank(o.pexelsUrl),
+      credit: textOrBlank(o.credit),
+      creditUrl: httpsOrBlank(o.creditUrl),
+      sourceUrl: httpsOrBlank(o.sourceUrl),
       imageUrl: o.imageUrl,
     },
   };
