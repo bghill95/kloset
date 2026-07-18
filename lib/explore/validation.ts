@@ -1,5 +1,6 @@
 import { isImageUrl, type Result } from "@/lib/closet/item-validation";
 import type { Pin } from "./pexels";
+import type { Board } from "./pinterest";
 
 const MAX_QUERY = 100;
 const MAX_PAGE = 100;
@@ -66,4 +67,33 @@ export function validatePinBody(raw: unknown): Result<Pin> {
       imageUrl: o.imageUrl,
     },
   };
+}
+
+const MAX_BOARDS = 50;
+const MAX_ID = 100;
+const MAX_NAME = 100;
+
+export function validateBoardsBody(raw: unknown): Result<Board[]> {
+  if (typeof raw !== "object" || raw === null) {
+    return { ok: false, error: "Body must be an object." };
+  }
+  const list = (raw as Record<string, unknown>).boards;
+  if (!Array.isArray(list) || list.length > MAX_BOARDS) {
+    return { ok: false, error: `boards must be an array of at most ${MAX_BOARDS}.` };
+  }
+  const boards: Board[] = [];
+  for (const entry of list) {
+    if (typeof entry !== "object" || entry === null) {
+      return { ok: false, error: "Each board must be an object." };
+    }
+    const b = entry as Record<string, unknown>;
+    if (typeof b.id !== "string" || b.id.length === 0 || b.id.length > MAX_ID) {
+      return { ok: false, error: "Each board needs a non-empty string id." };
+    }
+    if (typeof b.name !== "string" || b.name.trim().length === 0 || b.name.length > MAX_NAME) {
+      return { ok: false, error: "Each board needs a non-empty name." };
+    }
+    boards.push({ id: b.id, name: b.name.trim() });
+  }
+  return { ok: true, value: boards };
 }

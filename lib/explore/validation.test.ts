@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { validateFeedParams, validatePinBody } from "./validation";
+import { validateBoardsBody, validateFeedParams, validatePinBody } from "./validation";
 
 const params = (o: Record<string, string>) => new URLSearchParams(o);
 
@@ -54,5 +54,20 @@ describe("validatePinBody", () => {
   it("blanks non-https credit links instead of failing", () => {
     const r = validatePinBody({ ...good, photographerUrl: "javascript:alert(1)" });
     expect(r.ok && r.value.photographerUrl).toBe("");
+  });
+});
+
+describe("validateBoardsBody", () => {
+  it("accepts a boards array and trims names", () => {
+    const out = validateBoardsBody({ boards: [{ id: "1", name: "  Fits " }] });
+    expect(out).toEqual({ ok: true, value: [{ id: "1", name: "Fits" }] });
+  });
+  it("rejects non-arrays, bad entries, and oversized lists", () => {
+    expect(validateBoardsBody({}).ok).toBe(false);
+    expect(validateBoardsBody({ boards: [{ id: 1, name: "x" }] }).ok).toBe(false);
+    expect(validateBoardsBody({ boards: [{ id: "", name: "x" }] }).ok).toBe(false);
+    expect(
+      validateBoardsBody({ boards: Array.from({ length: 51 }, (_, i) => ({ id: String(i), name: "b" })) }).ok,
+    ).toBe(false);
   });
 });
