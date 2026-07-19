@@ -21,8 +21,10 @@ export default async function Icon() {
           background: "#a85a72",
           color: "#ffffff",
           fontFamily: "Great Vibes",
-          fontSize: 360,
-          paddingBottom: 40,
+          fontSize: 205,
+          // Same measured ink-centering as apple-icon.tsx, scaled ×512/180.
+          paddingRight: 97,
+          paddingTop: 46,
         }}
       >
         K

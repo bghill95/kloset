@@ -21,8 +21,11 @@ export default async function Icon() {
           background: "#a85a72",
           color: "#ffffff",
           fontFamily: "Great Vibes",
-          fontSize: 120,
-          paddingBottom: 40,
+          fontSize: 72,
+          // Great Vibes' K ink sits right of and above its em box — measured
+          // offsets, so the flex centering lands the INK at canvas center.
+          paddingRight: 34,
+          paddingTop: 16,
         }}
       >
         K
