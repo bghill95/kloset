@@ -24,9 +24,56 @@
 
   --radius-card: 1rem;
   --radius-big: 2rem;
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Page entrance on route change (app/template.tsx). No fill: the wrapper
+     must revert to natural styles after the run — a retained transform would
+     turn it into a containing block and break fixed overlays (menu, lightbox). */
+  --animate-page-in: page-in 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  /* Menu overlay: fade in, faster fade out (held at 0 until unmount). */
+  --animate-menu-in: menu-in 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-menu-out: menu-out 160ms ease-out both;
+  /* Menu links: staggered rise; fill both so delayed links start hidden. */
+  --animate-menu-link: menu-link-in 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes page-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes menu-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes menu-link-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
 }
 
 body {
   background: var(--color-canvas);
   color: var(--color-body);
+}
+
+/* Motion is skipped, not just shortened — animation events still fire so
+   animation-gated unmounts (the menu) complete instantly. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

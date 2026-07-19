@@ -17,11 +17,19 @@ const LINKS = [
 
 export default function Menu() {
   const [open, setOpen] = useState(false);
+  // Exit is animation-gated: close() plays the fade-out, and the overlay
+  // unmounts in onAnimationEnd once that animation finishes.
+  const [closing, setClosing] = useState(false);
   const pathname = usePathname();
   const closeRef = useRef<HTMLButtonElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    // Route change: drop the overlay instantly — the new page's own
+    // entrance is the transition.
+    setOpen(false);
+    setClosing(false);
+  }, [pathname]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -54,7 +62,10 @@ export default function Menu() {
         ref={triggerRef}
         type="button"
         aria-label="Open menu"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpen(true);
+          setClosing(false);
+        }}
         className="flex h-10 w-10 items-center justify-center rounded-full bg-card text-ink"
       >
         <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true">
@@ -66,10 +77,20 @@ export default function Menu() {
           role="dialog"
           aria-modal="true"
           aria-label="Menu"
-          className="fixed inset-0 z-50 flex flex-col bg-menu"
+          className={`fixed inset-0 z-50 flex flex-col bg-menu ${
+            closing ? "animate-menu-out" : "animate-menu-in"
+          }`}
           onKeyDown={(e) => {
-            if (e.key === "Escape") setOpen(false);
+            if (e.key === "Escape") setClosing(true);
             trapTab(e);
+          }}
+          onAnimationEnd={(e) => {
+            // animationend bubbles from the staggered links — only the
+            // overlay's own fade-out may unmount it.
+            if (closing && e.target === e.currentTarget) {
+              setOpen(false);
+              setClosing(false);
+            }
           }}
         >
           <div className="flex items-center justify-between px-5 pt-5">
@@ -80,7 +101,7 @@ export default function Menu() {
               ref={closeRef}
               type="button"
               aria-label="Close menu"
-              onClick={() => setOpen(false)}
+              onClick={() => setClosing(true)}
               className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -89,14 +110,15 @@ export default function Menu() {
             </button>
           </div>
           <nav aria-label="Main" className="flex flex-1 flex-col justify-center gap-2 px-8">
-            {LINKS.map((link) => {
+            {LINKS.map((link, i) => {
               const active = pathname === link.href || pathname.startsWith(link.href + "/");
               return (
                 <Link
                   key={link.href}
                   href={link.href}
                   aria-current={active ? "page" : undefined}
-                  className={`py-1 font-display text-5xl ${active ? "text-menu-active" : "text-white"}`}
+                  className={`animate-menu-link py-1 font-display text-5xl ${active ? "text-menu-active" : "text-white"}`}
+                  style={{ animationDelay: `${40 + i * 30}ms` }}
                 >
                   {link.label}
                 </Link>
