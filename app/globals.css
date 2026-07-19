@@ -31,9 +31,10 @@
      must revert to natural styles after the run — a retained transform would
      turn it into a containing block and break fixed overlays (menu, lightbox). */
   --animate-page-in: page-in 200ms cubic-bezier(0.22, 1, 0.36, 1);
-  /* Menu overlay: fade in, faster fade out (held at 0 until unmount). */
-  --animate-menu-in: menu-in 220ms cubic-bezier(0.22, 1, 0.36, 1);
-  --animate-menu-out: menu-out 160ms ease-out both;
+  /* Menu overlay: iOS-style sheet — slides up over the page, slides back
+     down to reveal it (or the newly-picked section). Exit held until unmount. */
+  --animate-menu-in: menu-in 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-menu-out: menu-out 220ms cubic-bezier(0.55, 0, 1, 0.45) both;
   /* Menu links: staggered rise; fill both so delayed links start hidden. */
   --animate-menu-link: menu-link-in 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
 
@@ -45,12 +46,12 @@
   }
   @keyframes menu-in {
     from {
-      opacity: 0;
+      transform: translateY(100%);
     }
   }
   @keyframes menu-out {
     to {
-      opacity: 0;
+      transform: translateY(100%);
     }
   }
   @keyframes menu-link-in {

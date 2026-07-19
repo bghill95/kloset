@@ -25,10 +25,11 @@ export default function Menu() {
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    // Route change: drop the overlay instantly — the new page's own
-    // entrance is the transition.
-    setOpen(false);
-    setClosing(false);
+    // Route change (a section was picked): slide the sheet down to reveal
+    // the new page — the dismissal IS the transition. Deliberately keyed on
+    // pathname alone; keying on `open` would close the menu as it opens.
+    if (open) setClosing(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   useEffect(() => {
@@ -117,8 +118,13 @@ export default function Menu() {
                   key={link.href}
                   href={link.href}
                   aria-current={active ? "page" : undefined}
+                  onClick={() => {
+                    // Same-section pick: no pathname change, so the route
+                    // effect won't fire — dismiss the sheet directly.
+                    if (active) setClosing(true);
+                  }}
                   className={`animate-menu-link py-1 font-display text-5xl ${active ? "text-menu-active" : "text-white"}`}
-                  style={{ animationDelay: `${40 + i * 30}ms` }}
+                  style={{ animationDelay: `${140 + i * 30}ms` }}
                 >
                   {link.label}
                 </Link>
