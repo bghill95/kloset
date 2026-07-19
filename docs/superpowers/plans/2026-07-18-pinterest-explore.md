@@ -2052,5 +2052,5 @@ git commit -m "test(explore): z-explore drives the mock pinterest feed"
 
 1. Pinterest developer portal requires a (free) business account — convert or create one **linked to the account that owns your boards** (OAuth must log into that account).
 2. developers.pinterest.com → create an app → request Trial access (app description + a reachable privacy-policy URL — any simple page).
-3. Register BOTH redirect URIs: `https://personal.tailc2e1d7.ts.net/api/pinterest/callback` and `http://localhost:4100/api/pinterest/callback`.
+3. Register BOTH redirect URIs: `https://personal.tailc2e1d7.ts.net:8443/api/pinterest/callback` and `http://localhost:4100/api/pinterest/callback`. (Kloset serves on :8443 — :443 belongs to another project.)
 4. Put the App ID + secret in `.env.local` as `PINTEREST_APP_ID` / `PINTEREST_APP_SECRET`.
