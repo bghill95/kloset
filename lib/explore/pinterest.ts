@@ -294,7 +294,7 @@ export async function listBoardPins(token: string, board: Board): Promise<BoardP
     const qs = new URLSearchParams({ page_size: "100" });
     if (bookmark) qs.set("bookmark", bookmark);
     const parsed = parseBoardPinsResponse(
-      await pinterestGet(`/boards/${board.id}/pins?${qs}`, token),
+      await pinterestGet(`/boards/${encodeURIComponent(board.id)}/pins?${qs}`, token),
       board,
     );
     pins.push(...parsed.pins);

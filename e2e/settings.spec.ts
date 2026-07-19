@@ -115,6 +115,21 @@ test.describe.serial("calendar and weather settings flows", () => {
   });
 });
 
+test.describe.serial("pinterest settings", () => {
+  test("mock mode is connected; boards default-selected; save & sync reports count", async ({ page }) => {
+    await page.goto("/settings");
+    const section = page.locator("section[aria-label='Pinterest']");
+    await expect(section.getByText("✅ Pinterest connected")).toBeVisible();
+    // Mock boards arrive pre-selected (default selection = all mock boards).
+    await expect(section.getByRole("checkbox", { name: "Street Style" })).toBeChecked();
+    await expect(section.getByRole("checkbox", { name: "Parisian Chic" })).toBeChecked();
+    await section.getByRole("button", { name: "Save boards & sync" }).click();
+    // 2 boards × 45 mock pins, deduped — keeps both boards selected so
+    // z-explore's 90-pin feed assumptions hold (specs share one DB wipe).
+    await expect(section.getByText("Synced 90 pins.")).toBeVisible();
+  });
+});
+
 test("studio credit signs the foot of the page", async ({ page }) => {
   await page.goto("/settings");
   await expect(page.getByText("built by Pseudo Engineering Studios")).toBeVisible();

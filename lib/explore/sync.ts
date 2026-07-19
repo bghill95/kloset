@@ -54,9 +54,11 @@ export async function syncPinterest(): Promise<{ synced: boolean; pinCount: numb
   const db = getDb();
   // Full replace: deselected boards, deleted pins, and moved pins all drop
   // out together — no stale boardId rows can survive a sync.
+  // ponytail: delete+insert is non-transactional (neon-http has no tx) — a
+  // mid-write failure leaves a partial cache until isStale re-syncs (≤1h).
   await db.delete(pinterestPins);
   for (let i = 0; i < all.length; i += 500) {
-    await db.insert(pinterestPins).values(all.slice(i, i + 500));
+    await db.insert(pinterestPins).values(all.slice(i, i + 500)).onConflictDoNothing();
   }
   await setSetting(PINTEREST_SYNCED_KEY, String(Date.now()));
   return { synced: true, pinCount: all.length };
