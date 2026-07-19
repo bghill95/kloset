@@ -51,7 +51,7 @@ export default async function SettingsPage({
         />
       </div>
       <p className="mt-16 pb-8 text-center text-xs font-medium text-ash">
-        built by Pseudo Engineering Studios
+        Pseudo Engineering Studios
       </p>
     </>
   );

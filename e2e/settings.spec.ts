@@ -132,5 +132,5 @@ test.describe.serial("pinterest settings", () => {
 
 test("studio credit signs the foot of the page", async ({ page }) => {
   await page.goto("/settings");
-  await expect(page.getByText("built by Pseudo Engineering Studios")).toBeVisible();
+  await expect(page.getByText("Pseudo Engineering Studios")).toBeVisible();
 });
