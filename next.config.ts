@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // The app is "in production" on the phone but served by next dev — hide
+  // the floating dev-tools button it injects on every page.
+  devIndicators: false,
+
   // Dev-only: let devices on the tailnet (e.g. the iPad) load dev assets when
   // browsing the dev server via the machine's Tailscale IP. No effect in prod.
   allowedDevOrigins: [
