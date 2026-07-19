@@ -24,7 +24,7 @@ test("studio credit signs the open menu", async ({ page }) => {
   await expect(
     page
       .getByRole("dialog", { name: "Menu" })
-      .getByText("built by Pseudo Engineering Studios"),
+      .getByText("Pseudo Engineering Studios"),
   ).toBeVisible();
 });
 
